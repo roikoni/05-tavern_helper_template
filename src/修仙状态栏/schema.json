@@ -1,0 +1,907 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "主角": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "名称": {
+          "default": "未命名修士",
+          "type": "string"
+        },
+        "称号": {
+          "default": "散修",
+          "type": "string"
+        },
+        "境界": {
+          "default": "炼气期",
+          "type": "string"
+        },
+        "修为": {
+          "default": 0,
+          "type": "number"
+        },
+        "修为上限": {
+          "default": 100,
+          "type": "number"
+        },
+        "气血": {
+          "default": 100,
+          "type": "number"
+        },
+        "气血上限": {
+          "default": 100,
+          "type": "number"
+        },
+        "法力值": {
+          "default": 80,
+          "type": "number"
+        },
+        "法力上限": {
+          "default": 100,
+          "type": "number"
+        },
+        "善恶值": {
+          "default": 0,
+          "type": "number"
+        },
+        "san值": {
+          "default": 80,
+          "type": "number"
+        },
+        "状态": {
+          "default": "正常",
+          "type": "string"
+        },
+        "六维": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "力道": {
+              "default": 10,
+              "type": "number"
+            },
+            "体魄": {
+              "default": 10,
+              "type": "number"
+            },
+            "身法": {
+              "default": 10,
+              "type": "number"
+            },
+            "灵力": {
+              "default": 10,
+              "type": "number"
+            },
+            "神识": {
+              "default": 10,
+              "type": "number"
+            },
+            "根骨": {
+              "default": 10,
+              "type": "number"
+            }
+          }
+        },
+        "灵悟值": {
+          "default": 0,
+          "type": "number"
+        },
+        "本源": {
+          "default": "剑",
+          "type": "string"
+        },
+        "灵根": {
+          "default": "金灵根",
+          "type": "string"
+        },
+        "灵石": {
+          "default": 0,
+          "type": "number"
+        },
+        "神契装备": {
+          "default": "",
+          "type": "string"
+        },
+        "装备": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "武器",
+              "法器",
+              "头盔",
+              "衣袍",
+              "腰带",
+              "靴子",
+              "项链",
+              "戒指",
+              "护腕"
+            ]
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "名称": {
+                "default": "空置",
+                "type": "string"
+              },
+              "品阶": {
+                "default": "凡品",
+                "type": "string"
+              },
+              "描述": {
+                "default": "",
+                "type": "string"
+              },
+              "属性": {
+                "default": "",
+                "type": "string"
+              },
+              "属性加成": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "武器",
+            "法器",
+            "头盔",
+            "衣袍",
+            "腰带",
+            "靴子",
+            "项链",
+            "戒指",
+            "护腕"
+          ]
+        },
+        "背包": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "物品名"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "描述": {
+                "default": "",
+                "type": "string"
+              },
+              "数量": {
+                "default": 1,
+                "type": "number"
+              },
+              "类型": {
+                "default": "杂物",
+                "type": "string",
+                "enum": [
+                  "丹药",
+                  "材料",
+                  "功法",
+                  "杂物",
+                  "灵石",
+                  "武器",
+                  "法器",
+                  "头盔",
+                  "衣袍",
+                  "腰带",
+                  "靴子",
+                  "项链",
+                  "戒指",
+                  "护腕"
+                ]
+              }
+            }
+          }
+        },
+        "性别": {
+          "default": "",
+          "type": "string"
+        },
+        "外貌": {
+          "default": "",
+          "type": "string"
+        },
+        "出身地": {
+          "default": "",
+          "type": "string"
+        },
+        "宗门": {
+          "default": "",
+          "type": "string"
+        },
+        "修炼流派": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "世界": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "当前年号": {
+          "default": "太初",
+          "type": "string"
+        },
+        "当前时间": {
+          "default": "混沌历元年",
+          "type": "string"
+        },
+        "当前地点": {
+          "default": "未知之地",
+          "type": "string"
+        },
+        "地图标记": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "标记点名"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "x": {
+                "default": 50,
+                "type": "number"
+              },
+              "y": {
+                "default": 50,
+                "type": "number"
+              },
+              "类型": {
+                "default": "地点",
+                "type": "string"
+              },
+              "颜色": {
+                "default": "#c9a94e",
+                "type": "string"
+              },
+              "描述": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "地图区域": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "区域名"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "颜色": {
+                "default": "#c6a664",
+                "type": "string"
+              },
+              "描述": {
+                "default": "",
+                "type": "string"
+              },
+              "顶点": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "default": {},
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "default": 0,
+                      "type": "number"
+                    },
+                    "y": {
+                      "default": 0,
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "大事记": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "时间": {
+                "default": "",
+                "type": "string"
+              },
+              "事件": {
+                "default": "",
+                "type": "string"
+              },
+              "描述": {
+                "default": "",
+                "type": "string"
+              },
+              "影响": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "古神列表": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "古神名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "神格": {
+            "default": "未知",
+            "type": "string"
+          },
+          "领域": {
+            "default": "未知",
+            "type": "string"
+          },
+          "位阶": {
+            "default": "下位神",
+            "type": "string"
+          },
+          "状态": {
+            "default": "沉睡",
+            "type": "string"
+          },
+          "信仰": {
+            "default": "",
+            "type": "string"
+          },
+          "描述": {
+            "default": "",
+            "type": "string"
+          },
+          "神迹": {
+            "default": "",
+            "type": "string"
+          },
+          "收服": {
+            "default": false,
+            "type": "boolean"
+          },
+          "沉沦值": {
+            "default": 0,
+            "type": "number"
+          },
+          "神契技能": {
+            "default": "",
+            "type": "string"
+          },
+          "神契描述": {
+            "default": "",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "缘契角色": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "角色名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "在场": {
+            "default": false,
+            "type": "boolean"
+          },
+          "羁绊": {
+            "default": false,
+            "type": "boolean"
+          },
+          "气血": {
+            "default": 100,
+            "type": "number"
+          },
+          "气血上限": {
+            "default": 100,
+            "type": "number"
+          },
+          "法力值": {
+            "default": 80,
+            "type": "number"
+          },
+          "法力上限": {
+            "default": 100,
+            "type": "number"
+          },
+          "善恶值": {
+            "default": 0,
+            "type": "number"
+          },
+          "san值": {
+            "default": 80,
+            "type": "number"
+          },
+          "好感度": {
+            "default": 0,
+            "type": "number"
+          },
+          "洗脑值": {
+            "default": 0,
+            "type": "number"
+          },
+          "内心想法": {
+            "default": "",
+            "type": "string"
+          },
+          "境界": {
+            "default": "凡人",
+            "type": "string"
+          },
+          "种族": {
+            "default": "人族",
+            "type": "string"
+          },
+          "性别": {
+            "default": "未知",
+            "type": "string"
+          },
+          "势力": {
+            "default": "散修",
+            "type": "string"
+          },
+          "描述": {
+            "default": "",
+            "type": "string"
+          },
+          "外貌": {
+            "default": "",
+            "type": "string"
+          },
+          "关系": {
+            "default": "陌路人",
+            "type": "string"
+          },
+          "六维": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "力道": {
+                "default": 0,
+                "type": "number"
+              },
+              "体魄": {
+                "default": 0,
+                "type": "number"
+              },
+              "身法": {
+                "default": 0,
+                "type": "number"
+              },
+              "灵力": {
+                "default": 0,
+                "type": "number"
+              },
+              "神识": {
+                "default": 0,
+                "type": "number"
+              },
+              "根骨": {
+                "default": 0,
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "重要人物": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "人物名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "称号": {
+            "default": "",
+            "type": "string"
+          },
+          "境界": {
+            "default": "未知",
+            "type": "string"
+          },
+          "势力": {
+            "default": "散修",
+            "type": "string"
+          },
+          "好感度": {
+            "default": 0,
+            "type": "number"
+          },
+          "洗脑值": {
+            "default": 0,
+            "type": "number"
+          },
+          "描述": {
+            "default": "",
+            "type": "string"
+          },
+          "外貌": {
+            "default": "",
+            "type": "string"
+          },
+          "特征": {
+            "default": "",
+            "type": "string"
+          },
+          "关系": {
+            "default": "中立",
+            "type": "string"
+          },
+          "所在地": {
+            "default": "未知",
+            "type": "string"
+          },
+          "攻略": {
+            "default": false,
+            "type": "boolean"
+          },
+          "_属性": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "力道": {
+                "default": 10,
+                "type": "number"
+              },
+              "体魄": {
+                "default": 10,
+                "type": "number"
+              },
+              "身法": {
+                "default": 10,
+                "type": "number"
+              },
+              "灵力": {
+                "default": 10,
+                "type": "number"
+              },
+              "神识": {
+                "default": 10,
+                "type": "number"
+              },
+              "根骨": {
+                "default": 10,
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "功法": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "功法名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "类型": {
+            "default": "被动",
+            "type": "string",
+            "enum": [
+              "主动",
+              "被动"
+            ]
+          },
+          "层级": {
+            "default": 1,
+            "type": "number"
+          },
+          "前置功法": {
+            "default": "",
+            "type": "string"
+          },
+          "效果": {
+            "default": "",
+            "type": "string"
+          },
+          "属性加成": {
+            "default": "",
+            "type": "string"
+          },
+          "已学习": {
+            "default": false,
+            "type": "boolean"
+          },
+          "消耗灵悟": {
+            "default": 10,
+            "type": "number"
+          },
+          "描述": {
+            "default": "",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "初始功法": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "功法名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "类型": {
+            "default": "被动",
+            "type": "string",
+            "enum": [
+              "主动",
+              "被动"
+            ]
+          },
+          "层级": {
+            "default": 1,
+            "type": "number"
+          },
+          "前置功法": {
+            "default": "",
+            "type": "string"
+          },
+          "效果": {
+            "default": "",
+            "type": "string"
+          },
+          "属性加成": {
+            "default": "",
+            "type": "string"
+          },
+          "已学习": {
+            "default": true,
+            "type": "boolean"
+          },
+          "消耗灵悟": {
+            "default": 0,
+            "type": "number"
+          },
+          "描述": {
+            "default": "",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "爱室": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "角色名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "描述": {
+            "default": "",
+            "type": "string"
+          },
+          "被击败时间": {
+            "default": "",
+            "type": "string"
+          },
+          "调教值": {
+            "default": 0,
+            "type": "number"
+          },
+          "心理状态": {
+            "default": "未知",
+            "type": "string"
+          },
+          "性器状态": {
+            "default": "未知",
+            "type": "string"
+          },
+          "来源": {
+            "default": "重要人物",
+            "type": "string",
+            "enum": [
+              "古神",
+              "重要人物"
+            ]
+          },
+          "收入时间": {
+            "default": "",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "势力声望": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "势力名"
+      },
+      "additionalProperties": {
+        "default": 0,
+        "type": "number"
+      }
+    },
+    "散修联盟": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "贡献值": {
+          "default": 0,
+          "type": "number"
+        },
+        "等级": {
+          "default": "散修",
+          "type": "string"
+        }
+      }
+    },
+    "正魔态势": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "状态": {
+          "default": "冷战",
+          "type": "string",
+          "enum": [
+            "和平",
+            "摩擦",
+            "冷战",
+            "局部冲突",
+            "全面战争"
+          ]
+        },
+        "态势值": {
+          "default": 50,
+          "type": "number"
+        },
+        "上次变更": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "当前秘境": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "在秘境中": {
+          "default": false,
+          "type": "boolean"
+        },
+        "名称": {
+          "default": "",
+          "type": "string"
+        },
+        "品阶": {
+          "default": "未知",
+          "type": "string",
+          "enum": [
+            "黄",
+            "玄",
+            "地",
+            "天",
+            "未知"
+          ]
+        },
+        "当前场景": {
+          "default": "",
+          "type": "string"
+        },
+        "场景描述": {
+          "default": "",
+          "type": "string"
+        },
+        "网格": {
+          "default": [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "minItems": 10,
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        "标记说明": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "剩余刻数": {
+          "default": 0,
+          "type": "number"
+        },
+        "刻数上限": {
+          "default": 0,
+          "type": "number"
+        },
+        "已得宝物": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "已石化": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "$flag": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "已完成捏角": {
+          "default": false,
+          "type": "boolean"
+        },
+        "拥有黑之匙": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "required": [
+    "古神列表",
+    "缘契角色",
+    "重要人物",
+    "爱室"
+  ],
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    }
+  }
+}
