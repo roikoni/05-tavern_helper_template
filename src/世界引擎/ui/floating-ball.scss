@@ -1,0 +1,59 @@
+// 世界引擎 · 悬浮球样式（挂到酒馆网页 head）
+// 注意：球的位置由 JS 通过 transform: translate3d() 控制，
+// 因此 hover/active 不得改写 transform，否则会丢失定位。悬停反馈用 filter 与 box-shadow。
+.we-floating-ball {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  color: #f0ebe0;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 200, 160, 0.35), transparent 55%),
+    linear-gradient(145deg, #c94f4a 0%, #9a2828 55%, #5a1212 100%);
+  border: 2px solid rgba(201, 160, 92, 0.6);
+  box-shadow:
+    0 0 18px rgba(212, 86, 80, 0.5),
+    inset 0 2px 4px rgba(255, 220, 200, 0.25),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 6px 16px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.3s var(--ease-out-soft, cubic-bezier(.22,.61,.36,1)), filter 0.3s var(--ease-out-soft, cubic-bezier(.22,.61,.36,1));
+  animation: we-ball-pulse 3.5s ease-in-out infinite;
+  font-family: 'Ma Shan Zheng', 'KaiTi', serif;
+  pointer-events: auto;
+}
+
+.we-floating-ball:hover {
+  filter: brightness(1.12) drop-shadow(0 0 10px rgba(232, 112, 106, 0.6));
+  box-shadow:
+    0 0 28px rgba(232, 112, 106, 0.75),
+    inset 0 2px 4px rgba(255, 220, 200, 0.35),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 8px 22px rgba(0, 0, 0, 0.7);
+}
+
+.we-floating-ball:active {
+  filter: brightness(0.92);
+}
+
+@keyframes we-ball-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 14px rgba(212, 86, 80, 0.4),
+      inset 0 2px 4px rgba(255, 220, 200, 0.25),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+      0 6px 16px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(212, 86, 80, 0.65),
+      inset 0 2px 4px rgba(255, 220, 200, 0.3),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+      0 6px 16px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* 窄屏下球略小，少占触摸区 */
+@media (max-width: 599px) {
+  .we-floating-ball { font-size: 1.1rem; }
+}
