@@ -1,6 +1,7 @@
 import { Schema } from '../../修仙状态栏/schema';
 import { 出身地列表 } from '../catalog/出身地';
 import { 功法列表 } from '../catalog/功法';
+import { 神级功法列表 } from '../catalog/神级功法';
 
 type StatData = z.infer<typeof Schema>;
 
@@ -9,6 +10,7 @@ const 层级编号: Record<string, number> = {
   黄阶中品: 2,
   黄阶上品: 3,
   玄阶下品: 4,
+  神级: 9,
 };
 
 /**
@@ -17,15 +19,16 @@ const 层级编号: Record<string, number> = {
  *
  * @param stat_data 当前 mvu stat_data
  * @param 已选功法名 玩家在捏角中选定的功法名（来自 draft store，未写入 stat_data）
+ * @param 自由 是否为自由模式（携带种族/境界/善恶/san/人脉/世界时间等额外档）
  */
-export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonly string[] = []): string {
+export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonly string[] = [], 自由 = false, 开局身份 = '', 自定义能力 = ''): string {
   const 主角 = stat_data.主角;
   const 武器 = 主角.装备?.武器;
   const 法器 = 主角.装备?.法器;
 
   // 把功法名匹配到 catalog，得到完整字段；找不到则降级为最简单条目
   const 已选功法详 = 已选功法名.map(名 => {
-    const c = 功法列表.find(g => g.名称 === 名);
+    const c = 功法列表.find(g => g.名称 === 名) ?? 神级功法列表.find(g => g.名称 === 名);
     if (c) {
       return {
         名称: c.名称,
@@ -48,9 +51,11 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
   行.push('【基本信息】');
   行.push(`  姓名: ${主角.名称}`);
   行.push(`  性别: ${主角.性别}`);
+  if (自由 && 主角.种族) 行.push(`  种族: ${主角.种族}`);
   行.push(`  称号: ${主角.称号}`);
   行.push(`  宗门: ${主角.宗门}`);
   行.push(`  出身地: ${主角.出身地}`);
+  if (自由 && 开局身份) 行.push(`  开局身份: ${开局身份}`);
   if (主角.外貌) 行.push(`  人物设定: ${主角.外貌}`);
 
   行.push('');
@@ -58,6 +63,10 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
   行.push(`  本源（道之根本）: ${主角.本源}`);
   行.push(`  修炼流派: ${主角.修炼流派}`);
   行.push(`  灵根: ${主角.灵根}`);
+  if (自由) {
+    行.push(`  修为境界: ${主角.境界}（修为 ${主角.修为}/${主角.修为上限}）`);
+    行.push(`  善恶值: ${主角.善恶值} · san值: ${主角.san值}`);
+  }
   行.push(`  神契古神: 胧（戏言之蝶）—— 已与角色同行多时，拌嘴中彼此依存`);
 
   行.push('');
@@ -86,6 +95,34 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
     }
   } else {
     行.push('  （尚未学习功法）');
+  }
+
+  // 开挂模式：自定义外挂能力
+  if (自由 && 自定义能力 && 自定义能力.trim()) {
+    行.push('');
+    行.push('【自定义外挂】');
+    行.push('  主角拥有的、不证自明的天赋能力（开挂模式，无需解释来源，视为既有事实）：');
+    自定义能力.split('\n').map(s => s.trim()).filter(Boolean).forEach(s => 行.push(`  - ${s}`));
+  }
+
+  // 自由模式：人脉羁绊 + 世界时间
+  if (自由) {
+    const 重要人物 = _.get(stat_data, '重要人物') as Record<string, any> | undefined;
+    const 人脉行 = _.entries(重要人物 ?? {})
+      .filter(([, v]) => v && (v.关系 || v.好感度))
+      .map(([名, v]) => `  - ${名}：${v.关系 ?? '陌路人'}（好感 ${v.好感度 ?? 0}）`);
+    if (人脉行.length) {
+      行.push('');
+      行.push('【人脉羁绊】');
+      人脉行.forEach(s => 行.push(s));
+    }
+
+    const 世界 = _.get(stat_data, '世界') as { 当前年号?: string; 当前时间?: string } | undefined;
+    if (世界 && (世界.当前年号 || 世界.当前时间)) {
+      行.push('');
+      行.push('【世界时间】');
+      行.push(`  年号: ${世界.当前年号 ?? '太初'} · 时间: ${世界.当前时间 ?? '混沌历元年'}`);
+    }
   }
 
   // ═══════════════════════════════════════════
@@ -118,7 +155,21 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
   );
   行.push('5. 结尾设置一个具体的、从场景中生长出来的悬念钩子，给主角留出明显的行动空间。');
   行.push('6. 变量更新不得遗漏【已学功法】。');
-  行.push('7. 文风模仿金庸，全文 800-1200 字。');
+  if (自由) {
+    行.push('7. 自由模式：主角种族、修为境界、善恶/san 已由玩家设定，开场需与之自洽——');
+    行.push('   高境界者应展现相应修为带来的气度与权柄感（非凡人视角），非人种族需体现其种族特征；');
+    行.push('   若档案含【人脉羁绊】，自然带出与其中人物的既有关系（不必全部出场，择相关者呼应）；');
+    行.push('   若含【世界时间】，以该纪元为时间锚点。');
+    if (自定义能力 && 自定义能力.trim()) {
+      行.push('8. 开挂模式：档案【自定义外挂】中的能力是主角既有的、不证自明的天赋，');
+      行.push('   无需解释来源、无需修炼过程，开场即视为已掌握并自然运用，可不经意展现其压倒性。');
+      行.push('9. 文风模仿金庸，全文 800-1200 字。');
+    } else {
+      行.push('8. 文风模仿金庸，全文 800-1200 字。');
+    }
+  } else {
+    行.push('7. 文风模仿金庸，全文 800-1200 字。');
+  }
 
   return 行.join('\n');
 }

@@ -54,9 +54,9 @@
 
       <Transition name="collapse">
         <div v-if="!heroesCollapsed" key="heroes-content">
-          <div v-if="!_.isEmpty(store.data.重要人物)" class="vip-list">
+          <div v-if="!_.isEmpty(heroes)" class="vip-list">
         <div
-          v-for="(npc, name) in store.data.重要人物"
+          v-for="(npc, name) in heroes"
           :key="name"
           class="vip-card group"
           @click="openDetail(name, npc, 'vip')"
@@ -135,7 +135,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useDataStore } from '../store';
 import { avatarOf, hasDefaultAvatar } from '../avatarStore';
 import CharacterDetailModal from './CharacterDetailModal.vue';
@@ -148,6 +148,17 @@ const detailSubtitle = ref('');
 const detailType = ref<'deity' | 'vip'>('vip');
 const godsCollapsed = ref(false);
 const heroesCollapsed = ref(false);
+
+// 当世豪杰固定名单：仅这些人物显示在右栏，AI 新增的 NPC 不计入
+const HEROES = ['沈清辞', '姜无忧', '顾千卷', '柳不移', '萧太薇'] as const;
+
+// 右栏只显示固定名单内、且变量中存在的人物
+const heroes = computed(() => {
+  const all = store.data.重要人物 || {};
+  return HEROES
+    .filter(name => all[name])
+    .reduce<Record<string, any>>((acc, name) => { acc[name] = all[name]; return acc; }, {});
+});
 
 function openDetail(name: string, data: any, type: 'deity' | 'vip') {
   detailName.value = name; detailData.value = data;

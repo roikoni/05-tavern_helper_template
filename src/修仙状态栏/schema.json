@@ -205,6 +205,10 @@
           "default": "",
           "type": "string"
         },
+        "种族": {
+          "default": "人族",
+          "type": "string"
+        },
         "外貌": {
           "default": "",
           "type": "string"
@@ -312,32 +316,6 @@
               }
             }
           }
-        },
-        "大事记": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "default": {},
-            "type": "object",
-            "properties": {
-              "时间": {
-                "default": "",
-                "type": "string"
-              },
-              "事件": {
-                "default": "",
-                "type": "string"
-              },
-              "描述": {
-                "default": "",
-                "type": "string"
-              },
-              "影响": {
-                "default": "",
-                "type": "string"
-              }
-            }
-          }
         }
       }
     },
@@ -398,7 +376,8 @@
         }
       }
     },
-    "缘契角色": {
+    "在场": {
+      "default": {},
       "type": "object",
       "propertyNames": {
         "type": "string",
@@ -408,14 +387,114 @@
         "default": {},
         "type": "object",
         "properties": {
-          "在场": {
-            "default": false,
-            "type": "boolean"
+          "气血": {
+            "default": 100,
+            "type": "number"
           },
-          "羁绊": {
-            "default": false,
-            "type": "boolean"
+          "气血上限": {
+            "default": 100,
+            "type": "number"
           },
+          "法力值": {
+            "default": 80,
+            "type": "number"
+          },
+          "法力上限": {
+            "default": 100,
+            "type": "number"
+          },
+          "善恶值": {
+            "default": 0,
+            "type": "number"
+          },
+          "san值": {
+            "default": 80,
+            "type": "number"
+          },
+          "好感度": {
+            "default": 0,
+            "type": "number"
+          },
+          "洗脑值": {
+            "default": 0,
+            "type": "number"
+          },
+          "内心想法": {
+            "default": "",
+            "type": "string"
+          },
+          "境界": {
+            "default": "凡人",
+            "type": "string"
+          },
+          "种族": {
+            "default": "人族",
+            "type": "string"
+          },
+          "性别": {
+            "default": "未知",
+            "type": "string"
+          },
+          "势力": {
+            "default": "散修",
+            "type": "string"
+          },
+          "描述": {
+            "default": "",
+            "type": "string"
+          },
+          "外貌": {
+            "default": "",
+            "type": "string"
+          },
+          "关系": {
+            "default": "陌路人",
+            "type": "string"
+          },
+          "六维": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "力道": {
+                "default": 0,
+                "type": "number"
+              },
+              "体魄": {
+                "default": 0,
+                "type": "number"
+              },
+              "身法": {
+                "default": 0,
+                "type": "number"
+              },
+              "灵力": {
+                "default": 0,
+                "type": "number"
+              },
+              "神识": {
+                "default": 0,
+                "type": "number"
+              },
+              "根骨": {
+                "default": 0,
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "羁绊": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "角色名"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
           "气血": {
             "default": 100,
             "type": "number"
@@ -745,57 +824,6 @@
         }
       }
     },
-    "势力声望": {
-      "default": {},
-      "type": "object",
-      "propertyNames": {
-        "type": "string",
-        "description": "势力名"
-      },
-      "additionalProperties": {
-        "default": 0,
-        "type": "number"
-      }
-    },
-    "散修联盟": {
-      "default": {},
-      "type": "object",
-      "properties": {
-        "贡献值": {
-          "default": 0,
-          "type": "number"
-        },
-        "等级": {
-          "default": "散修",
-          "type": "string"
-        }
-      }
-    },
-    "正魔态势": {
-      "default": {},
-      "type": "object",
-      "properties": {
-        "状态": {
-          "default": "冷战",
-          "type": "string",
-          "enum": [
-            "和平",
-            "摩擦",
-            "冷战",
-            "局部冲突",
-            "全面战争"
-          ]
-        },
-        "态势值": {
-          "default": 50,
-          "type": "number"
-        },
-        "上次变更": {
-          "default": "",
-          "type": "string"
-        }
-      }
-    },
     "当前秘境": {
       "default": {},
       "type": "object",
@@ -895,7 +923,6 @@
   },
   "required": [
     "古神列表",
-    "缘契角色",
     "重要人物",
     "爱室"
   ],

@@ -78,10 +78,36 @@
         墨影孤行——你，便是那执灯之人。
       </p>
 
-      <button class="enter-btn" @click="开始">
+      <!-- 模式三选：点击「踏入此道」后才显示 -->
+      <Transition name="mode-in">
+        <div v-if="已踏入" class="mode-pick">
+          <button
+            v-for="m in 模式选项"
+            :key="m.值"
+            class="mode-card"
+            :class="{ active: 选中 === m.值, locked: m.锁定 }"
+            :disabled="m.锁定"
+            @click="选(m.值)"
+          >
+            <span class="m-name">{{ m.名 }}</span>
+            <span v-if="m.锁定" class="m-lock">敬请期待</span>
+          </button>
+        </div>
+      </Transition>
+
+      <button v-if="!已踏入" class="enter-btn" @click="踏入">
         <span class="text">
           <i class="icon">☯</i>
           <span class="label">踏 入 此 道</span>
+          <i class="icon">☯</i>
+        </span>
+        <span class="btn-ink"></span>
+      </button>
+
+      <button v-else class="enter-btn" :disabled="选中 === null" @click="开始">
+        <span class="text">
+          <i class="icon">☯</i>
+          <span class="label">{{ 选中 ? '入 局' : '请择一道' }}</span>
           <i class="icon">☯</i>
         </span>
         <span class="btn-ink"></span>
@@ -111,14 +137,31 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { 捏角模式 } from '../draft';
 
-const emit = defineEmits<{ enter: [] }>();
+const emit = defineEmits<{ enter: [mode: 捏角模式] }>();
 const 离场中 = ref(false);
+const 已踏入 = ref(false);
+const 选中 = ref<捏角模式 | null>(null);
+
+const 模式选项: { 值: 捏角模式; 名: string; 锁定?: boolean }[] = [
+  { 值: '普通', 名: '普通模式' },
+  { 值: '自由', 名: '自由模式' },
+  { 值: '开挂', 名: '开挂模式' },
+];
+
+function 踏入() {
+  已踏入.value = true;
+}
+
+function 选(m: 捏角模式) {
+  选中.value = m;
+}
 
 function 开始() {
-  if (离场中.value) return;
+  if (选中.value === null || 离场中.value) return;
   离场中.value = true;
-  setTimeout(() => emit('enter'), 1100);
+  setTimeout(() => emit('enter', 选中.value as 捏角模式), 1100);
 }
 
 // 给每个粒子生成不同的位置/延时/速度
@@ -425,6 +468,57 @@ $blood-glow: #a83333;
   }
 }
 
+// 模式三选
+.mode-pick {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: 0.4rem auto 1rem;
+  flex-wrap: wrap;
+  @include mobile { gap: 0.4rem; }
+
+  .mode-card {
+    @include xianxia-btn;
+    flex: 1;
+    min-width: 7rem;
+    max-width: 11rem;
+    padding: 0.7rem 0.7rem;
+    text-align: center;
+    position: relative;
+    @include mobile { min-width: 5.5rem; padding: 0.55rem 0.4rem; }
+
+    .m-name {
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      color: $paper-cold;
+      @include mobile { font-size: 0.85rem; }
+    }
+    .m-lock {
+      position: absolute;
+      top: 4px; right: 6px;
+      font-size: 0.55rem;
+      color: $blood-glow;
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+    }
+
+    &.active {
+      background: linear-gradient(180deg, $blood-glow 0%, $blood-mid 55%, $blood 100%);
+      color: #f4e8d8;
+      border-color: $blood-bright;
+      box-shadow:
+        inset 0 0 14px rgba(255,200,200,0.18),
+        0 0 14px rgba(168,51,51,0.4);
+      .m-name { color: #f4e8d8; }
+    }
+    &.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      filter: grayscale(0.6);
+    }
+  }
+}
+
 // 进入按钮：水墨签文风
 .enter-btn {
   position: relative;
@@ -528,7 +622,34 @@ $blood-glow: #a83333;
     .btn-ink { opacity: 1; transform: scale(1.1); }
   }
   &:active .text { transform: translateY(1px); }
+
+  &:disabled {
+    cursor: not-allowed;
+    .text {
+      opacity: 0.45;
+      filter: grayscale(0.6);
+    }
+    .btn-ink { display: none; }
+    &:hover .text {
+      color: $paper-cold;
+      border-color: rgba(207,200,184,0.35);
+      background:
+        linear-gradient(180deg,
+          rgba(20,17,26,0.85) 0%,
+          rgba(10,9,13,0.95) 100%);
+      box-shadow:
+        inset 0 0 18px rgba(0,0,0,0.7),
+        0 4px 24px rgba(0,0,0,0.6);
+      .icon { color: $paper-cold; opacity: 0.7; text-shadow: none; }
+    }
+  }
 }
+
+// 模式选择淡入
+.mode-in-enter-active { transition: opacity 0.5s ease, transform 0.5s ease; }
+.mode-in-leave-active { transition: opacity 0.3s ease; }
+.mode-in-enter-from { opacity: 0; transform: translateY(12px); }
+.mode-in-leave-to { opacity: 0; }
 
 .footer {
   margin-top: 1.4rem;

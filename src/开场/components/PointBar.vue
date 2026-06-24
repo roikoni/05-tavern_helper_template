@@ -1,13 +1,28 @@
 <template>
-  <div class="point-bar" :class="{ '超支': 剩余 < 0 }">
+  <div class="point-bar" :class="{ '超支': 模式 !== '开挂' && 剩余 < 0 }">
     <span class="orn left">❖</span>
     <span class="label">灵悟点数</span>
     <span class="value">
-      <span class="num">{{ 剩余 }}</span>
+      <span v-if="模式 === '开挂'" class="num infinite">∞</span>
+      <span v-else class="num">{{ 剩余 }}</span>
       <span class="slash">/</span>
-      <span class="total">{{ 总数 }}</span>
+      <span class="total">{{ 模式 === '开挂' ? '∞' : 点数池 }}</span>
     </span>
-    <span v-if="剩余 < 0" class="warn">⚠ 超支 {{ -剩余 }} 点</span>
+
+    <!-- 自由模式掷骰 -->
+    <button
+      v-if="模式 === '自由'"
+      class="roll-btn"
+      :class="{ locked: 锁定 }"
+      :disabled="锁定"
+      :title="锁定 ? '已花费点数，无法重新掷骰' : '掷 0~100 决定点数预算'"
+      @click="onRoll"
+    >
+      <span class="dice">🎲</span>
+      <span class="roll-label">{{ 锁定 ? '已锁定' : '掷骰' }}</span>
+    </button>
+
+    <span v-if="模式 !== '开挂' && 剩余 < 0" class="warn">⚠ 超支 {{ -剩余 }} 点</span>
     <span class="orn right">❖</span>
   </div>
 </template>
@@ -17,11 +32,13 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
-import { 初始总点数, 计算剩余点数, type 玩家选择 } from '../lib/点数';
+import { 计算剩余点数, type 玩家选择 } from '../lib/点数';
 
 const { data } = storeToRefs(useDataStore());
-const { 已选功法 } = storeToRefs(useDraftStore());
+const draft = useDraftStore();
+const { 模式, 点数池, 锁定 } = storeToRefs(draft);
 
+// 本地聚合当前选择——直接读 data.value.主角，确保各步写入能即时反映到剩余点数
 const 当前选择 = computed<玩家选择>(() => {
   const 主角 = data.value.主角;
   const 已购武器 = 主角.装备?.武器?.名称 && 主角.装备.武器.名称 !== '空置'
@@ -35,16 +52,21 @@ const 当前选择 = computed<玩家选择>(() => {
     流派: 主角.修炼流派,
     灵根: 主角.灵根,
     宗门: 主角.宗门,
+    境界: 主角.境界,
     已购武器,
     已购法器,
-    已选功法: 已选功法.value,
+    已选功法: draft.已选功法,
     六维: 主角.六维 as any,
     灵石: 主角.灵石,
   };
 });
 
-const 剩余 = computed(() => 计算剩余点数(当前选择.value));
-const 总数 = 初始总点数;
+const 剩余 = computed(() => 计算剩余点数(当前选择.value, 点数池.value));
+
+function onRoll() {
+  if (锁定.value) return;
+  draft.roll();
+}
 </script>
 
 <style scoped lang="scss">
@@ -69,7 +91,6 @@ const 总数 = 初始总点数;
   box-shadow: 0 2px 14px rgba(0,0,0,0.6);
   transition: background 0.4s ease, border-color 0.4s ease;
 
-  // 手机端压缩 + 允许换行
   @include mobile {
     padding: 0.55rem 0.6rem;
     gap: 0.35rem;
@@ -99,6 +120,10 @@ const 总数 = 初始总点数;
       @include gold-text;
       font-size: 1.5em;
       font-weight: bold;
+      &.infinite {
+        @include blood-text;
+        font-size: 1.8em;
+      }
     }
     .slash { color: $paper-faint; margin: 0 0.25em; }
     .total { color: $paper-soft; font-size: 1em; }
@@ -117,8 +142,7 @@ const 总数 = 初始总点数;
     @include mobile {
       font-size: 0.78rem;
       padding: 0.2rem 0.5rem;
-      margin-right: 0;
-      margin-left: 0;
+      margin: 0;
       width: 100%;
       text-align: center;
     }
@@ -132,6 +156,39 @@ const 总数 = 初始总点数;
     .value .num {
       @include blood-text;
     }
+  }
+}
+
+// 掷骰按钮
+.roll-btn {
+  @include xianxia-btn;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  @include mobile { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+
+  .dice {
+    display: inline-block;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: transform 0.18s ease;
+  }
+  .roll-label { color: $paper-cold; }
+
+  &:not(:disabled):hover .dice {
+    transform: rotate(20deg) scale(1.15);
+  }
+  &:not(:disabled):active .dice {
+    transform: rotate(-30deg) scale(0.9);
+  }
+  &.locked {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
   }
 }
 

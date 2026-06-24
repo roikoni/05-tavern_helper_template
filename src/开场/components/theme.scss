@@ -44,11 +44,11 @@ $bg-card-hi:  #161318;   // 卡片悬浮
 $ink-line:    #1a181c;   // 墨线
 $ink-line-2:  #2a2630;   // 浅墨线
 
-$paper-cold:  #cfc8b8;   // 冷宣纸白（主文字）
-$paper:       #cfc8b8;   // 兼容别名
-$paper-soft:  #a8a293;   // 弱宣纸
-$paper-dim:   #a09888;   // 暗宣纸（提亮，原 #8a8378）
-$paper-faint: #7a7668;   // 极弱（提亮，原 #5a564e）
+$paper-cold:  #e8e2d4;   // 冷宣纸白（主文字，提亮以增对比）
+$paper:       #e8e2d4;   // 兼容别名
+$paper-soft:  #c4bca9;   // 弱宣纸（提亮）
+$paper-dim:   #b8af9a;   // 暗宣纸（提亮）
+$paper-faint: #9a9180;   // 极弱（提亮，保证最小可读对比）
 
 // 血色系（替代原烫金做高亮）
 $blood:        #6b1a1a;

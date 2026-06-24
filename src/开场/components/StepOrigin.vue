@@ -10,6 +10,26 @@
       </p>
     </label>
 
+    <!-- 自由模式：修为境界 -->
+    <template v-if="自由">
+      <h3>修为境界</h3>
+      <div class="grid grid-境界">
+        <button
+          v-for="b in 境界列表"
+          :key="b.名称"
+          :class="{ active: 境界 === b.名称 }"
+          @click="选境界(b.名称)"
+        >
+          <div class="title">{{ b.名称 }}</div>
+          <div class="desc">{{ b.档次 }} · 寿元 {{ b.寿元 }}</div>
+          <div class="cost" :class="{ free: b.消耗 === 0 }">
+            {{ b.消耗 === 0 ? '免费' : `+${b.消耗} 点` }}
+          </div>
+        </button>
+      </div>
+      <p class="hint">境界越高开局越强，消耗点数越多；选定后修为自动填满上限</p>
+    </template>
+
     <h3>修炼流派</h3>
     <div class="grid">
       <button v-for="s in 流派列表" :key="s.名称"
@@ -47,10 +67,15 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
+import { useDraftStore } from '../draft';
 import { 流派列表 } from '../catalog/流派';
 import { 灵根列表 } from '../catalog/灵根';
+import { 境界列表, 查境界 } from '../lib/点数';
+
+defineProps<{ 自由: boolean }>();
 
 const { data } = storeToRefs(useDataStore());
+const draft = useDraftStore();
 
 const 本源 = computed({
   get: () => data.value.主角.本源 === '待捏角' ? '' : data.value.主角.本源,
@@ -62,22 +87,32 @@ const 流派 = computed({
 });
 const 灵根 = computed({
   get: () => data.value.主角.灵根,
-  set: v => data.value.主角.灵根 = v,
+  set: v => { data.value.主角.灵根 = v; draft.标记花费(); },
 });
 const 称号 = computed({
   get: () => data.value.主角.称号 === '待捏角' ? '' : data.value.主角.称号,
   set: v => data.value.主角.称号 = v || '待捏角',
 });
+const 境界 = computed(() => data.value.主角.境界);
+
+function 选境界(名: string) {
+  data.value.主角.境界 = 名;
+  const 候选 = 查境界(名);
+  if (候选) {
+    data.value.主角.修为上限 = 候选.修为上限;
+    data.value.主角.修为 = 候选.修为上限;
+  }
+  draft.标记花费();
+}
 
 function 选流派(名: string) {
   const 旧流派 = 流派.value;
-  // 默认称号 = 流派名本身（如"剑修"、"克苏鲁修"）
   const 旧默认称号 = 旧流派 && 旧流派 !== '待捏角' ? 旧流派 : '待捏角';
   流派.value = 名;
-  // 如果当前称号是上一个流派的默认值或仍是"待捏角"，则自动更新；否则尊重玩家自定义
   if (data.value.主角.称号 === 旧默认称号 || data.value.主角.称号 === '待捏角') {
     data.value.主角.称号 = 名;
   }
+  draft.标记花费();
 }
 </script>
 
@@ -119,6 +154,10 @@ h3 {
   &.grid-灵根 {
     grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
     // 手机端灵根用 2 列
+    @include mobile { grid-template-columns: repeat(2, 1fr); }
+  }
+  &.grid-境界 {
+    grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
     @include mobile { grid-template-columns: repeat(2, 1fr); }
   }
 }

@@ -194,7 +194,13 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
     },
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     watchOptions: {
-      ignored: ['**/dist', '**/node_modules'],
+      ignored: [
+        '**/dist',
+        '**/node_modules',
+        '**/pagefile.sys',
+        '**/hiberfil.sys',
+        '**/swapfile.sys',
+      ],
     },
     entry: path.join(import.meta.dirname, entry.script),
     target: 'browserslist',

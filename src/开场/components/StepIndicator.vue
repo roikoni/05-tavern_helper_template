@@ -17,10 +17,18 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ modelValue: number }>();
+import { computed } from 'vue';
+import type { 捏角模式 } from '../draft';
+
+const props = defineProps<{ modelValue: number; 模式: 捏角模式 }>();
 const emit = defineEmits<{ 'update:modelValue': [n: number] }>();
 
-const 步骤标题 = ['江湖出身', '道途取向', '宗门归属', '行装功法', '资质分配', '总览确认'];
+const 普通标题 = ['江湖出身', '道途取向', '宗门归属', '行装功法', '资质分配', '总览确认'];
+const 自由标题 = ['江湖出身', '道途取向', '宗门归属', '行装功法', '资质分配', '人脉羁绊', '世界设定', '总览确认'];
+const 开挂标题 = ['江湖出身', '道途取向', '宗门归属', '行装功法', '资质分配', '人脉羁绊', '世界设定', '自定义外挂', '总览确认'];
+
+const 步骤标题 = computed(() => props.模式 === '开挂' ? 开挂标题 : props.模式 === '自由' ? 自由标题 : 普通标题);
+const 总步数 = computed(() => 步骤标题.value.length);
 </script>
 
 <style scoped lang="scss">
@@ -37,6 +45,12 @@ const 步骤标题 = ['江湖出身', '道途取向', '宗门归属', '行装功
       rgba(15,13,18,0.85) 100%);
   border-bottom: 1px solid rgba(207,200,184,0.15);
   position: relative;
+  // 步骤多时（开挂9步）窄屏允许横向滚动，避免挤爆或截断
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { height: 0; display: none; }
+  scrollbar-width: none;
 
   // 手机端：压缩内边距
   @include mobile {

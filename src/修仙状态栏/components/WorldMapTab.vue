@@ -80,7 +80,7 @@
         <g :transform="viewTransform">
           <image :href="mapBaseImg" :width="imgWidth" :height="imgHeight" class="map-base-image" />
 
-          <!-- ========== 区域中心标记（立体倒三角） ========== -->
+          <!-- ========== 区域中心标记（立体圆点） ========== -->
           <g v-for="poly in displayRegions" :key="'reg'+poly.name"
             class="region-marker"
             :class="{ selected: selectedRegion === poly.name }"
@@ -90,33 +90,18 @@
             <!-- 透明点击区 -->
             <circle r="42" fill="none" stroke="transparent" />
 
-            <!-- 立体倒三角标记 —— 仿 location-dot 风格，尖端朝下 -->
+            <!-- 立体圆点标记 -->
             <g class="region-triangle" filter="url(#region-tri-shadow)">
-              <!-- 三角主体：宽 26、高 30，尖端圆润 -->
-              <path
-                d="M -13,-20 L 13,-20 Q 14,-20 14,-19 L 1.5,8 Q 0,12 -1.5,8 L -14,-19 Q -14,-20 -13,-20 Z"
-                fill="url(#region-tri-grad)"
-                :stroke="poly.color"
-                stroke-width="1.8"
-                stroke-linejoin="round"
-              />
-              <!-- 顶部高光带（模拟球体高光） -->
-              <path
-                d="M -11,-19 L 11,-19 Q 12,-19 12,-18 L 11,-14 Q 0,-16 -11,-14 L -12,-18 Q -12,-19 -11,-19 Z"
-                fill="url(#region-tri-highlight)"
-                opacity="0.6"
-              />
-              <!-- 内嵌圆盘（仿 location-dot 中心圆孔） -->
-              <circle cx="0" cy="-10" r="6.5" :fill="poly.color" opacity="0.85" />
-              <circle cx="0" cy="-10" r="6.5" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="0.6" />
-              <!-- 圆盘内小圆（镂空感） -->
-              <circle cx="0" cy="-10" r="3.2" fill="#0a0a0a" />
-              <circle cx="0" cy="-10" r="3.2" fill="none" :stroke="poly.color" stroke-width="0.5" opacity="0.5" />
-              <!-- 圆盘顶部微光 -->
-              <ellipse cx="-1.5" cy="-12.5" rx="3" ry="1.8" fill="rgba(255,255,255,0.2)" />
-              <!-- 左右棱面暗线（立体感） -->
-              <line x1="-13" y1="-18" x2="-3" y2="4" stroke="rgba(0,0,0,0.25)" stroke-width="0.5" />
-              <line x1="13" y1="-18" x2="3" y2="4" stroke="rgba(0,0,0,0.2)" stroke-width="0.4" />
+              <!-- 外圈描边圆 -->
+              <circle r="13" :fill="poly.color" opacity="0.9" />
+              <circle r="13" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="1.2" />
+              <!-- 深色内圈（凹陷感） -->
+              <circle r="13" fill="url(#region-tri-grad)" opacity="0.35" />
+              <!-- 中心镂空圆孔 -->
+              <circle r="5.5" fill="#0a0a0a" />
+              <circle r="5.5" fill="none" :stroke="poly.color" stroke-width="0.7" opacity="0.7" />
+              <!-- 顶部球面高光 -->
+              <ellipse cx="-3.5" cy="-4.5" rx="5" ry="3.5" fill="rgba(255,255,255,0.35)" />
             </g>
 
             <!-- 区域名称标签 -->
@@ -189,31 +174,25 @@
             <text y="18" text-anchor="middle" class="marker-label" fill="#cfc8b8" opacity="0.8" font-size="8" font-family="var(--font-ui)" letter-spacing="0.15em">{{ name }}</text>
           </g>
 
-          <!-- ========== 当前所在地（立体朱砂 PIN） ========== -->
+          <!-- ========== 当前所在地（朱砂圆点） ========== -->
           <template v-if="currentLocationSvg">
             <g :transform="`translate(${currentLocationSvg.x}, ${currentLocationSvg.y})`" class="current-pin">
               <!-- 脉动光环 -->
-              <circle r="14" fill="none" stroke="#a83333" stroke-width="2" class="pulse-ring" />
-              <circle r="14" fill="none" stroke="#a83333" stroke-width="1.2" class="pulse-ring-2" />
+              <circle r="9" fill="none" stroke="#a83333" stroke-width="1.8" class="pulse-ring" />
+              <circle r="9" fill="none" stroke="#a83333" stroke-width="1.1" class="pulse-ring-2" />
               <!-- 地面阴影 -->
-              <ellipse cx="0" cy="4" rx="8" ry="2" fill="rgba(0,0,0,0.65)" />
-              <!-- PIN 主体（更大的水滴形） -->
+              <ellipse cx="0" cy="2.5" rx="5.5" ry="1.6" fill="rgba(0,0,0,0.55)" />
+              <!-- 圆点主体 -->
               <g filter="url(#pin-shadow)">
-                <path
-                  d="M 0,6 C -10,-4 -10,-16 0,-22 C 10,-16 10,-4 0,6 Z"
-                  fill="url(#pin-stamp)"
-                  stroke="rgba(0,0,0,0.6)"
-                  stroke-width="1"
-                />
-                <!-- 顶部高光 -->
-                <ellipse cx="-3" cy="-16" rx="4.5" ry="2.8" fill="url(#pin-highlight)" opacity="0.9" />
-                <!-- 中心人形小图标 -->
-                <circle cx="0" cy="-14" r="6" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.18)" stroke-width="0.5" />
-                <circle cx="0" cy="-16.5" r="2" fill="#fff" opacity="0.9" />
-                <path d="M -3.5,-9 Q 0,-14 3.5,-9 Z" fill="#fff" opacity="0.9" />
+                <!-- 朱砂外圈 -->
+                <circle r="7" fill="url(#pin-stamp)" stroke="rgba(0,0,0,0.6)" stroke-width="0.8" />
+                <!-- 顶部球面高光 -->
+                <ellipse cx="-2" cy="-2.5" rx="3" ry="2" fill="url(#pin-highlight)" opacity="0.9" />
+                <!-- 中心白色人形点 -->
+                <circle r="2.4" fill="#fff" opacity="0.95" />
               </g>
             </g>
-            <text :x="currentLocationSvg.x" :y="currentLocationSvg.y+22" text-anchor="middle" fill="#d44848" opacity="0.95" font-size="10" font-family="var(--font-ui)" font-weight="bold" letter-spacing="0.18em" class="current-pin-label"
+            <text :x="currentLocationSvg.x" :y="currentLocationSvg.y+18" text-anchor="middle" fill="#d44848" opacity="0.95" font-size="10" font-family="var(--font-ui)" font-weight="bold" letter-spacing="0.18em" class="current-pin-label"
               paint-order="stroke" stroke="rgba(0,0,0,0.85)" stroke-width="3"
             >{{ store.data.主角.名称 || '主角' }}</text>
           </template>
@@ -243,7 +222,7 @@
           <text x="74" y="13" text-anchor="middle" fill="#cfc8b8" font-size="7" font-family="var(--font-ui)" letter-spacing="0.2em">图 例</text>
           <line x1="10" y1="17" x2="138" y2="17" stroke="#262626" stroke-width="0.5" />
           <g font-size="5.5" font-family="var(--font-ui)" fill="#888">
-            <polygon points="18,22 13,30 23,30" fill="#111" stroke="#cfc8b8" stroke-width="0.8" stroke-linejoin="round" /><circle cx="18" cy="24" r="2.2" fill="#cfc8b8" opacity="0.6" /><text x="25" y="30">区域标记</text>
+            <circle cx="18" cy="28" r="5" fill="#111" stroke="#cfc8b8" stroke-width="0.8" /><circle cx="18" cy="28" r="2.2" fill="#cfc8b8" opacity="0.6" /><text x="25" y="30">区域标记</text>
             <circle cx="18" cy="40" r="3" fill="#c9a94e" opacity="0.8" /><text x="25" y="43">宗门势力</text>
             <rect x="13" y="47" width="6" height="6" rx="1" fill="#c9a94e" opacity="0.8" /><text x="25" y="55">城镇据点</text>
             <polygon points="18,62 15,68 21,68" fill="#c9a94e" opacity="0.8" /><text x="25" y="68">远古遗迹</text>
@@ -347,8 +326,13 @@ onMounted(async () => {
     '北海渔港及渔村':'北海沿岸自治社区，没有法律没有税收。渔民自行推举长者裁决纠纷',
     '克茜拉的废弃渔村':'渔港以北约百里。古神克茜拉潜伏于此，村民已被深度污染',
     '玄冰宫':'唯一北冥大宗，正道七宗之一。修炼冰系功法，与世隔绝神秘低调',
+    '太虚剑宗':'正道七宗之首，天下剑修祖庭。山门在中州河朔州苍云峰，以"太虚剑诀"名震修仙界。现任宗主为渡劫后期剑尊',
+    '天机阁':'正道七宗之一，精研阵法与推演之术，号称"算尽天机"。阁址在天京城灵城区中枢，是七宗中唯一把山门设在凡人皇都内的',
+    '万法门':'正道七宗之一，法术研究圣地，藏有最多品类的功法秘籍。山门在临江州万法山，主张"万法归宗"，兼容并蓄',
+    '碧落宫':'正道七宗之一，以医道入世，悬壶济世。山门在云岫州药王谷，掌握最顶尖的疗伤续命之术',
+    '镇岳宗':'正道七宗之一，体修正统，以肉身对抗天地。门人数量最少但个个战力惊人。山门在东平州铁岳',
     '北方边境关口':'大虞北方边境，当地郡守世代与玄冰宫通婚。大虞对北冥的实际控制止于此',
-    '天宗城':'中州大城，大虞治下修仙者与凡人共居的州级治所',
+    '天京城':'大虞都城，大陆最大城市，人口逾百万。城中分凡城区与灵城区，灵城区内设万象坊，为五域商路总枢纽',
     '青木城':'东荒七诸侯国中最大者，散修猎妖者的主要集散地。以猎妖和灵草贸易为生',
     '东平州':'中州东部州郡，东接诸侯七国区，是通往东荒的商路起点',
     '临江州':'中州南部州郡，临江而建，水运要道，连接中州与南岭的重要枢纽',
@@ -837,12 +821,12 @@ const detailDesc = computed(() => {
 
 /* ===== 脉动动画 ===== */
 @keyframes pulse-ring-anim {
-  0%, 100% { r: 14; opacity: 0.8; }
-  50% { r: 28; opacity: 0; }
+  0%, 100% { r: 9; opacity: 0.8; }
+  50% { r: 20; opacity: 0; }
 }
 @keyframes pulse-ring-anim-2 {
-  0%, 100% { r: 14; opacity: 0.6; }
-  50% { r: 24; opacity: 0; }
+  0%, 100% { r: 9; opacity: 0.6; }
+  50% { r: 16; opacity: 0; }
 }
 .pulse-ring  { animation: pulse-ring-anim 2.2s ease-out infinite; }
 .pulse-ring-2 { animation: pulse-ring-anim-2 2.2s ease-out 0.55s infinite; }
@@ -888,7 +872,7 @@ const detailDesc = computed(() => {
 
   .region-triangle {
     transition: transform 0.25s cubic-bezier(.22,.61,.36,1), filter 0.25s;
-    transform-origin: 0 0;
+    transform-origin: center center;
     transform-box: fill-box;
   }
 

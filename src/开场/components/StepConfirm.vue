@@ -9,8 +9,17 @@
       <div class="cell">
         <span>性别</span><b>{{ 主角.性别 }}</b>
       </div>
+      <div v-if="自由" class="cell">
+        <span>种族</span><b>{{ 主角.种族 || '人族' }}</b>
+      </div>
+      <div v-if="自由 && 开局身份" class="cell wide">
+        <span>开局身份</span><b>{{ 开局身份 }}</b>
+      </div>
       <div class="cell">
         <span>称号</span><b>{{ 主角.称号 }}</b>
+      </div>
+      <div v-if="自由" class="cell">
+        <span>境界</span><b>{{ 主角.境界 }}（修为 {{ 主角.修为 }}/{{ 主角.修为上限 }}）</b>
       </div>
       <div class="cell">
         <span>出身地</span><b>{{ 主角.出身地 }}</b>
@@ -29,6 +38,9 @@
       </div>
       <div class="cell">
         <span>灵石</span><b>{{ 主角.灵石 }} 枚</b>
+      </div>
+      <div v-if="自由" class="cell">
+        <span>善恶 / san</span><b>{{ 主角.善恶值 }} / {{ 主角.san值 }}</b>
       </div>
       <div class="cell wide">
         <span>人物设定</span><b>{{ 主角.外貌 || '（未填）' }}</b>
@@ -49,6 +61,22 @@
     </ul>
     <p v-else class="hint">（未选择功法）</p>
 
+    <template v-if="自由">
+      <h3>人脉羁绊</h3>
+      <ul v-if="人脉列表.length">
+        <li v-for="(r, i) in 人脉列表" :key="i">
+          {{ r.名 }}：{{ r.关系 }}<template v-if="r.好感 !== null">（好感 {{ r.好感 }}）</template>
+        </li>
+      </ul>
+      <p v-else class="hint">（未设置人物关系）</p>
+
+      <h3>世界</h3>
+      <p>{{ 主角_世界.当前年号 }} · {{ 主角_世界.当前时间 }}</p>
+
+      <h3 v-if="开挂">自定义外挂</h3>
+      <p v-if="开挂" class="cheat-text">{{ 自定义能力 || '（未填）' }}</p>
+    </template>
+
     <div v-if="校验.错误.length" class="errors">
       <p v-for="(e, i) in 校验.错误" :key="i">⚠ {{ e }}</p>
     </div>
@@ -64,16 +92,29 @@ import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
-import { 校验玩家选择 } from '../lib/点数';
+import { 校验玩家选择, 普通六维上限, 自由六维上限 } from '../lib/点数';
 import { buildOpeningPrompt } from '../lib/prompt';
 
+const props = defineProps<{ 自由: boolean; 开挂?: boolean }>();
 const { data } = storeToRefs(useDataStore());
-const { 已选功法 } = storeToRefs(useDraftStore());
+const draft = useDraftStore();
+const { 已选功法, 点数池, 开局身份, 自定义能力 } = storeToRefs(draft);
 const 生成中 = ref(false);
 const 六维键 = ['力道', '体魄', '身法', '灵力', '神识', '根骨'] as const;
 
 const 主角 = computed(() => data.value.主角);
 const 已学功法 = computed(() => 已选功法.value);
+const 主角_世界 = computed(() => data.value.世界);
+
+const 人脉列表 = computed(() => {
+  const out: { 名: string; 关系: string; 好感: number | null }[] = [];
+  const 人物 = data.value.重要人物 ?? {};
+  for (const [名, v] of Object.entries(人物)) {
+    if (!v) continue;
+    out.push({ 名, 关系: v.关系 ?? '陌路人', 好感: v.好感度 ?? null });
+  }
+  return out;
+});
 
 const 校验 = computed(() => {
   const 主 = data.value.主角;
@@ -85,6 +126,7 @@ const 校验 = computed(() => {
       流派: 主.修炼流派,
       灵根: 主.灵根,
       宗门: 主.宗门,
+      境界: 主.境界,
       已购武器: 装备武器,
       已购法器: 装备法器,
       已选功法: 已学功法.value,
@@ -93,6 +135,8 @@ const 校验 = computed(() => {
     },
     主.名称,
     主.出身地,
+    props.自由 ? 自由六维上限 : 普通六维上限,
+    props.开挂 ? Infinity : 点数池.value,
   );
 });
 
@@ -109,7 +153,7 @@ async function onConfirm() {
 
     // 3. 把开场 prompt 作为一条可见的 user 消息追加到聊天末尾（和玩家手动发送等效）
     //    玩家选定的初始功法通过 prompt 嵌入，由 AI 用 <UpdateVariable> insert 到 /初始功法/
-    const 开场白 = buildOpeningPrompt(data.value as any, 已选功法.value);
+    const 开场白 = buildOpeningPrompt(data.value as any, 已选功法.value, props.自由, 开局身份.value, props.开挂 ? 自定义能力.value : '');
     await createChatMessages([{ role: 'user', message: 开场白 }]);
 
     // 4. 触发 AI 生成开场剧情
@@ -292,6 +336,15 @@ p {
   @include mobile {
     font-size: 0.92rem;
   }
+}
+.cheat-text {
+  white-space: pre-wrap;
+  color: $blood-glow;
+  font-style: italic;
+  padding: 0.6rem 0.8rem;
+  background: rgba(80,15,15,0.18);
+  border-left: 3px solid $blood-mid;
+  border-radius: 0 $r-sm $r-sm 0;
 }
 .hint {
   color: $paper-faint;

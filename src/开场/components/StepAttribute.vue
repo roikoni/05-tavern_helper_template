@@ -1,7 +1,11 @@
 <template>
   <section class="step">
     <h2>资质分配</h2>
-    <p class="hint">每 3 点属性消耗 1 开局点；减点回收点数。单项范围 0-30，基线 10。</p>
+    <p class="hint">
+      每 3 点属性消耗 1 开局点；减点回收点数。
+      单项范围 0-{{ 上限 }}，基线 10。
+      <span v-if="自由">自由模式下六维上限解锁至 100。</span>
+    </p>
 
     <div v-for="key in 六维键" :key="key" class="row">
       <span class="name">{{ key }}</span>
@@ -9,12 +13,36 @@
         <button @click="调整(key, -3)" :disabled="data.主角.六维[key] - 3 < 0">-3</button>
         <button @click="调整(key, -1)" :disabled="data.主角.六维[key] - 1 < 0">-1</button>
         <span class="value">{{ data.主角.六维[key] }}</span>
-        <button @click="调整(key, +1)" :disabled="data.主角.六维[key] + 1 > 30">+1</button>
-        <button @click="调整(key, +3)" :disabled="data.主角.六维[key] + 3 > 30">+3</button>
+        <button @click="调整(key, +1)" :disabled="data.主角.六维[key] + 1 > 上限">+1</button>
+        <button @click="调整(key, +3)" :disabled="data.主角.六维[key] + 3 > 上限">+3</button>
       </div>
     </div>
 
     <p class="summary">净变化合计：{{ 净变化 }} 属性点 ≈ 消耗 {{ 等价点数 }} 开局点</p>
+
+    <!-- 自由模式：善恶 / san -->
+    <template v-if="自由">
+      <h3 class="sub">心性</h3>
+      <div class="slider-row">
+        <span class="name">善恶值</span>
+        <div class="slider-ctrl">
+          <span class="range-label">邪</span>
+          <input type="range" min="-100" max="100" step="1" v-model.number="善恶值" class="slider" />
+          <span class="range-label">善</span>
+          <span class="value small">{{ 善恶值 }}</span>
+        </div>
+      </div>
+      <div class="slider-row">
+        <span class="name">san 值</span>
+        <div class="slider-ctrl">
+          <span class="range-label">狂</span>
+          <input type="range" min="0" max="100" step="1" v-model.number="san值" class="slider" />
+          <span class="range-label">稳</span>
+          <span class="value small">{{ san值 }}</span>
+        </div>
+      </div>
+      <p class="hint">克苏鲁修玩家可调低 san 开局，拥抱疯狂</p>
+    </template>
   </section>
 </template>
 
@@ -22,21 +50,37 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
-import { 默认六维基线, 计算属性点数 } from '../lib/点数';
+import { useDraftStore } from '../draft';
+import { 默认六维基线, 计算属性点数, 普通六维上限, 自由六维上限 } from '../lib/点数';
 
+const props = defineProps<{ 自由: boolean }>();
 const { data } = storeToRefs(useDataStore());
+const draft = useDraftStore();
 const 六维键 = ['力道','体魄','身法','灵力','神识','根骨'] as const;
+
+const 上限 = computed(() => props.自由 ? 自由六维上限 : 普通六维上限);
 
 function 调整(key: typeof 六维键[number], 增量: number) {
   const 新值 = data.value.主角.六维[key] + 增量;
-  if (新值 < 0 || 新值 > 30) return;
+  if (新值 < 0 || 新值 > 上限.value) return;
   data.value.主角.六维[key] = 新值;
+  // 净加点超出基线才算消耗；减点不消耗（只回收）
+  if (新值 > 默认六维基线) draft.标记花费();
 }
 
 const 净变化 = computed(() =>
   Object.values(data.value.主角.六维).reduce((acc, v) => acc + (v - 默认六维基线), 0)
 );
 const 等价点数 = computed(() => 计算属性点数(data.value.主角.六维 as any));
+
+const 善恶值 = computed({
+  get: () => data.value.主角.善恶值,
+  set: v => { data.value.主角.善恶值 = Number(v) || 0; },
+});
+const san值 = computed({
+  get: () => data.value.主角.san值,
+  set: v => { data.value.主角.san值 = Number(v) || 0; },
+});
 </script>
 
 <style scoped lang="scss">
@@ -57,6 +101,15 @@ const 等价点数 = computed(() => 计算属性点数(data.value.主角.六维 
 
 h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.2rem;
   @include mobile { font-size: 1.3rem; }
+}
+.sub {
+  font-family: $font-serif;
+  margin: 1.8rem 0 1rem;
+  color: $paper-cold;
+  letter-spacing: 0.15em;
+  font-size: 1.2rem;
+  @include mobile { font-size: 1rem; margin: 1.2rem 0 0.7rem; }
+  &::before { content: "▸ "; color: $blood-glow; opacity: 0.7; }
 }
 .hint {
   font-size: 0.95rem;
@@ -106,6 +159,72 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.2rem;
       padding: 0 0.5rem;
       text-shadow: 0 0 8px rgba(168,51,51,0.4);
       @include mobile { font-size: 1.2rem; min-width: 2.2rem; padding: 0 0.25rem; }
+      &.small { font-size: 1.1rem; min-width: 2.5rem; color: $paper-cold; text-shadow: none; }
+    }
+  }
+}
+
+// 滑块行
+.slider-row {
+  @include xianxia-card;
+  display: flex; align-items: center;
+  padding: 0.8rem 1.1rem;
+  margin: 0.55rem 0;
+  gap: 0.8rem;
+  @include mobile { padding: 0.55rem 0.6rem; gap: 0.4rem; flex-wrap: wrap; }
+
+  .name {
+    font-family: $font-serif;
+    font-size: 1.1rem;
+    min-width: 4.5rem;
+    color: $paper-cold;
+    letter-spacing: 0.15em;
+    @include mobile { font-size: 0.95rem; min-width: 3rem; }
+  }
+  .slider-ctrl {
+    display: flex; align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    @include mobile { width: 100%; gap: 0.35rem; }
+
+    .range-label {
+      font-size: 0.85rem;
+      color: $paper-dim;
+      letter-spacing: 0.1em;
+      @include mobile { font-size: 0.75rem; }
+    }
+    .slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: linear-gradient(90deg, $blood 0%, $bg-soft 50%, $jade 100%);
+      border-radius: $r-pill;
+      outline: none;
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 1.1rem; height: 1.1rem;
+        border-radius: 50%;
+        background: $blood-glow;
+        border: 1px solid $blood-bright;
+        box-shadow: 0 0 8px rgba(168,51,51,0.5);
+        cursor: pointer;
+      }
+      &::-moz-range-thumb {
+        width: 1.1rem; height: 1.1rem;
+        border-radius: 50%;
+        background: $blood-glow;
+        border: 1px solid $blood-bright;
+        cursor: pointer;
+      }
+    }
+    .value {
+      min-width: 2.5rem;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: $paper-cold;
+      font-family: $font-serif;
     }
   }
 }

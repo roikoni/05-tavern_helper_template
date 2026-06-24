@@ -131,12 +131,8 @@ import CharacterDetailModal from './CharacterDetailModal.vue';
 
 const store = useDataStore();
 
-const presentChars = computed(() =>
-  _.pickBy(store.data.缘契角色, (c: any) => c.在场)
-);
-const bondChars = computed(() =>
-  _.pickBy(store.data.缘契角色, (c: any) => c.羁绊)
-);
+const presentChars = computed(() => store.data.在场 || {});
+const bondChars = computed(() => store.data.羁绊 || {});
 
 function pct(val: number, max: number): number {
   return Math.min((val / Math.max(max || 1, 1)) * 100, 100);

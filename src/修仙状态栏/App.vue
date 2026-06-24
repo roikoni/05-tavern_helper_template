@@ -34,7 +34,6 @@
         </div>
         <div v-else-if="mainTab === 'worldmap'" class="header-map-title">世界版图</div>
         <div v-else-if="mainTab === 'mijing'" class="header-map-title">秘境</div>
-        <div v-else class="header-map-title">大事记</div>
       </header>
 
       <!-- 时间地点信息栏 -->
@@ -86,8 +85,6 @@
           <WorldMapTab v-else-if="mainTab === 'worldmap'" key="worldmap" />
           <!-- 秘境 -->
           <MijingTab v-else-if="mainTab === 'mijing'" key="mijing" />
-          <!-- 大事记 -->
-          <ChroniclesTab v-else key="chronicles" />
         </Transition>
       </div>
 
@@ -100,14 +97,6 @@
         >
           <i class="fa-solid fa-user nav-btn-icon"></i>
           <span>基本信息</span>
-        </button>
-        <button
-          class="nav-btn"
-          :class="{ active: mainTab === 'chronicles' }"
-          @click="mainTab = 'chronicles'"
-        >
-          <i class="fa-solid fa-book-journal-whills nav-btn-icon"></i>
-          <span>大事记</span>
         </button>
         <button
           class="nav-btn"
@@ -137,7 +126,6 @@ import { useLocalStorage } from '@vueuse/core';
 import { computed, watch } from 'vue';
 import { useDataStore } from './store';
 import AishiTab from './components/AishiTab.vue';
-import ChroniclesTab from './components/ChroniclesTab.vue';
 import DeitiesTab from './components/DeitiesTab.vue';
 import ShenqiTab from './components/ShenqiTab.vue';
 import ProtagonistTab from './components/ProtagonistTab.vue';
@@ -178,6 +166,11 @@ watch(inMijing, (now, before) => {
     mainTab.value = 'mijing';
   }
 });
+
+// 大事记页已移除，兼容旧 localStorage 残留
+if (mainTab.value === 'chronicles') {
+  mainTab.value = 'basic';
+}
 </script>
 
 <style lang="scss" scoped>
@@ -648,7 +641,7 @@ $ease-bounce:   cubic-bezier(.16,.84,.36,1.05);
 /* ===== 底部导航栏 ===== */
 .bottom-nav {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   height: 74px;
   background:
     linear-gradient(to top,

@@ -96,6 +96,7 @@ export const Schema = z.object({
         )
         .prefault({}),
       性别: z.string().prefault(''),
+      种族: z.string().prefault('人族'),
       外貌: z.string().prefault(''),
       出身地: z.string().prefault(''),
       宗门: z.string().prefault(''),
@@ -143,18 +144,6 @@ export const Schema = z.object({
             .prefault({}),
         )
         .prefault({}),
-      大事记: z
-        .array(
-          z
-            .object({
-              时间: z.string().prefault(''),
-              事件: z.string().prefault(''),
-              描述: z.string().prefault(''),
-              影响: z.string().prefault(''),
-            })
-            .prefault({}),
-        )
-        .prefault([]),
     })
     .prefault({}),
 
@@ -180,12 +169,10 @@ export const Schema = z.object({
       .prefault({}),
   ),
 
-  缘契角色: z.record(
+  在场: z.record(
     z.string().describe('角色名'),
     z
       .object({
-        在场: z.boolean().prefault(false),
-        羁绊: z.boolean().prefault(false),
         气血: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
         气血上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
         法力值: z.preprocess(v => (v === null || v === undefined ? 80 : Number(v)), z.number()).prefault(80),
@@ -226,7 +213,53 @@ export const Schema = z.object({
           .prefault({}),
       })
       .prefault({}),
-  ),
+  ).prefault({}),
+
+  羁绊: z.record(
+    z.string().describe('角色名'),
+    z
+      .object({
+        气血: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
+        气血上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
+        法力值: z.preprocess(v => (v === null || v === undefined ? 80 : Number(v)), z.number()).prefault(80),
+        法力上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
+        善恶值: z
+          .preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number())
+          .transform(v => _.clamp(v, -100, 100))
+          .prefault(0),
+        san值: z
+          .preprocess(v => (v === null || v === undefined ? 80 : Number(v)), z.number())
+          .transform(v => _.clamp(v, 0, 100))
+          .prefault(80),
+        好感度: z
+          .preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number())
+          .transform(v => _.clamp(v, -100, 100))
+          .prefault(0),
+        洗脑值: z
+          .preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number())
+          .transform(v => _.clamp(v, 0, 100))
+          .prefault(0),
+        内心想法: z.string().prefault(''),
+        境界: z.string().prefault('凡人'),
+        种族: z.string().prefault('人族'),
+        性别: z.string().prefault('未知'),
+        势力: z.string().prefault('散修'),
+        描述: z.string().prefault(''),
+        外貌: z.string().prefault(''),
+        关系: z.string().prefault('陌路人'),
+        六维: z
+          .object({
+            力道: z.preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number()).prefault(0),
+            体魄: z.preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number()).prefault(0),
+            身法: z.preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number()).prefault(0),
+            灵力: z.preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number()).prefault(0),
+            神识: z.preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number()).prefault(0),
+            根骨: z.preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number()).prefault(0),
+          })
+          .prefault({}),
+      })
+      .prefault({}),
+  ).prefault({}),
 
   重要人物: z.record(
     z.string().describe('人物名'),
@@ -340,31 +373,6 @@ export const Schema = z.object({
       })
       .prefault({}),
   ),
-
-  势力声望: z
-    .record(
-      z.string().describe('势力名'),
-      z
-        .preprocess(val => (val === null || val === undefined ? 0 : Number(val)), z.number())
-        .transform(v => _.clamp(v, -100, 100))
-        .prefault(0),
-    )
-    .prefault({}),
-
-  散修联盟: z
-    .object({
-      贡献值: z.coerce.number().prefault(0),
-      等级: z.string().prefault('散修'),
-    })
-    .prefault({}),
-
-  正魔态势: z
-    .object({
-      状态: z.enum(['和平', '摩擦', '冷战', '局部冲突', '全面战争']).prefault('冷战'),
-      态势值: z.coerce.number().prefault(50),
-      上次变更: z.string().prefault(''),
-    })
-    .prefault({}),
 
   当前秘境: z
     .object({
