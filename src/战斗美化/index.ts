@@ -36,22 +36,39 @@ function enhanceAll(): void {
   if (count > 0) console.info(`[战斗美化] 增强 ${count} 个战斗块`);
 }
 
+/** 楼层渲染完成后扫描：正则显示替换是异步的，轮询几次确保 data-combat 容器已生成 */
+function enhanceAfterRender(): void {
+  let tries = 0;
+  const tick = () => {
+    enhanceAll();
+    // 仍未增强的容器可能正则还没替换完，最多轮询 5 次（约 500ms）
+    if ($(`div[data-combat="1"]:not(.${ENHANCED_CLASS})`).length > 0 && tries++ < 5) {
+      setTimeout(tick, 100);
+    }
+  };
+  tick();
+}
+
 $(() => {
   errorCatched(() => {
     injectCss();
 
     // 初始扫描（已存在的消息）
-    enhanceAll();
+    enhanceAfterRender();
 
-    // 新消息到达后扫描
-    eventOn(tavern_events.MESSAGE_RECEIVED, () => {
-      // 延迟一帧，确保正则显示替换已完成
-      requestAnimationFrame(() => enhanceAll());
+    // AI 消息渲染完成后扫描（战斗 <combat> 块出现在 AI 回复中）
+    eventOn(tavern_events.CHARACTER_MESSAGE_RENDERED, () => {
+      enhanceAfterRender();
     });
 
-    // 重新生成消息后扫描
-    eventOn(tavern_events.GENERATION_AFTER_COMMANDS, () => {
-      requestAnimationFrame(() => enhanceAll());
+    // 用户消息渲染完成后扫描（以防战斗块出现在用户输入）
+    eventOn(tavern_events.USER_MESSAGE_RENDERED, () => {
+      enhanceAfterRender();
+    });
+
+    // 消息被编辑/更新后重新扫描
+    eventOn(tavern_events.MESSAGE_UPDATED, () => {
+      enhanceAfterRender();
     });
 
     console.info('[战斗美化脚本] 已加载');
