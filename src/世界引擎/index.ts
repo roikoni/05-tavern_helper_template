@@ -8,7 +8,7 @@ import 悬浮球样式 from './ui/floating-ball.scss?raw';
 import { 主题样式 } from './ui/theme';
 import App from './ui/App.vue';
 import { useWorldEngineStore } from './store';
-import { 推进世界 } from './推进';
+import { 推进世界, 通知 } from './推进';
 import { 生成摘要, 检查自动推进 } from './摘要';
 import { 注册世界书宏 } from './世界书宏';
 
@@ -201,20 +201,34 @@ function 打开弹窗() {
   }
   $弹窗iframe = $iframe;
   $mask.append($iframe);
+  // 先挂 load 监听再连入文档，避免 srcdoc 解析过快导致 load 在监听前触发（重开后白屏）
+  $iframe.on('load', on弹窗加载);
   $mask.appendTo('body');
+}
 
-  $iframe.on('load', () => {
-    const doc = $iframe[0].contentDocument!;
-    // 注入全局主题样式（非 scoped：:root 变量与字体在此生效）
-    $全局样式节点 = $('<style>').text(主题样式).appendTo(doc.head);
+function on弹窗加载() {
+  const $iframe = $弹窗iframe;
+  if (!$iframe) return; // 已被关闭
+  const doc = $iframe[0].contentDocument;
+  if (!doc || !doc.head || !doc.body) {
+    console.warn('[世界引擎] 弹窗 iframe 文档未就绪，跳过挂载');
+    return;
+  }
+  if (弹窗App) 弹窗App.unmount(); // 容错：避免重复挂载
+  try {
+    // 主题样式（:root 变量）优先注入，确保组件 var(--c-*) 有定义
+    $全局样式节点 = $('<style>').text(主题样式).prependTo(doc.head);
     // 将脚本 iframe 中已注入的组件样式复制到弹窗 iframe（style-loader 注入在脚本 document 中）
     document.head.querySelectorAll('style').forEach(s => {
-      $(doc.head).append(s.cloneNode(true));
+      doc.head.appendChild(s.cloneNode(true));
     });
     const app = createApp(App, { onClose: () => 关闭弹窗() }).use(createPinia());
     app.mount(doc.body);
     弹窗App = app;
-  });
+  } catch (e) {
+    console.error('[世界引擎] 弹窗挂载失败', e);
+    通知('世界引擎面板加载失败，请重试', 'error');
+  }
 }
 
 function 关闭弹窗() {
@@ -253,7 +267,7 @@ $(() => {
       const engine = store.data;
       await 生成摘要(engine);
       if (await 检查自动推进(engine)) {
-        await 推进世界();
+        await 推进世界(true);
       }
     } catch (e) {
       console.error('[世界引擎] 消息事件处理失败', e);

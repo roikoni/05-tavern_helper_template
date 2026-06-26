@@ -254,6 +254,7 @@ $blood-glow: #a83333;
   100% { transform: translate(110%, 40%); opacity: 0; }
 }
 
+
 // 顶部 / 角落水墨飞溅
 .splatter.top {
   position: absolute;

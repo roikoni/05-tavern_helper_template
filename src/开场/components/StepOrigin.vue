@@ -72,7 +72,7 @@ import { 流派列表 } from '../catalog/流派';
 import { 灵根列表 } from '../catalog/灵根';
 import { 境界列表, 查境界 } from '../lib/点数';
 
-defineProps<{ 自由: boolean }>();
+const props = defineProps<{ 自由: boolean }>();
 
 const { data } = storeToRefs(useDataStore());
 const draft = useDraftStore();
@@ -101,6 +101,14 @@ function 选境界(名: string) {
   if (候选) {
     data.value.主角.修为上限 = 候选.修为上限;
     data.value.主角.修为 = 候选.修为上限;
+    // 自由/开挂模式：境界选定后，六维下限抬升到该境界的最低标准
+    // 已高于下限的属性不动（保留玩家加点），低于下限的自动补齐
+    if (props.自由) {
+      const 六维 = data.value.主角.六维 as Record<string, number>;
+      for (const k of Object.keys(六维)) {
+        if (六维[k] < 候选.六维下限) 六维[k] = 候选.六维下限;
+      }
+    }
   }
   draft.标记花费();
 }

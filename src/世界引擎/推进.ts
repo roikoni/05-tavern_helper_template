@@ -5,10 +5,21 @@
 
 import type { 世界引擎, 世界状态 } from './schema';
 import type { CustomApi } from './schema';
+import { ref } from 'vue';
 import { 生成世界氛围 } from './氛围';
 
-// 推进进行中锁，防重复触发
-let 推进中 = false;
+// 推进进行中状态：模块级共享 ref，跨弹窗开关存活。
+// 手动按钮直接绑定此 ref，关闭弹窗后后台推进仍能反映到重开后的按钮状态。
+export const 推进中 = ref(false);
+
+// toastr 在脚本后台 iframe 中不可见，统一走酒馆父窗口的 toastr，确保自动/手动推进的提示都能被用户看到。
+type ToastrType = 'info' | 'success' | 'warning' | 'error';
+export function 通知(msg: string, type: ToastrType = 'info') {
+  try {
+    const t = (window.parent as any)?.toastr ?? (window as any).toastr;
+    if (t && typeof t[type] === 'function') t[type](msg);
+  } catch { /* 跨域或 toastr 不可用时静默 */ }
+}
 
 function 系统提示词(): string {
   return `你是一个修仙世界的「世界引擎」。你的职责是独立推演世界局势演变，不围绕主角推进。
@@ -147,13 +158,14 @@ function 应用指令(状态: 世界状态, 指令: { op: string; path: string; 
 }
 
 // 推进世界：手动按钮 / 自动触发共用入口。返回叙述文本供 UI 展示。
-export async function 推进世界(): Promise<{ 叙述: string; 成功: number; 跳过: number } | null> {
-  if (推进中) {
-    toastr.warning('世界正在推进中，请稍候');
+// auto=true 表示自动推进触发（无弹窗可用），会用 toastr 把叙述一并提示给用户。
+export async function 推进世界(auto = false): Promise<{ 叙述: string; 成功: number; 跳过: number } | null> {
+  if (推进中.value) {
+    通知('世界正在推进中，请稍候', 'warning');
     return null;
   }
-  推进中 = true;
-  toastr.info('世界引擎推演中…');
+  推进中.value = true;
+  通知(auto ? '世界引擎自动推演中…' : '世界引擎推演中…', 'info');
 
   try {
     const variables = getVariables({ type: 'chat' });
@@ -189,13 +201,18 @@ export async function 推进世界(): Promise<{ 叙述: string; 成功: number; 
     replaceVariables(variables, { type: 'chat' });
 
     console.info(`[世界引擎] 推进完成：${成功} 条指令生效，${跳过} 条跳过`);
-    toastr.success('世界已推演演进');
+    if (auto) {
+      // 自动推进无弹窗，把叙述作为系统提示直接展示给用户
+      通知(叙述 ? `世界已自动推演演进：\n${叙述}` : '世界已自动推演演进', 'success');
+    } else {
+      通知('世界已推演演进', 'success');
+    }
     return { 叙述, 成功, 跳过 };
   } catch (e) {
     console.error('[世界引擎] 推进失败', e);
-    toastr.error('世界推演失败，世界状态未变更');
+    通知('世界推演失败，世界状态未变更', 'error');
     return null;
   } finally {
-    推进中 = false;
+    推进中.value = false;
   }
 }

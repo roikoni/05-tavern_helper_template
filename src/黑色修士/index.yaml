@@ -1412,7 +1412,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\世界氛围
+    内容: <world_atmosphere>{{世界氛围}}</world_atmosphere>
 
   - 名称: 势力_太虚剑宗
     启用: true
@@ -1429,7 +1429,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_太虚剑宗
+    内容: "{{势力:太虚剑宗}}"
 
   - 名称: 势力_天机阁
     启用: true
@@ -1446,7 +1446,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_天机阁
+    内容: "{{势力:天机阁}}"
 
   - 名称: 势力_丹霞宗
     启用: true
@@ -1463,7 +1463,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_丹霞宗
+    内容: "{{势力:丹霞宗}}"
 
   - 名称: 势力_万法门
     启用: true
@@ -1480,7 +1480,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_万法门
+    内容: "{{势力:万法门}}"
 
   - 名称: 势力_碧落宫
     启用: true
@@ -1497,7 +1497,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_碧落宫
+    内容: "{{势力:碧落宫}}"
 
   - 名称: 势力_镇岳宗
     启用: true
@@ -1514,7 +1514,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_镇岳宗
+    内容: "{{势力:镇岳宗}}"
 
   - 名称: 势力_玄冰宫
     启用: true
@@ -1531,7 +1531,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_玄冰宫
+    内容: "{{势力:玄冰宫}}"
 
   - 名称: 势力_血煞宗
     启用: true
@@ -1548,7 +1548,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_血煞宗
+    内容: "{{势力:血煞宗}}"
 
   - 名称: 势力_幽魂谷
     启用: true
@@ -1565,7 +1565,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_幽魂谷
+    内容: "{{势力:幽魂谷}}"
 
   - 名称: 势力_万象魔宗
     启用: true
@@ -1582,7 +1582,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_万象魔宗
+    内容: "{{势力:万象魔宗}}"
 
   - 名称: 势力_合欢宗
     启用: true
@@ -1599,7 +1599,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_合欢宗
+    内容: "{{势力:合欢宗}}"
 
   - 名称: 势力_散修联盟
     启用: true
@@ -1616,7 +1616,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_散修联盟
+    内容: "{{势力:散修联盟}}"
 
   - 名称: 势力_大虞皇朝
     启用: true
@@ -1633,7 +1633,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_大虞皇朝
+    内容: "{{势力:大虞皇朝}}"
 
   - 名称: 势力_古神势力
     启用: true
@@ -1650,7 +1650,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\势力_古神势力
+    内容: "{{势力:古神势力}}"
 
   - 名称: 地区_天京城
     启用: true
@@ -1667,7 +1667,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\地区_天京城
+    内容: "{{地区:天京城}}"
 
   - 名称: 地区_天渊关口
     启用: true
@@ -1684,7 +1684,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\地区_天渊关口
+    内容: "{{地区:天渊关口}}"
 
   - 名称: 地区_万妖林
     启用: true
@@ -1701,7 +1701,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\地区_万妖林
+    内容: "{{地区:万妖林}}"
 
   - 名称: 地区_西漠
     启用: true
@@ -1718,7 +1718,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\地区_西漠
+    内容: "{{地区:西漠}}"
 
   - 名称: 地区_北冥
     启用: true
@@ -1735,7 +1735,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\地区_北冥
+    内容: "{{地区:北冥}}"
 
   - 名称: 地区_南岭
     启用: true
@@ -1752,7 +1752,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\地区_南岭
+    内容: "{{地区:南岭}}"
 
   - 名称: 人物_沈清辞
     启用: true
@@ -1769,7 +1769,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\人物_沈清辞
+    内容: "{{人物:沈清辞}}"
 
   - 名称: 人物_姜无忧
     启用: true
@@ -1786,7 +1786,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\人物_姜无忧
+    内容: "{{人物:姜无忧}}"
 
   - 名称: 人物_顾千卷
     启用: true
@@ -1803,7 +1803,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\人物_顾千卷
+    内容: "{{人物:顾千卷}}"
 
   - 名称: 人物_柳不移
     启用: true
@@ -1820,7 +1820,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\人物_柳不移
+    内容: "{{人物:柳不移}}"
 
   - 名称: 人物_萧太薇
     启用: true
@@ -1837,7 +1837,7 @@
     递归:
       不可被其他条目激活: true
       不可激活其他条目: true
-    文件: 世界书\人物_萧太薇
+    内容: "{{人物:萧太薇}}"
 
   - 名称: ===世界引擎结束===
     启用: false
@@ -1907,7 +1907,7 @@
     - 正则名称: "[美化]战斗结算"
       id: 5fbf4d2c-3a87-4b1f-9c46-7c4d1e8a2b39
       启用: true
-      查找表达式: /<combat>\s*<turn>([\s\S]*?)<\/turn>\s*(?:<school>\s*(剑修|法修|体修|丹修|阵修|符修|魂修|魔修|克苏鲁修|散修)\s*·\s*([\s\S]*?)<\/school>\s*)?<action>([\s\S]*?)<\/action>\s*(?:<response>([\s\S]*?)<\/response>\s*)?<roll>([\s\S]*?→\s*(命中|擦伤|落空|暴击|大失败)[\s\S]*?)<\/roll>\s*(?:<damage>([\s\S]*?)<\/damage>\s*)?<hp>([\s\S]*?)<\/hp>\s*<\/combat>/gs
+      查找表达式: /<combat>\s*<turn>([\s\S]*?)<\/turn>\s*(?:<school>\s*(剑修|法修|体修|丹修|阵修|符修|魂修|魔修|克苏鲁修|散修)\s*·\s*([\s\S]*?)<\/school>\s*)?<action>([\s\S]*?)<\/action>\s*(?:<response>([\s\S]*?)<\/response>\s*)?<roll>([\s\S]*?→\s*(命中|擦伤|落空|暴击|大失败)[\s\S]*?)<\/roll>\s*(?:<damage>([\s\S]*?)<\/damage>\s*)?<vitals>([\s\S]*?)<\/vitals>\s*<\/combat>/gs
       文件: 正则\[美化]战斗结算
       来源:
         用户输入: true
@@ -1966,17 +1966,6 @@
           按钮: true
         文件: 脚本\变量结构
 
-      - 名称: 动态局势系统
-        id: 948e5b68-8c79-4e8e-9ba2-69bb78cb8d08
-        启用: false
-        类型: 脚本
-        内容: |-
-          const r=z,e=r.z.object({主角:r.z.object({名称:r.z.string().prefault('未命名修士'),称号:r.z.string().prefault('散修'),境界:r.z.string().prefault('炼气期'),气血:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),气血上限:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),法力值:r.z.preprocess(r=>null==r?80:Number(r),r.z.number()).prefault(80),法力上限:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),善恶值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0),san值:r.z.preprocess(r=>null==r?80:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(80),状态:r.z.string().prefault('正常'),六维:r.z.object({力道:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),体魄:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),身法:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),灵力:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),神识:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),根骨:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10)}).prefault({}),灵悟值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),本源:r.z.string().prefault('剑'),灵根:r.z.string().prefault('金灵根'),灵石:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),神契装备:r.z.string().prefault(''),装备:r.z.record(r.z.enum(['武器','法器','头盔','衣袍','腰带','靴子','项链','戒指','护腕']),r.z.object({名称:r.z.string().prefault('空置'),品阶:r.z.string().prefault('凡品'),描述:r.z.string().prefault(''),属性:r.z.string().prefault('')}).prefault({})).prefault({}),背包:r.z.record(r.z.string().describe('物品名'),r.z.object({描述:r.z.string().prefault(''),数量:r.z.preprocess(r=>null==r?1:Number(r),r.z.number()).prefault(1),类型:r.z.enum(['丹药','材料','功法','杂物','灵石','武器','法器','头盔','衣袍','腰带','靴子','项链','戒指','护腕']).prefault('杂物')}).prefault({})).prefault({}),性别:r.z.string().prefault(''),外貌:r.z.string().prefault(''),出身地:r.z.string().prefault(''),宗门:r.z.string().prefault(''),修炼流派:r.z.string().prefault('')}).prefault({}),世界:r.z.object({当前年号:r.z.string().prefault('太初'),当前时间:r.z.string().prefault('混沌历元年'),当前地点:r.z.string().prefault('未知之地'),地图标记:r.z.record(r.z.string().describe('标记点名'),r.z.object({x:r.z.preprocess(r=>null==r?50:Number(r),r.z.number()).prefault(50),y:r.z.preprocess(r=>null==r?50:Number(r),r.z.number()).prefault(50),类型:r.z.string().prefault('地点'),颜色:r.z.string().prefault('#c9a94e'),描述:r.z.string().prefault('')}).prefault({})).prefault({}),地图区域:r.z.record(r.z.string().describe('区域名'),r.z.object({颜色:r.z.string().prefault('#c6a664'),描述:r.z.string().prefault(''),顶点:r.z.array(r.z.object({x:r.z.coerce.number().prefault(0),y:r.z.coerce.number().prefault(0)}).prefault({})).prefault([])}).prefault({})).prefault({}),大事记:r.z.array(r.z.object({时间:r.z.string().prefault(''),事件:r.z.string().prefault(''),描述:r.z.string().prefault(''),影响:r.z.string().prefault('')}).prefault({})).prefault([])}).prefault({}),古神列表:r.z.record(r.z.string().describe('古神名'),r.z.object({神格:r.z.string().prefault('未知'),领域:r.z.string().prefault('未知'),位阶:r.z.string().prefault('下位神'),状态:r.z.string().prefault('沉睡'),信仰:r.z.string().prefault(''),描述:r.z.string().prefault(''),神迹:r.z.string().prefault(''),收服:r.z.boolean().prefault(!1),沉沦值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(0),神契技能:r.z.string().prefault(''),神契描述:r.z.string().prefault('')}).prefault({})),在场:r.z.record(r.z.string().describe('角色名'),r.z.object({气血:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),气血上限:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),法力值:r.z.preprocess(r=>null==r?80:Number(r),r.z.number()).prefault(80),法力上限:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),善恶值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0),san值:r.z.preprocess(r=>null==r?80:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(80),好感度:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0),洗脑值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(0),内心想法:r.z.string().prefault(''),境界:r.z.string().prefault('凡人'),种族:r.z.string().prefault('人族'),性别:r.z.string().prefault('未知'),势力:r.z.string().prefault('散修'),描述:r.z.string().prefault(''),外貌:r.z.string().prefault(''),关系:r.z.string().prefault('陌路人'),六维:r.z.object({力道:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),体魄:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),身法:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),灵力:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),神识:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),根骨:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0)}).prefault({})}).prefault({})).prefault({}),羁绊:r.z.record(r.z.string().describe('角色名'),r.z.object({气血:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),气血上限:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),法力值:r.z.preprocess(r=>null==r?80:Number(r),r.z.number()).prefault(80),法力上限:r.z.preprocess(r=>null==r?100:Number(r),r.z.number()).prefault(100),善恶值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0),san值:r.z.preprocess(r=>null==r?80:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(80),好感度:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0),洗脑值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(0),内心想法:r.z.string().prefault(''),境界:r.z.string().prefault('凡人'),种族:r.z.string().prefault('人族'),性别:r.z.string().prefault('未知'),势力:r.z.string().prefault('散修'),描述:r.z.string().prefault(''),外貌:r.z.string().prefault(''),关系:r.z.string().prefault('陌路人'),六维:r.z.object({力道:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),体魄:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),身法:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),灵力:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),神识:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0),根骨:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).prefault(0)}).prefault({})}).prefault({})).prefault({}),重要人物:r.z.record(r.z.string().describe('人物名'),r.z.object({称号:r.z.string().prefault(''),境界:r.z.string().prefault('未知'),势力:r.z.string().prefault('散修'),好感度:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0),洗脑值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(0),描述:r.z.string().prefault(''),外貌:r.z.string().prefault(''),特征:r.z.string().prefault(''),关系:r.z.string().prefault('中立'),所在地:r.z.string().prefault('未知'),攻略:r.z.boolean().prefault(!1),_属性:r.z.object({力道:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),体魄:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),身法:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),灵力:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),神识:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10),根骨:r.z.preprocess(r=>null==r?10:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(10)}).prefault({})}).prefault({})),功法:r.z.record(r.z.string().describe('功法名'),r.z.object({类型:r.z.enum(['主动','被动']).prefault('被动'),层级:r.z.coerce.number().prefault(1),前置功法:r.z.string().prefault(''),效果:r.z.string().prefault(''),已学习:r.z.preprocess(r=>null!=r&&Boolean(r),r.z.boolean()).prefault(!1),消耗灵悟:r.z.coerce.number().prefault(10),描述:r.z.string().prefault('')}).prefault({})).prefault({}),爱室:r.z.record(r.z.string().describe('角色名'),r.z.object({描述:r.z.string().prefault(''),被击败时间:r.z.string().prefault(''),调教值:r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,0,100)).prefault(0),心理状态:r.z.string().prefault('未知'),性器状态:r.z.string().prefault('未知'),来源:r.z.enum(['古神','重要人物']).prefault('重要人物'),收入时间:r.z.string().prefault('')}).prefault({})),势力声望:r.z.record(r.z.string().describe('势力名'),r.z.preprocess(r=>null==r?0:Number(r),r.z.number()).transform(r=>_.clamp(r,-100,100)).prefault(0)).prefault({}),散修联盟:r.z.object({贡献值:r.z.coerce.number().prefault(0),等级:r.z.string().prefault('散修')}).prefault({}),正魔态势:r.z.object({状态:r.z.enum(['和平','摩擦','冷战','局部冲突','全面战争']).prefault('冷战'),态势值:r.z.coerce.number().prefault(50),上次变更:r.z.string().prefault('')}).prefault({}),$flag:r.z.object({已完成捏角:r.z.boolean().prefault(!1),拥有黑之匙:r.z.boolean().prefault(!1)}).prefault({})}),t=[{name:'散修',min:0},{name:'游侠',min:100},{name:'执事',min:300},{name:'堂主',min:600},{name:'长老',min:1e3}],a=['和平','摩擦','冷战','局部冲突','全面战争'],n={和平:[{事件:'七宗会盟筹备',描述:'天机阁发出请柬，七十年后的会盟提前启动筹备。五大宗宗主将在天京城举行非正式磋商。',影响:'各大宗门近期表现克制，边境摩擦减少。'},{事件:'天道盟新令',描述:'天道盟发布新律：坊市内禁止以神识探查他人修为，违者逐出坊市。散修哗然，宗门沉默。',影响:'坊市秩序微调，散修间关系微妙。'},{事件:'丹霞宗拍卖会',描述:'丹霞宗宣布今年将在百草城举办一场公开拍卖会，压轴拍品据说是枚六品丹药。',影响:'各地修士纷纷赶往南岭，百草城人满为患。'}],摩擦:[{事件:'天渊关口摩擦',描述:'天渊关口巡逻队与魔修斥候发生遭遇战，双方各有损伤。太虚剑宗发表声明谴责。',影响:'边境气氛紧张，商队绕道而行。',态势影响:3},{事件:'猎妖队失踪',描述:'东荒一支猎妖队深入万妖林后音讯全无。散修联盟悬赏寻找下落。',影响:'东荒猎妖活动暂时沉寂。'},{事件:'维拉宴会传闻',描述:'欢宴之主的宴会上，某正道长老与莫尔迦的使节同席。消息传出后正道联盟启动内部调查。',影响:'正道内部对古神态度分歧加大。'}],冷战:[{事件:'万象魔宗建交被拒',描述:'万象魔宗派遣使节前往天机阁，再次请求建立正式外交渠道。七宗以血煞宗公开反对为由拒绝。',影响:'万象魔宗内部不满情绪升温。'},{事件:'散修坊市遇袭',描述:'西漠边境一座散修坊市遭到不明势力袭击，半数灵石被劫。散修联盟悬赏千枚中品灵石缉凶。',影响:'坊市安全形势恶化，散修抱团巡逻。',态势影响:3},{事件:'顾千卷新发现',描述:'天机阁第九阁主顾千卷在北冥冰层下发现了疑似太古时代的建筑群。消息尚未公开。',影响:'各大宗门加紧向北冥派遣探索队。'}],局部冲突:[{事件:'血煞宗越界',描述:'血煞宗三名金丹期修士越界至中州边境掳走凡人数十人。太虚剑宗派遣执法队追击。',影响:'中州-西漠边境戒备升级。',态势影响:5},{事件:'幽魂谷异动',描述:'幽魂谷在西漠地下打通了一条新的溶洞通道，出口距离中州边境仅两百里。',影响:'正道联盟紧急增派巡逻。'},{事件:'合欢宗暗中调解',描述:'合欢宗派出长老暗中斡旋正魔冲突。各方对其动机深表怀疑。',影响:'合欢宗在正魔两道的信用微妙变化。',态势影响:-3}],全面战争:[{事件:'天道盟紧急调停',描述:'天道盟连续召集紧急会议。散修联盟盟主柳不移亲自出席。血煞宗与幽魂谷拒绝参加。',影响:'修仙界分裂加剧。',态势影响:-5},{事件:'莫尔迦表态',描述:'欲望之母莫尔迦公开声明她的绿洲领地对任何一方保持开放，但禁止将战火带入她的领地。',影响:'部分散修涌入莫尔迦领地寻求庇护。'},{事件:'沉寂古神苏醒',描述:'远在南岭深山的斯芬克丝道观外，一夜之间多了一圈无法穿越的迷雾。天机阁评定为绿级事件。',影响:'修士们猜测寂静之唇是否要出手。'}]},u={中州:[{事件:'金陵城欢宴',描述:'维拉在金陵城的百年老店设宴三日，城中最奢华的酒楼被包下。赴宴者脸色各异。',影响:'金陵城成为修士焦点，坊市物价暴涨。'},{事件:'太虚剑宗收徒',描述:'太虚剑宗开启三年一度的收徒试炼，五千名少年从五域赶来。',影响:'剑宗周边坊市生意兴隆。'},{事件:'灵台司暗访',描述:'大虞灵台司官员出现在万象坊，据说是调查走私禁忌丹药的货源。',影响:'坊市暗中的丹药交易暂停。'}],东荒:[{事件:'妖兽潮',描述:'东荒深处涌出一波妖兽潮，数十个散修猎妖营地被迫撤离。妖王庭表示不知情。',影响:'低阶妖兽材料价格飞涨。'},{事件:'拉维妮亚传闻',描述:'有猎妖者声称在大雨中看到一个红衣女子独自走在山路上。头发遮住了脸，但脚步毫无迟疑。',影响:'东荒散修开始结伴出行。'},{事件:'青木城拍兽会',描述:'青木城举办年度灵兽拍卖，压轴的是一颗完好的三阶妖丹。散修猎妖者蜂拥而至。',影响:'东荒猎妖活动激增。'}],西漠:[{事件:'沙暴掩城',描述:'一场持续七日的沙暴掩埋了西漠两座小型坊市。幽魂谷派出亡者大军清理废墟。',影响:'坊市重建需要大量建材与灵石。'},{事件:'绿洲异象',描述:'莫尔迦绿洲边缘的沙丘上出现了大片发光的符文，入夜后尤为明显。天机阁正派人前往查看。',影响:'好奇的修士涌入绿洲。'},{事件:'矿脉塌陷',描述:'血煞宗辖区一条灵石矿脉发生塌陷，数十名矿工被困。血煞宗拒绝外界救援。',影响:'灵石价格短期上涨。'}],南岭:[{事件:'丹炉炸膛',描述:'丹霞宗一座七品丹炉在炼制中炸膛，方圆十里弥漫着刺鼻的药雾。周边凡人纷纷跑上山来看热闹。',影响:'丹霞宗暂停高阶丹药炼制一周。'},{事件:'炉山镇新器',描述:'炉山镇一位无名炼器师铸造出了一件灵器。品阶虽不高，但剑身有一条天然灵纹，据说能自行吸收灵气。',影响:'各宗门开始派人接触这位炼器师。'},{事件:'解惑者门前',描述:'斯芬克丝的道观外排起了长队。有人等了三天，进去后三分钟面色苍白地出来，一句话不说地走了。',影响:'前去求解惑的人只增不减。'}],北冥:[{事件:'无尽海异响',描述:'北海渔村的渔民声称深夜听到了海底传来的吟唱声。次日海面上漂浮着大面积死鱼。',影响:'渔村村民大量外迁，渔港几乎废弃。'},{事件:'玄冰宫解封',描述:'沉寂多年的玄冰宫突然对外宣布将招收新弟子。这是两百年来首次。',影响:'冰系灵根修士纷纷北上。'},{事件:'深渊禁地扩大',描述:'无尽海沿岸禁区范围又向外延伸了十里。克茜拉废弃渔村的屋顶上多了新的鸟巢——全是空的。',影响:'禁区周边再无修士出没。'}]},l=[{事件:'胧的小动作',描述:'胧趁你不注意，在你袖子里藏了一枚她从坊市偷来的灵果。被摊主找上门时一脸无辜。',影响:'你花了十枚下品灵石摆平此事。'},{事件:'莫尔迦信徒到访',描述:'莫尔迦的一名信徒出现在附近，手持欲望之母的信物，希望能与你谈谈。',影响:'周围修士的目光变得复杂。'},{事件:'维拉邀约',描述:'你收到一封没有署名的请柬。纸张是淡金色的，散发着一股说不清的香气。上面只写了地点和时间。',影响:'去不去在你。'},{事件:'拉维妮亚行踪',描述:'有人声称在附近的镇上看到了一个红发女子在雨中独自撑伞走过。没有人记得她的脸。',影响:'东荒各城镇更新了痴情之锁的告示。'},{事件:'斯芬克丝纸条',描述:'你在行李中发现一张来历不明的纸条，上面写着五行楷书。内容与你正在困扰的一个问题有关。落款无。',影响:'你怀疑是斯芬克丝所为，但她理应从来不出道观。'},{事件:'奈亚的玩笑',描述:'坊市里有一个孩子指着你说你眼里有金色的光。你照了镜子，什么也没看到。孩子说现在没有了。',影响:'没有人能帮你。'}],s=[{事件:'散修失踪',描述:'一名筑基期散修在独自探索秘境时失踪。目击者说他似乎看到了什么，然后径直走向了峭壁。',影响:'散修联盟提醒独行修士多加小心。'},{事件:'禁忌丹药现身',描述:'坊市角落出现了一种来源不明的丹药，据说能在突破元婴时增加三成成功率。价格是一个人的全部记忆。',影响:'部分散修开始寻找卖家。'},{事件:'柳不移的行踪',描述:'有人目击散修联盟盟主柳不移独自进入了西漠深处。她拒绝了所有人的跟随。',影响:'散修们猜测盟主在追查什么。'},{事件:'新秘境入口',描述:'附近山中一处被遗忘的古矿洞中出现了空间裂隙。附近的散修已经开始组队准备进入。',影响:'暂时无人知晓秘境内有什么。'}];function p(r){return r[Math.floor(Math.random()*r.length)]}$(()=>{errorCatched(async()=>{await waitGlobalInitialized('Mvu'),eventOn(tavern_events.GENERATION_AFTER_COMMANDS,()=>{try{const r=Mvu.getMvuData({type:'message',message_id:-1}),a=_.get(r,'stat_data');if(!a)return;const n=function(r){const e=[],a=_(r.势力声望).entries().filter(([,r])=>Math.abs(r)>=5).sortBy(([,r])=>-Math.abs(r)).map(([r,e])=>`${r}: ${e>0?'+':''}${e}`).value();a.length&&e.push(`声望: ${a.join(' | ')}`);const{贡献值:n,等级:u}=r.散修联盟,l=t.find(r=>r.name===u),s=l?t.indexOf(l):-1,p=s>=0&&s+1<t.length?t[s+1]:null;p?e.push(`散修联盟: ${u} (${n}/${p.min})`):e.push(`散修联盟: ${u}`);const{状态:f,态势值:o}=r.正魔态势;return e.push(`正魔态势: ${f} (${o}/100)`),`【势力状态】\n${e.join('\n')}`}(e.parse(a));injectPrompts([{id:`faction_ctx_${Date.now()}`,role:'system',content:`${n}\n请根据以上势力状态自然地反映在 NPC 的态度、对话和行动中。`,position:'in_chat',depth:0}],{once:!0})}catch(r){console.warn('[势力系统] 注入失败:',r)}}),eventOn(Mvu.events.VARIABLE_UPDATE_ENDED,async(r,n)=>{const u=e.parse(_.get(r,'stat_data',{})),l=e.parse(_.get(n,'stat_data',{})),{贡献值:s,等级:p}=u.散修联盟,f=_(t).filter(r=>s>=r.min).last();f.name!==p&&(_.set(r,'stat_data.散修联盟.等级',f.name),toastr.success(`散修联盟晋升：${p} → ${f.name}`,'联盟晋升'));const o=l.世界?.大事记??[];(u.世界?.大事记??[]).length>o.length&&toastr.warning('世界局势似乎发生了变化……');const{态势值:m,状态:c}=u.正魔态势,{态势值:i}=l.正魔态势;for(const e of[25,50,75]){if(i<e&&m>=e||i>=e&&m<e){const e=a[m<25?0:m<50?1:m<75?2:m<100?3:4];if(_.set(r,'stat_data.正魔态势.状态',e),_.set(r,'stat_data.正魔态势.上次变更',u.世界.当前时间||'未知'),e!==c){const r=a.indexOf(e)>a.indexOf(c);toastr[r?'warning':'info'](`正魔态势：${c} → ${e}`,r?'局势升级':'局势缓和')}break}}for(const[r,e]of Object.entries(u.势力声望)){const t=l.势力声望[r]??0;t<20&&e>=20&&toastr.info(`${r} 声望达到 20，解锁内门区域`,'声望提升'),t<60&&e>=60&&toastr.success(`${r} 声望达到 60，解锁禁地/藏经阁`,'声望达标'),t>-30&&e<=-30&&toastr.warning(`${r} 声望降至 ${e}，关系转为敌对`,'声望恶化')}});let r=3+Math.floor(5*Math.random()),f=10,o=0;eventOn(tavern_events.MESSAGE_RECEIVED,async()=>{const a=getVariables({type:'message',message_id:-1}),m=_.get(a,'stat_data');if(!m)return;const c=e.parse(m);if(o++,o>=r&&(o=0,r=3+Math.floor(5*Math.random()),Math.random()<.25)){const r=function(r){const e={中州:'中州',东荒:'东荒',西漠:'西漠',南岭:'南岭',北冥:'北冥'};for(const[t,a]of Object.entries(e))if(r.includes(t))return a;return null}(c.世界.当前地点),e=c.正魔态势.状态,f=Object.keys(c.古神列表).length,o=t.findIndex(r=>r.name===c.散修联盟.等级),m=[],i=n[e];if(i?.length&&m.push(...i),r&&u[r]?.length&&m.push(...u[r]),!r||Math.random()<.3){const e=p(Object.keys(u).filter(e=>e!==r));u[e]?.length&&m.push(...u[e])}if(f>=3&&Math.random()<.4&&m.push(...l),o>=0&&Math.random()<.3+.1*o&&m.push(...s),m.length>0){const r=p(m),e={时间:c.世界.当前时间||'未知时间',...r},t=[...c.世界.大事记||[],e],n={};if(_.set(n,'stat_data.世界.大事记',t),r.态势影响){const e=_.clamp(c.正魔态势.态势值+r.态势影响,0,100);_.set(n,'stat_data.正魔态势.态势值',e)}await Mvu.replaceMvuData(_.merge(_.cloneDeep(a),n),{type:'message',message_id:-1}),toastr.info(r.事件,'世界事件')}}if(f--,f<=0){f=10;const r=Math.floor(7*Math.random())-3,e=_.clamp(c.正魔态势.态势值+r,0,100);await Mvu.replaceMvuData(_.set(_.cloneDeep(a),'stat_data.正魔态势.态势值',e),{type:'message',message_id:-1})}}),console.info('[势力系统] 已启动')})()});
-          //# sourceMappingURL=index.js.map
-        导出时携带:
-          数据: true
-          按钮: true
-
       - 名称: 功法生成与更新
         id: d74683b7-8865-4fbb-8bcf-d0d42c17f153
         启用: true
@@ -1994,6 +1983,16 @@
         内容: |-
           import
             'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@570724f/dist/战斗美化/index.js'
+        导出时携带:
+          数据: true
+          按钮: true
+
+      - 名称: 世界引擎
+        id: 05643ffb-b99c-41a0-bb62-1bef83f87145
+        启用: true
+        类型: 脚本
+        内容: import
+          'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@c9bbd5c/dist/世界引擎/index.js'
         导出时携带:
           数据: true
           按钮: true

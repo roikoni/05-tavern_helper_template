@@ -10,7 +10,7 @@
     <response>: 被动方应对。可选。无应对（如纯逃跑检定）时省略。
     <roll>: 检定过程与结果。必填。包含骰值、修正、DC、命中/擦伤/落空/暴击/大失败。
     <damage>: 伤害结算。可选。落空/无伤害时省略。须含骰子表达式、最终伤害数字、伤害类型。
-    <hp>: 状态变化。必填。列出双方 HP/MP/San 的变化与当前值，格式 HP:N/N | MP:N/N | San:N。
+    <vitals>: 状态变化。必填。列出双方 HP/MP/San 的变化与当前值，格式 HP:N/N | MP:N/N | San:N。
 
   格式模板: |-
     <combat>
@@ -20,10 +20,10 @@
     <response>[被动方]选择 [应对方式]（[效果简述]）</response>
     <roll>D20([骰值]) + [修正名]([修正值]) = [总值] vs [DC名]([DC值]) → [命中/擦伤/落空/暴击/大失败]</roll>
     <damage>[骰子表达式]([骰值]) + [修正] - [减免] = [最终伤害]点（[伤害类型]）</damage>
-    <hp>
+    <vitals>
     - [主动方] [HP/MP/San变化]，当前 HP: N/N | MP: N/N | San: N
     - [被动方] [HP/MP/San变化]，当前 HP: N/N | MP: N/N | San: N
-    </hp>
+    </vitals>
     </combat>
 
   示例: |-
@@ -34,19 +34,19 @@
     <response>沈清辞选择 神识抵御（成功则精神伤害减半）</response>
     <roll>D20(17) + 神识修正(6) = 23 vs 神识抵御DC(18) → 命中</roll>
     <damage>D8(6) + 神识修正(6) - 神识减免(3) = 9点（精神/San）</damage>
-    <hp>
+    <vitals>
     - 奈亚 MP -12，San -3
     - 沈清辞 San -9，当前 HP: 160/160 | MP: 92/110 | San: 81
-    </hp>
+    </vitals>
     </combat>
 
   关键格式约束:
     - "`<combat>` 与 `</combat>` 各占一行，标签内部不得有其他内容"
-    - 7 个字段标签名固定为 turn/school/action/response/roll/damage/hp，全小写英文，不得更改
+    - 7 个字段标签名固定为 turn/school/action/response/roll/damage/vitals，全小写英文，不得更改
     - 标签内文字自由，但每个标签的语义信息必须完整
-    - 字段顺序不强制，但建议按 turn → school → action → response → roll → damage → hp 排列
+    - 字段顺序不强制，但建议按 turn → school → action → response → roll → damage → vitals 排列
     - 非本回合适用的字段可省略（如落空时省 <damage>，无应对时省 <response>，无流派时省 <school>）
     - 一次只结算一个回合，不要连续结算多个回合
     - 每个战斗叙事都可以生成一个回合
-    - "<hp> 中的 HP/MP/San 格式必须为 HP: N/N | MP: N/N | San: N"
+    - "<vitals> 中的 HP/MP/San 格式必须为 HP: N/N | MP: N/N | San: N"
     - <damage> 中最终伤害必须为数字，伤害类型用中文括号（）包裹

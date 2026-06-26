@@ -69,9 +69,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useWorldEngineStore } from '../store';
-import { 推进世界 } from '../推进';
+import { 推进世界, 推进中 } from '../推进';
 import FactionTab from './FactionTab.vue';
 import NpcTab from './NpcTab.vue';
 import RegionTab from './RegionTab.vue';
@@ -83,7 +83,6 @@ defineEmits<{ (e: 'close'): void }>();
 
 const store = useWorldEngineStore();
 const tab = ref('faction');
-const 推进中 = ref(false);
 const 叙述展示 = ref('');
 
 const tabs = [
@@ -95,17 +94,15 @@ const tabs = [
   { id: 'settings', label: '设置', icon: 'fa-solid fa-gear' },
 ];
 
+// 推进结束即刷新数据：覆盖手动推进完成、关闭弹窗后后台推进完成、自动推进完成三种情形。
+// 推进中是模块级共享 ref，关闭弹窗后重开仍能反映真实状态，避免按钮加载态丢失。
+watch(推进中, (v, old) => {
+  if (!v && old) store.refresh();
+});
+
 async function on推进() {
-  推进中.value = true;
-  try {
-    const r = await 推进世界();
-    if (r) {
-      store.refresh();
-      if (r.叙述) 叙述展示.value = r.叙述;
-    }
-  } finally {
-    推进中.value = false;
-  }
+  const r = await 推进世界(false);
+  if (r && r.叙述) 叙述展示.value = r.叙述;
 }
 </script>
 
