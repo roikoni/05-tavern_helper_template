@@ -1987,4 +1987,15 @@
           数据: true
           按钮: true
 
+      - 名称: 战斗美化
+        id: a5f89524-17a6-43eb-b74a-0e1b5437a57d
+        启用: true
+        类型: 脚本
+        内容: |-
+          import
+            'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@<COMMIT_HASH>/dist/战斗美化/index.js'
+        导出时携带:
+          数据: true
+          按钮: true
+
     变量: {}
