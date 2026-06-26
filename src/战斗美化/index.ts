@@ -3,13 +3,14 @@ import { renderCombat, COMBAT_CSS } from './render';
 
 const ENHANCED_CLASS = 'combat-enhanced';
 const CSS_FLAG_ATTR = 'data-combat-css-injected';
+let $injectedStyle: JQuery<HTMLElement> | null = null;
 
 /** 注入增强卡片 CSS 到酒馆父页面 head（只注一次） */
 function injectCss(): void {
   if ($(`style[${CSS_FLAG_ATTR}]`).length > 0) return;
-  const $style = $(`<style ${CSS_FLAG_ATTR}="1"></style>`);
-  $style.text(COMBAT_CSS);
-  $('head').append($style);
+  $injectedStyle = $(`<style ${CSS_FLAG_ATTR}="1"></style>`);
+  $injectedStyle.text(COMBAT_CSS);
+  $('head').append($injectedStyle);
 }
 
 /** 扫描所有未增强的 data-combat 容器并替换为增强卡片 */
@@ -58,5 +59,9 @@ $(() => {
 });
 
 $(window).on('pagehide', () => {
+  if ($injectedStyle) {
+    $injectedStyle.remove();
+    $injectedStyle = null;
+  }
   console.info('[战斗美化脚本] 已卸载');
 });
