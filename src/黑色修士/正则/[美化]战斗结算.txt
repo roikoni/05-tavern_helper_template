@@ -1,56 +1,12 @@
-
-<div style="
+<div data-combat="1" style="
   background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
   border: 1px solid #7f1d1d;
   border-radius: 10px;
-  padding: 0 0 14px 0;
+  padding: 12px 16px;
   margin: 14px 0;
   color: #d4d4d4;
   font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  box-shadow: 0 0 16px rgba(127, 29, 29, 0.25), inset 0 1px 0 rgba(255,255,255,0.03);
-  max-width: 100%;
+  box-shadow: 0 0 16px rgba(127, 29, 29, 0.25);
   box-sizing: border-box;
   overflow: hidden;
-">
-  <div style="height: 3px; background: linear-gradient(90deg, transparent 0%, #991b1b 30%, #dc2626 50%, #991b1b 70%, transparent 100%);"></div>
-
-  <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid rgba(127,29,29,0.35);">
-    <span style="font-size:18px;filter:drop-shadow(0 0 4px rgba(220,38,38,0.5));">⚔️</span>
-    <span style="font-size:14px;font-weight:700;color:#dc2626;letter-spacing:2px;text-shadow:0 0 6px rgba(220,38,38,0.4);">$1</span>
-  </div>
-
-  <div style="display:flex;padding:10px 18px 6px;align-items:flex-start;">
-    <span style="min-width:48px;font-size:11px;font-weight:700;color:#991b1b;letter-spacing:2px;margin-top:3px;font-family:'Courier New',monospace;">行动</span>
-    <span style="font-size:13px;color:#a3a3a3;line-height:1.5;">
-      $3<strong style="color:#d4d4d4">$4</strong> · <strong style="font-family:'STXingkai','华文行楷','LiSu','KaiTi','FZShuTi','STKaiti',serif;font-size:15px;font-weight:400;color:#fecaca;letter-spacing:3px;text-shadow:0 0 6px rgba(220,38,38,0.9),0 0 14px rgba(220,38,38,0.6),0 0 28px rgba(220,38,38,0.3);">$5</strong>$6
-    </span>
-  </div>
-
-  <div style="display:flex;padding:0 18px 10px;align-items:flex-start;">
-    <span style="min-width:48px;font-size:11px;font-weight:700;color:#525252;letter-spacing:2px;margin-top:3px;font-family:'Courier New',monospace;">应对</span>
-    <span style="font-size:13px;color:#737373;line-height:1.5;">$7</span>
-  </div>
-
-  <div style="background:rgba(0,0,0,0.45);border-left:2px solid #525252;margin:0 18px 10px;padding:10px 14px;border-radius:0 6px 6px 0;">
-    <div style="font-size:11px;color:#525252;margin-bottom:5px;font-weight:600;letter-spacing:1px;font-family:'Courier New',monospace;">🎲 检定</div>
-    <div style="font-size:12px;color:#a3a3a3;font-family:'Courier New',monospace;line-height:1.6;">$8</div>
-    <div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(82,82,82,0.25);">
-      <span style="display:inline-block;padding:3px 12px;border-radius:3px;font-size:11px;font-weight:700;letter-spacing:1px;background:rgba(220,38,38,0.1);color:#f87171;border:1px solid rgba(220,38,38,0.25);font-family:'Courier New',monospace;">$9</span>
-    </div>
-  </div>
-
-  <div style="background:rgba(127,29,29,0.08);border:1px solid rgba(127,29,29,0.25);border-radius:6px;padding:10px 14px;margin:0 18px 10px;">
-    <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;">
-      <span style="font-size:11px;color:#991b1b;font-weight:700;letter-spacing:1px;font-family:'Courier New',monospace;">伤害</span>
-      <span style="font-size:12px;color:#525252;font-family:'Courier New',monospace;">$10</span>
-      <span style="font-size:22px;font-weight:800;color:#ef4444;text-shadow:0 0 8px rgba(239,68,68,0.6),0 0 18px rgba(239,68,68,0.3);font-family:'Courier New',monospace;">$11</span>
-      <span style="font-size:10px;padding:2px 8px;border-radius:2px;background:rgba(127,29,29,0.2);color:#f87171;font-weight:600;border:1px solid rgba(127,29,29,0.3);font-family:'Courier New',monospace;letter-spacing:1px;">$12</span>
-    </div>
-    <div style="font-size:11px;color:#525252;margin-top:5px;line-height:1.5;white-space:pre-line;font-family:'Courier New',monospace;">$13</div>
-  </div>
-
-  <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(82,82,82,0.15);border-radius:6px;padding:10px 14px;margin:0 18px;">
-    <div style="font-size:11px;color:#737373;font-weight:700;margin-bottom:6px;letter-spacing:1px;font-family:'Courier New',monospace;">状态变化</div>
-    <div style="font-size:12px;color:#a3a3a3;line-height:1.7;white-space:pre-line;font-family:'Courier New',monospace;">$14</div>
-  </div>
-</div>
+">$1</div>
