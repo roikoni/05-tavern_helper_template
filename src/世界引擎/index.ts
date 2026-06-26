@@ -26,7 +26,8 @@ let $全局样式节点: JQuery<HTMLElement> | null = null; // 注入到弹窗 i
 // 世界书宏注册句柄：世界书条目用 {{世界氛围}} {{势力:X}} {{地区:X}} {{人物:X}} 注入主线 prompt
 let 宏句柄: { unregister: () => void } | null = null;
 
-const 球尺寸 = 52;
+// 悬浮球尺寸：窄屏（手机）略小，少占触摸区；桌面端 52px。
+const 球尺寸 = () => 视口宽() < 600 ? 44 : 52;
 // 接近 int32 上限但留余量，确保悬浮球始终位于酒馆所有 UI 之上
 const 球zIndex = 2147483600;
 let 球位置 = { x: 0, y: 0 }; // left/top 定位
@@ -51,8 +52,9 @@ function 关闭拖拽抑制() {
 function 创建悬浮球() {
   if ($悬浮球) return;
   // 默认右下角
-  球位置.x = 视口宽() - 球尺寸 - 24;
-  球位置.y = 视口高() - 球尺寸 - 90;
+  const s = 球尺寸();
+  球位置.x = 视口宽() - s - 24;
+  球位置.y = 视口高() - s - 90;
 
   const $ball = $('<div>')
     .attr('script_id', getScriptId())
@@ -63,8 +65,8 @@ function 创建悬浮球() {
       left: '0',
       top: '0',
       transform: `translate3d(${球位置.x}px, ${球位置.y}px, 0)`,
-      width: 球尺寸 + 'px',
-      height: 球尺寸 + 'px',
+      width: s + 'px',
+      height: s + 'px',
       zIndex: 球zIndex,
       cursor: 'grab',
       userSelect: 'none',
@@ -117,8 +119,8 @@ function 创建悬浮球() {
         开启拖拽抑制();
       }
       if (拖动) {
-        目标X = Math.max(0, Math.min(视口宽() - 球尺寸, origX + dx));
-        目标Y = Math.max(0, Math.min(视口高() - 球尺寸, origY + dy));
+        目标X = Math.max(0, Math.min(视口宽() - 球尺寸(), origX + dx));
+        目标Y = Math.max(0, Math.min(视口高() - 球尺寸(), origY + dy));
         if (!rafId) rafId = requestAnimationFrame(apply);
         ev.preventDefault();
       }
@@ -147,9 +149,13 @@ function 创建悬浮球() {
 
 function 视口校正() {
   if (!$悬浮球) return;
-  球位置.x = Math.max(0, Math.min(视口宽() - 球尺寸, 球位置.x));
-  球位置.y = Math.max(0, Math.min(视口高() - 球尺寸, 球位置.y));
-  ($悬浮球[0] as HTMLElement).style.transform = `translate3d(${球位置.x}px, ${球位置.y}px, 0)`;
+  const s = 球尺寸();
+  球位置.x = Math.max(0, Math.min(视口宽() - s, 球位置.x));
+  球位置.y = Math.max(0, Math.min(视口高() - s, 球位置.y));
+  const el = $悬浮球[0] as HTMLElement;
+  el.style.width = s + 'px';
+  el.style.height = s + 'px';
+  el.style.transform = `translate3d(${球位置.x}px, ${球位置.y}px, 0)`;
 }
 
 function 销毁悬浮球() {
@@ -164,13 +170,18 @@ function 打开弹窗() {
   if (弹窗App) return;
 
   // 遮罩
+  const 移动端 = 视口宽() < 600;
   const $mask = $('<div>')
     .attr('script_id', getScriptId())
     .addClass('we-mask')
     .css({
       position: 'fixed', inset: '0', zIndex: 球zIndex + 1,
       background: 'rgba(0,0,0,0.6)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      // 移动端：iframe 顶对齐填满可见区，避免 100vh 含地址栏导致底部被裁；
+      // 桌面端：居中放置固定尺寸弹窗。
+      display: 'flex',
+      alignItems: 移动端 ? 'flex-start' : 'center',
+      justifyContent: 'center',
     });
   $mask.on('click', (e: JQuery.ClickEvent) => {
     if (e.target === $mask[0]) 关闭弹窗();
@@ -195,9 +206,18 @@ function 打开弹窗() {
     boxShadow: '0 24px 70px rgba(0, 0, 0, 0.85), 0 0 40px rgba(184, 69, 61, 0.18)',
     background: '#1a1512',
   });
-  // 窄屏（手机）下接近全屏，去掉圆角与边距以最大化可用空间
-  if (视口宽() < 600) {
-    $iframe.css({ width: '100vw', height: '100vh', maxWidth: '100vw', maxHeight: '100vh', border: 'none', borderRadius: '0', boxShadow: 'none' });
+  // 窄屏（手机）下接近全屏，去掉圆角与边距以最大化可用空间。
+  // 用 100dvh 替代 100vh：iOS Safari 的 100vh 含地址栏区域，会高出可见区导致内容顶到屏外、底部被裁。
+  if (移动端) {
+    $iframe.css({
+      width: '100%',
+      height: '100dvh',
+      maxWidth: '100%',
+      maxHeight: '100dvh',
+      border: 'none',
+      borderRadius: '0',
+      boxShadow: 'none',
+    });
   }
   $弹窗iframe = $iframe;
   $mask.append($iframe);
