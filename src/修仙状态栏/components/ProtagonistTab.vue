@@ -106,12 +106,12 @@
     <div class="right-col">
       <!-- 属性条 2×2 -->
       <div class="stats-grid">
-        <StatBars type="stat" label="气血" :value="store.data.主角.气血" :max="store.data.主角.气血上限" color="hp" />
+        <StatBars type="stat" label="气血" :value="hpDisplay" :max="maxHp" color="hp" />
         <StatBars
           type="stat"
           label="法力值"
-          :value="store.data.主角.法力值"
-          :max="store.data.主角.法力上限"
+          :value="mpDisplay"
+          :max="maxMp"
           color="mp"
         />
         <StatBars type="karma" :value="store.data.主角.善恶值" />
@@ -330,6 +330,7 @@ import { computed, ref } from 'vue';
 import { useDataStore } from '../store';
 import { useAvatar, setAvatar } from '../avatarStore';
 import type { Schema } from '../schema';
+import { deriveMaxHp, deriveMaxMp, clampCurrent } from '../vitals';
 import RadarChart from './RadarChart.vue';
 import StatBars from './StatBars.vue';
 
@@ -464,6 +465,12 @@ const radarValues = computed(() => {
 });
 
 const invCount = computed(() => Object.keys(store.data.主角.背包).length);
+
+// 气血/法力上限完全由六维派生，六维变化时实时更新
+const maxHp = computed(() => deriveMaxHp(store.data.主角.六维));
+const maxMp = computed(() => deriveMaxMp(store.data.主角.六维));
+const hpDisplay = computed(() => clampCurrent(store.data.主角.气血, maxHp.value));
+const mpDisplay = computed(() => clampCurrent(store.data.主角.法力值, maxMp.value));
 
 const cultivationPercent = computed(() => {
   const max = store.data.主角.修为上限 || 100;

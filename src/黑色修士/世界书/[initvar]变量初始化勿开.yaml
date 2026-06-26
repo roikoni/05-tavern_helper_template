@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schema.json
+# yaml-language-server: $schema=../../修仙状态栏/schema.json
 # 修仙状态栏初始变量
 主角:
   名称: ''
@@ -7,9 +7,7 @@
   修为: 0
   修为上限: 100
   气血: 200
-  气血上限: 200
   法力值: 250
-  法力上限: 250
   善恶值: 0
   san值: 100
   状态: 正常

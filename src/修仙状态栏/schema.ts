@@ -7,9 +7,9 @@ export const Schema = z.object({
       修为: z.coerce.number().prefault(0),
       修为上限: z.coerce.number().prefault(100),
       气血: z.preprocess(val => (val === null || val === undefined ? 100 : Number(val)), z.number()).prefault(100),
-      气血上限: z.preprocess(val => (val === null || val === undefined ? 100 : Number(val)), z.number()).prefault(100),
+      // 气血上限 / 法力上限 不再作为变量存储，由六维派生（见 vitals.ts）：
+      // 气血上限 = 50 + 体魄×10 + 根骨×5；法力上限 = 50 + 灵力×15 + 根骨×5
       法力值: z.preprocess(val => (val === null || val === undefined ? 80 : Number(val)), z.number()).prefault(80),
-      法力上限: z.preprocess(val => (val === null || val === undefined ? 100 : Number(val)), z.number()).prefault(100),
       善恶值: z
         .preprocess(val => (val === null || val === undefined ? 0 : Number(val)), z.number())
         .transform(v => _.clamp(v, -100, 100))
@@ -174,9 +174,7 @@ export const Schema = z.object({
     z
       .object({
         气血: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
-        气血上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
         法力值: z.preprocess(v => (v === null || v === undefined ? 80 : Number(v)), z.number()).prefault(80),
-        法力上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
         善恶值: z
           .preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number())
           .transform(v => _.clamp(v, -100, 100))
@@ -220,9 +218,7 @@ export const Schema = z.object({
     z
       .object({
         气血: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
-        气血上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
         法力值: z.preprocess(v => (v === null || v === undefined ? 80 : Number(v)), z.number()).prefault(80),
-        法力上限: z.preprocess(v => (v === null || v === undefined ? 100 : Number(v)), z.number()).prefault(100),
         善恶值: z
           .preprocess(v => (v === null || v === undefined ? 0 : Number(v)), z.number())
           .transform(v => _.clamp(v, -100, 100))

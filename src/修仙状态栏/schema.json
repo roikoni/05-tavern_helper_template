@@ -30,16 +30,8 @@
           "default": 100,
           "type": "number"
         },
-        "气血上限": {
-          "default": 100,
-          "type": "number"
-        },
         "法力值": {
           "default": 80,
-          "type": "number"
-        },
-        "法力上限": {
-          "default": 100,
           "type": "number"
         },
         "善恶值": {
@@ -391,16 +383,8 @@
             "default": 100,
             "type": "number"
           },
-          "气血上限": {
-            "default": 100,
-            "type": "number"
-          },
           "法力值": {
             "default": 80,
-            "type": "number"
-          },
-          "法力上限": {
-            "default": 100,
             "type": "number"
           },
           "善恶值": {
@@ -499,16 +483,8 @@
             "default": 100,
             "type": "number"
           },
-          "气血上限": {
-            "default": 100,
-            "type": "number"
-          },
           "法力值": {
             "default": 80,
-            "type": "number"
-          },
-          "法力上限": {
-            "default": 100,
             "type": "number"
           },
           "善恶值": {

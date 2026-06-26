@@ -18,13 +18,13 @@
           <div class="char-bars">
             <div class="cb-bar">
               <span class="cb-label">气血</span>
-              <div class="cb-track"><div class="cb-fill cb-fill-hp" :style="{ width: pct(c.气血, c.气血上限) + '%' }"></div></div>
-              <span class="cb-num">{{ c.气血 }}/{{ c.气血上限 }}</span>
+              <div class="cb-track"><div class="cb-fill cb-fill-hp" :style="{ width: pct(c.气血, maxHp(c)) + '%' }"></div></div>
+              <span class="cb-num">{{ clamp(c.气血, maxHp(c)) }}/{{ maxHp(c) }}</span>
             </div>
             <div class="cb-bar">
               <span class="cb-label">法力</span>
-              <div class="cb-track"><div class="cb-fill cb-fill-mp" :style="{ width: pct(c.法力值, c.法力上限) + '%' }"></div></div>
-              <span class="cb-num">{{ c.法力值 }}/{{ c.法力上限 }}</span>
+              <div class="cb-track"><div class="cb-fill cb-fill-mp" :style="{ width: pct(c.法力值, maxMp(c)) + '%' }"></div></div>
+              <span class="cb-num">{{ clamp(c.法力值, maxMp(c)) }}/{{ maxMp(c) }}</span>
             </div>
           </div>
         </div>
@@ -50,13 +50,13 @@
           <div class="char-bars">
             <div class="cb-bar">
               <span class="cb-label">气血</span>
-              <div class="cb-track"><div class="cb-fill cb-fill-hp" :style="{ width: pct(c.气血, c.气血上限) + '%' }"></div></div>
-              <span class="cb-num">{{ c.气血 }}/{{ c.气血上限 }}</span>
+              <div class="cb-track"><div class="cb-fill cb-fill-hp" :style="{ width: pct(c.气血, maxHp(c)) + '%' }"></div></div>
+              <span class="cb-num">{{ clamp(c.气血, maxHp(c)) }}/{{ maxHp(c) }}</span>
             </div>
             <div class="cb-bar">
               <span class="cb-label">法力</span>
-              <div class="cb-track"><div class="cb-fill cb-fill-mp" :style="{ width: pct(c.法力值, c.法力上限) + '%' }"></div></div>
-              <span class="cb-num">{{ c.法力值 }}/{{ c.法力上限 }}</span>
+              <div class="cb-track"><div class="cb-fill cb-fill-mp" :style="{ width: pct(c.法力值, maxMp(c)) + '%' }"></div></div>
+              <span class="cb-num">{{ clamp(c.法力值, maxMp(c)) }}/{{ maxMp(c) }}</span>
             </div>
           </div>
         </div>
@@ -91,8 +91,8 @@
           <div v-if="detailData.洗脑值 > 0" class="dt-row"><span class="dt-lbl">侵蚀</span><span class="dt-val dt-brainwash">{{ detailData.洗脑值 }}</span></div>
           <div class="dt-row"><span class="dt-lbl">势力</span><span class="dt-val">{{ detailData.势力 }}</span></div>
           <div class="dt-row"><span class="dt-lbl">关系</span><span class="dt-val">{{ detailData.关系 }}</span></div>
-          <div class="dt-row"><span class="dt-lbl">气血</span><span class="dt-val">{{ detailData.气血 }}/{{ detailData.气血上限 }}</span></div>
-          <div class="dt-row"><span class="dt-lbl">法力</span><span class="dt-val">{{ detailData.法力值 }}/{{ detailData.法力上限 }}</span></div>
+          <div class="dt-row"><span class="dt-lbl">气血</span><span class="dt-val">{{ clamp(detailData.气血, maxHp(detailData)) }}/{{ maxHp(detailData) }}</span></div>
+          <div class="dt-row"><span class="dt-lbl">法力</span><span class="dt-val">{{ clamp(detailData.法力值, maxMp(detailData)) }}/{{ maxMp(detailData) }}</span></div>
           <div class="dt-row"><span class="dt-lbl">善恶</span><span class="dt-val" :class="detailData.善恶值 >= 0 ? 'aff-good' : 'aff-evil'">{{ detailData.善恶值 >= 0 ? '+' : '' }}{{ detailData.善恶值 }}</span></div>
           <div class="dt-row"><span class="dt-lbl">SAN</span><span class="dt-val dt-san">{{ detailData.san值 }}</span></div>
         </div>
@@ -127,12 +127,21 @@ import _ from 'lodash';
 import { computed, ref } from 'vue';
 import { useDataStore } from '../store';
 import { useAvatar, setAvatar, hasDefaultAvatar } from '../avatarStore';
+import { deriveMaxHp, deriveMaxMp, clampCurrent as clamp } from '../vitals';
 import CharacterDetailModal from './CharacterDetailModal.vue';
 
 const store = useDataStore();
 
 const presentChars = computed(() => store.data.在场 || {});
 const bondChars = computed(() => store.data.羁绊 || {});
+
+// 气血/法力上限完全由六维派生，六维变化时实时更新
+function maxHp(c: any): number {
+  return deriveMaxHp(c?.六维);
+}
+function maxMp(c: any): number {
+  return deriveMaxMp(c?.六维);
+}
 
 function pct(val: number, max: number): number {
   return Math.min((val / Math.max(max || 1, 1)) * 100, 100);
