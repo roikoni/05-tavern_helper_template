@@ -1993,7 +1993,7 @@
         类型: 脚本
         内容: |-
           import
-            'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@96192c1/dist/战斗美化/index.js'
+            'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@63bae53/dist/战斗美化/index.js'
         导出时携带:
           数据: true
           按钮: true
