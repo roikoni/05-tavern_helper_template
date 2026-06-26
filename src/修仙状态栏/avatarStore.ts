@@ -16,6 +16,7 @@ const DEFAULT_AVATARS: Record<string, string> = {
   顾千卷: 'https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%20Tavern%E7%9B%B8%E5%85%B3%5C%E5%9B%BE%E5%BA%8A-%E6%88%91%E8%A2%AB%E7%8C%AB%E5%A8%98%E5%8C%85%E5%9B%B4%E4%BA%86!%E9%A1%BE%E5%8D%83%E5%8D%B72.png',
   柳不移: 'https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%20Tavern%E7%9B%B8%E5%85%B3%5C%E5%9B%BE%E5%BA%8A-%E6%88%91%E8%A2%AB%E7%8C%AB%E5%A8%98%E5%8C%85%E5%9B%B4%E4%BA%86!%E6%9F%B3%E4%B8%8D%E7%A7%BB2.png',
   萧太薇: 'https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%20Tavern%E7%9B%B8%E5%85%B3%5C%E5%9B%BE%E5%BA%8A-%E6%88%91%E8%A2%AB%E7%8C%AB%E5%A8%98%E5%8C%85%E5%9B%B4%E4%BA%86!%E8%90%A7%E5%A4%AA%E8%96%87.png',
+  白穗: 'https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%20Tavern%E7%9B%B8%E5%85%B3%5C%E5%9B%BE%E5%BA%8A-%E6%88%91%E8%A2%AB%E7%8C%AB%E5%A8%98%E5%8C%85%E5%9B%B4%E4%BA%86!0.75__artist_hiten_(hitenkei)__,%203.8__ge_tianzun__,%201.2__year%202024,%20year%202025,%20_%20s-2290349312.png',
 };
 
 const overrides = useLocalStorage<Record<string, string>>('cultivation_bar:avatars', {});
