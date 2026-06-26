@@ -3,15 +3,15 @@
     <h2>资质分配</h2>
     <p class="hint">
       每 3 点属性消耗 1 开局点；减点回收点数。
-      单项范围 0-{{ 上限 }}，基线 10。
-      <span v-if="自由">自由模式下六维上限解锁至 100。</span>
+      单项范围 {{ 下限 }}-{{ 上限 }}，基线 10。
+      <span v-if="自由">自由模式下境界抬升的属性免费，仅超出境界下限的加点消耗点数。</span>
     </p>
 
     <div v-for="key in 六维键" :key="key" class="row">
       <span class="name">{{ key }}</span>
       <div class="ctrl">
-        <button @click="调整(key, -3)" :disabled="data.主角.六维[key] - 3 < 0">-3</button>
-        <button @click="调整(key, -1)" :disabled="data.主角.六维[key] - 1 < 0">-1</button>
+        <button @click="调整(key, -3)" :disabled="data.主角.六维[key] - 3 < 下限">-3</button>
+        <button @click="调整(key, -1)" :disabled="data.主角.六维[key] - 1 < 下限">-1</button>
         <span class="value">{{ data.主角.六维[key] }}</span>
         <button @click="调整(key, +1)" :disabled="data.主角.六维[key] + 1 > 上限">+1</button>
         <button @click="调整(key, +3)" :disabled="data.主角.六维[key] + 3 > 上限">+3</button>
@@ -51,7 +51,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
-import { 默认六维基线, 计算属性点数, 普通六维上限, 自由六维上限 } from '../lib/点数';
+import { 默认六维基线, 计算属性点数, 境界六维下限, 普通六维上限, 自由六维上限 } from '../lib/点数';
 
 const props = defineProps<{ 自由: boolean }>();
 const { data } = storeToRefs(useDataStore());
@@ -59,10 +59,13 @@ const draft = useDraftStore();
 const 六维键 = ['力道','体魄','身法','灵力','神识','根骨'] as const;
 
 const 上限 = computed(() => props.自由 ? 自由六维上限 : 普通六维上限);
+// 自由模式：境界抬升的六维免费，减点不得低于境界下限（否则会把免费保底回收成点数）
+// 普通模式：地板仍是 0
+const 下限 = computed(() => props.自由 ? 境界六维下限(data.value.主角.境界) : 0);
 
 function 调整(key: typeof 六维键[number], 增量: number) {
   const 新值 = data.value.主角.六维[key] + 增量;
-  if (新值 < 0 || 新值 > 上限.value) return;
+  if (新值 < 下限.value || 新值 > 上限.value) return;
   data.value.主角.六维[key] = 新值;
   // 净加点超出基线才算消耗；减点不消耗（只回收）
   if (新值 > 默认六维基线) draft.标记花费();
@@ -71,7 +74,8 @@ function 调整(key: typeof 六维键[number], 增量: number) {
 const 净变化 = computed(() =>
   Object.values(data.value.主角.六维).reduce((acc, v) => acc + (v - 默认六维基线), 0)
 );
-const 等价点数 = computed(() => 计算属性点数(data.value.主角.六维 as any));
+// 等价点数：用境界下限作为免费基线，与实际计费一致
+const 等价点数 = computed(() => 计算属性点数(data.value.主角.六维 as any, 下限.value));
 
 const 善恶值 = computed({
   get: () => data.value.主角.善恶值,
