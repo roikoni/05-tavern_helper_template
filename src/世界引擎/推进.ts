@@ -3,8 +3,7 @@
 // 输出纯文本【叙述】+【变更指令】，脚本自解析指令 patch 世界状态。
 // 纯文本协议兼容所有渠道（含不支持 json_schema 的国产模型/中转）。
 
-import type { 世界引擎, 世界状态 } from './schema';
-import type { CustomApi } from './schema';
+import { 世界状态Schema, type 世界引擎, type 世界状态, type CustomApi } from './schema';
 import { ref } from 'vue';
 import { 生成世界氛围 } from './氛围';
 
@@ -111,48 +110,65 @@ function 解析指令(text: string): { op: string; path: string; value?: unknown
   return 指令;
 }
 
-// 应用指令，原地修改状态
+// 单条指令原地应用（不校验）。非法路径/类型抛错，由调用方回滚。
+function 单条应用(状态: 世界状态, cmd: { op: string; path: string; value?: unknown }) {
+  const { op, path, value } = cmd;
+  switch (op) {
+    case 'set':
+      _.set(状态, path, value);
+      break;
+    case 'inc': {
+      const cur = _.get(状态, path, 0);
+      _.set(状态, path, Number(cur) + Number(value));
+      break;
+    }
+    case 'add': {
+      const arr = _.get(状态, path);
+      if (Array.isArray(arr)) {
+        arr.push(value);
+      } else if (arr === undefined) {
+        _.set(状态, path, [value]);
+      } else {
+        throw new Error(`add 目标非数组: ${path}`);
+      }
+      break;
+    }
+    case 'remove':
+      _.unset(状态, path);
+      break;
+    default:
+      throw new Error(`未知指令: ${op}`);
+  }
+}
+
+// 把状态回滚到快照：清空自身键后深拷贝快照内容，保留原对象引用。
+function 回滚(状态: 世界状态, 快照: 世界状态) {
+  for (const k of Object.keys(状态)) delete (状态 as any)[k];
+  Object.assign(状态, 快照);
+}
+
+// 应用指令：逐条试应用 + schema 校验，非法指令回滚跳过，避免脏数据写回聊天变量导致面板黑屏。
 function 应用指令(状态: 世界状态, 指令: { op: string; path: string; value?: unknown }[]): { 成功: number; 跳过: number } {
   let 成功 = 0;
   let 跳过 = 0;
   for (const cmd of 指令) {
+    const 快照 = klona(状态);
     try {
-      const { op, path, value } = cmd;
-      switch (op) {
-        case 'set':
-          _.set(状态, path, value);
-          成功++;
-          break;
-        case 'inc': {
-          const cur = _.get(状态, path, 0);
-          _.set(状态, path, Number(cur) + Number(value));
-          成功++;
-          break;
-        }
-        case 'add': {
-          const arr = _.get(状态, path);
-          if (Array.isArray(arr)) {
-            arr.push(value);
-            成功++;
-          } else if (arr === undefined) {
-            _.set(状态, path, [value]);
-            成功++;
-          } else {
-            跳过++;
-          }
-          break;
-        }
-        case 'remove':
-          _.unset(状态, path);
-          成功++;
-          break;
-        default:
-          跳过++;
-      }
+      单条应用(状态, cmd);
     } catch (e) {
-      console.warn('[世界引擎] 指令解析失败，跳过', cmd, e);
+      回滚(状态, 快照);
+      console.warn('[世界引擎] 指令执行失败，跳过', cmd, e);
       跳过++;
+      continue;
     }
+    const r = 世界状态Schema.safeParse(状态);
+    if (!r.success) {
+      回滚(状态, 快照);
+      console.warn('[世界引擎] 指令产生非法状态，跳过', cmd, r.error);
+      跳过++;
+      continue;
+    }
+    成功++;
   }
   return { 成功, 跳过 };
 }
