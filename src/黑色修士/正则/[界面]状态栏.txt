@@ -1,7 +1,7 @@
 ```
 <body>
 <script>
-  $('body').load('https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@c9bbd5c/dist/修仙状态栏/index.html')
+  $('body').load('https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@18e5671/dist/修仙状态栏/index.html')
 </script>
 </body>
 ```

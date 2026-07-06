@@ -716,19 +716,6 @@
       不可激活其他条目: true
     文件: 世界书\古神概览
 
-  - 名称: 人类角色概览
-    启用: true
-    激活策略:
-      类型: 蓝灯
-    插入位置:
-      类型: 角色定义之前
-      顺序: 14720
-    激活概率: 100
-    递归:
-      不可被其他条目激活: true
-      不可激活其他条目: true
-    文件: 世界书\人类角色概览
-
   - 名称: NPC角色生成模板
     启用: true
     激活策略:
@@ -741,6 +728,19 @@
       不可被其他条目激活: true
       不可激活其他条目: true
     文件: 世界书\NPC角色生成模板
+
+  - 名称: 人类角色概览
+    启用: true
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 角色定义之前
+      顺序: 14720
+    激活概率: 100
+    递归:
+      不可被其他条目激活: true
+      不可激活其他条目: true
+    文件: 世界书\人类角色概览
 
   - 名称: ===世界设定结束===
     启用: false
@@ -1212,7 +1212,7 @@
     文件: 世界书\沈清辞
 
   - 名称: 沈清辞_分阶段
-    启用: true
+    启用: false
     激活策略:
       类型: 绿灯
       关键字:
@@ -1244,7 +1244,7 @@
     文件: 世界书\姜无忧
 
   - 名称: 姜无忧_分阶段
-    启用: true
+    启用: false
     激活策略:
       类型: 绿灯
       关键字:
@@ -1276,7 +1276,7 @@
     文件: 世界书\顾千卷
 
   - 名称: 顾千卷_分阶段
-    启用: true
+    启用: false
     激活策略:
       类型: 绿灯
       关键字:
@@ -1308,7 +1308,7 @@
     文件: 世界书\柳不移
 
   - 名称: 柳不移_分阶段
-    启用: true
+    启用: false
     激活策略:
       类型: 绿灯
       关键字:
@@ -1907,7 +1907,7 @@
     - 正则名称: "[美化]战斗结算"
       id: 5fbf4d2c-3a87-4b1f-9c46-7c4d1e8a2b39
       启用: true
-      查找表达式: /<combat>\s*<turn>([\s\S]*?)<\/turn>\s*(?:<school>\s*(剑修|法修|体修|丹修|阵修|符修|魂修|魔修|克苏鲁修|散修)\s*·\s*([\s\S]*?)<\/school>\s*)?<action>([\s\S]*?)<\/action>\s*(?:<response>([\s\S]*?)<\/response>\s*)?<roll>([\s\S]*?→\s*(命中|擦伤|落空|暴击|大失败)[\s\S]*?)<\/roll>\s*(?:<damage>([\s\S]*?)<\/damage>\s*)?<vitals>([\s\S]*?)<\/vitals>\s*<\/combat>/gs
+      查找表达式: /<combat>\s*<turn>([\s\S]*?)<\/turn>\s*(?:<school>\s*([^·<>\s]+)(?:\s*·\s*([\s\S]*?))?<\/school>\s*)?<action>([\s\S]*?)<\/action>\s*(?:<response>([\s\S]*?)<\/response>\s*)?<roll>([\s\S]*?(?:→\s*(命中|擦伤|落空|暴击|大失败)[\s\S]*?)?)<\/roll>\s*(?:<damage>([\s\S]*?)<\/damage>\s*)?<vitals>([\s\S]*?)<\/vitals>\s*<\/combat>/gs
       文件: 正则\[美化]战斗结算
       来源:
         用户输入: true
@@ -1971,18 +1971,7 @@
         启用: true
         类型: 脚本
         内容: import
-          'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@c9bbd5c/dist/功法分支生成/index.js'
-        导出时携带:
-          数据: true
-          按钮: true
-
-      - 名称: 战斗美化
-        id: a5f89524-17a6-43eb-b74a-0e1b5437a57d
-        启用: true
-        类型: 脚本
-        内容: |-
-          import
-            'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@570724f/dist/战斗美化/index.js'
+          'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@18e5671/dist/功法分支生成/index.js'
         导出时携带:
           数据: true
           按钮: true
@@ -1992,7 +1981,7 @@
         启用: true
         类型: 脚本
         内容: import
-          'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@c9bbd5c/dist/世界引擎/index.js'
+          'https://testingcf.jsdelivr.net/gh/roikoni/05-tavern_helper_template@18e5671/dist/世界引擎/index.js'
         导出时携带:
           数据: true
           按钮: true
