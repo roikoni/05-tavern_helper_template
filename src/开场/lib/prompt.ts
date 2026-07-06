@@ -2,6 +2,7 @@ import { Schema } from '../../修仙状态栏/schema';
 import { 出身地列表 } from '../catalog/出身地';
 import { 功法列表 } from '../catalog/功法';
 import { 神级功法列表 } from '../catalog/神级功法';
+import { 人物已被设置 } from './person';
 
 type StatData = z.infer<typeof Schema>;
 
@@ -21,7 +22,13 @@ const 层级编号: Record<string, number> = {
  * @param 已选功法名 玩家在捏角中选定的功法名（来自 draft store，未写入 stat_data）
  * @param 自由 是否为自由模式（携带种族/境界/善恶/san/人脉/世界时间等额外档）
  */
-export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonly string[] = [], 自由 = false, 开局身份 = '', 自定义能力 = ''): string {
+export function buildOpeningPrompt(
+  stat_data: StatData,
+  已选功法名: readonly string[] = [],
+  自由 = false,
+  开局身份 = '',
+  自定义能力 = '',
+): string {
   const 主角 = stat_data.主角;
   const 武器 = 主角.装备?.武器;
   const 法器 = 主角.装备?.法器;
@@ -78,7 +85,9 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
       for (const [名, v] of 已收服) {
         const 位阶 = v.位阶 ?? '';
         const 领域 = v.领域 ?? '';
-        行.push(`    - ${名}${位阶 ? `（${位阶}·${领域}）` : ''}${神契装备 && 神契装备.includes(名) ? '【当前装备神契】' : ''}`);
+        行.push(
+          `    - ${名}${位阶 ? `（${位阶}·${领域}）` : ''}${神契装备 && 神契装备.includes(名) ? '【当前装备神契】' : ''}`,
+        );
       }
     } else if (神契装备) {
       行.push(`  神契古神: ${神契装备}`);
@@ -120,14 +129,21 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
     行.push('');
     行.push('【自定义外挂】');
     行.push('  主角拥有的、不证自明的天赋能力（开挂模式，无需解释来源，视为既有事实）：');
-    自定义能力.split('\n').map(s => s.trim()).filter(Boolean).forEach(s => 行.push(`  - ${s}`));
+    自定义能力
+      .split('\n')
+      .map(s => s.trim())
+      .filter(Boolean)
+      .forEach(s => 行.push(`  - ${s}`));
   }
 
   // 自由模式：人脉羁绊 + 世界时间
   if (自由) {
     const 重要人物 = _.get(stat_data, '重要人物') as Record<string, any> | undefined;
+    // 仅输出玩家在人脉羁绊步骤里真正设置过的人物（好感非 0 / 已攻略 / 关系被改动），
+    // 排除 initvar 预置的占位档案，避免 AI 把未设置角色一并 insert 进「羁绊」造成多余变量更新。
+    // 古神 boss 与尘世 NPC 共用此口径：未被玩家动过的古神亦不进入提示词。
     const 人脉行 = _.entries(重要人物 ?? {})
-      .filter(([, v]) => v && (v.关系 || v.好感度))
+      .filter(([名, v]) => v && 人物已被设置(名, v))
       .map(([名, v]) => {
         const 好感 = v.好感度 ?? 0;
         const 关系 = v.关系 ?? '陌路人';
@@ -156,16 +172,14 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
   行.push('===');
   行.push('');
   行.push('【你的任务】');
-  行.push(
-    `基于以上角色档案，结合世界书既有设定（世界书已在上下文中，自然引用即可，无需复述条目原文），为主角"${主角.名称}"生成一段叙事开场剧情。`,
-  );
+  行.push(`基于以上角色档案，为主角"${主角.名称}"生成一段叙事开场剧情。`);
 
   const 出身地区域 = 出身地列表.find(p => p.名称 === 主角.出身地)?.区域 ?? '';
 
   行.push('');
   行.push('【叙事要求】');
   行.push(
-    `1. 场景必须发生在出身地"${主角.出身地}"所属区域${出身地区域}，不可偏移至其他区域。先描绘此刻环境（时辰、天气、建筑、人群与生活/修炼气息），再切入主角正在做的具体事——不要写"站在某处发呆"。`,
+    `1. 场景必须发生在出身地"${主角.出身地}"所属区域${出身地区域}，不可偏移至其他区域。先描绘此刻环境（时辰、天气、建筑、人群与生活/修炼气息），再切入主角正在做的具体事。`,
   );
   行.push(`   宗门弟子从宗门日常切入（晨练/值勤/听训/接任务），散修从坊市/赶路/借宿切入。选一个有张力的时刻起笔。`);
   行.push(
@@ -180,7 +194,9 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
   // 第 3 条：神契古神据档案动态生成
   {
     const 古神列表 = _.get(stat_data, '古神列表') as Record<string, any> | undefined;
-    const 已收服古神 = _.entries(古神列表 ?? {}).filter(([, v]) => v && v.收服).map(([名]) => 名);
+    const 已收服古神 = _.entries(古神列表 ?? {})
+      .filter(([, v]) => v && v.收服)
+      .map(([名]) => 名);
     if (已收服古神.length) {
       const 主名 = 已收服古神.includes('胧') ? '胧' : 已收服古神[0];
       const 其余 = 已收服古神.filter(n => n !== 主名);
@@ -195,21 +211,23 @@ export function buildOpeningPrompt(stat_data: StatData, 已选功法名: readonl
       行.push(line3);
     } else {
       // 无神契古神时退回原通用条目（普通模式亦走此分支）
-      行.push(
-        '3. 若主角已有神契古神同行，以拟人/异象形态自然出现，展示"有历史的相伴"。',
-      );
+      行.push('3. 若主角已有神契古神同行，以拟人/异象形态自然出现，展示"有历史的相伴"。');
     }
   }
 
   if (自由) {
-    行.push('7. 自由模式：主角种族、修为境界、善恶/san 已由玩家设定，开场需与之自洽——');
-    行.push('   高境界者应展现相应修为带来的气度与权柄感（大乘期近乎超脱凡俗，凡夫俗子难窥其境），六维强弱须与境界匹配（不得出现大乘期却手无缚鸡之力的描写）；');
+    行.push('7. 〔仅自由模式〕自由模式：主角种族、修为境界、善恶/san 已由玩家设定，开场需与之自洽');
+    行.push(
+      '   高境界者应展现相应修为带来的气度与权柄感（大乘期近乎超脱凡俗，凡夫俗子难窥其境），六维强弱须与境界匹配（不得出现大乘期却手无缚鸡之力的描写）；',
+    );
     行.push('   非人种族需体现其种族特征；');
-    行.push('   若档案含【人脉羁绊】，这些是主角开局已建立的关系：须择相关者（至少 1 位，若场景允许可多位）在开场中自然呼应（现身/被提及/书信/传闻均可），');
-    行.push('   并在变量更新中将其 insert 到「羁绊」变量（含关系、好感度、境界、势力等字段，字段值参考档案），使其进入状态栏羁绊栏——不得只留在「重要人物」而漏入「羁绊」；');
+    行.push(
+      '   若档案含【人脉羁绊】，这些是主角开局已建立的关系：须择相关者（至少 1 位）在开场中自然呼应（现身/被提及/书信/传闻均可），',
+    );
+    行.push('   并在变量更新中将其 insert 到「羁绊」变量（含关系、好感度、境界、势力等字段，字段值参考档案）；');
     行.push('   若含【世界时间】，以该纪元为时间锚点。');
     if (自定义能力 && 自定义能力.trim()) {
-      行.push('8. 开挂模式：档案【自定义外挂】中的能力是主角既有的、不证自明的天赋，');
+      行.push('8. 〔仅开挂模式〕开挂模式：档案【自定义外挂】中的能力是主角既有的、不证自明的天赋，');
       行.push('   无需解释来源、无需修炼过程，开场即视为已掌握并自然运用，可不经意展现其压倒性。');
       行.push('9. 文风模仿金庸，全文 800-1200 字。');
     } else {

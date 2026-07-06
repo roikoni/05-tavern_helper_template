@@ -94,6 +94,8 @@ import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
 import { 校验玩家选择, 普通六维上限, 自由六维上限 } from '../lib/点数';
 import { buildOpeningPrompt } from '../lib/prompt';
+import { deriveMaxHp, deriveMaxMp } from '../../修仙状态栏/vitals';
+import { 人物已被设置 } from '../lib/person';
 
 const props = defineProps<{ 自由: boolean; 开挂?: boolean }>();
 const { data } = storeToRefs(useDataStore());
@@ -111,6 +113,8 @@ const 人脉列表 = computed(() => {
   const 人物 = data.value.重要人物 ?? {};
   for (const [名, v] of Object.entries(人物)) {
     if (!v) continue;
+    // 与 prompt 同口径：只展示玩家真正设置过的人物，排除 initvar 预置占位档案
+    if (!人物已被设置(名, v)) continue;
     out.push({ 名, 关系: v.关系 ?? '陌路人', 好感: v.好感度 ?? null });
   }
   return out;
@@ -148,12 +152,25 @@ async function onConfirm() {
     // 1. 锁定捏角状态
     data.value.$flag.已完成捏角 = true;
 
+    // 1.5 角色初创：气血/法力值回满至六维派生上限。
+    // 上限不存储、由六维派生，当前值须在捏角落定时初始化为满值，
+    // 否则将沿用 initvar 占位 0，呈现“上限正常但血量/蓝条为 0”。
+    const 六维 = data.value.主角.六维;
+    data.value.主角.气血 = deriveMaxHp(六维);
+    data.value.主角.法力值 = deriveMaxMp(六维);
+
     // 2. 清空第 0 楼原本的 <开场> 开场白，避免其字面内容进入 AI 上下文
     await setChatMessages([{ message_id: 0, message: '' }], { refresh: 'none' });
 
     // 3. 把开场 prompt 作为一条可见的 user 消息追加到聊天末尾（和玩家手动发送等效）
     //    玩家选定的初始功法通过 prompt 嵌入，由 AI 用 <UpdateVariable> insert 到 /初始功法/
-    const 开场白 = buildOpeningPrompt(data.value as any, 已选功法.value, props.自由, 开局身份.value, props.开挂 ? 自定义能力.value : '');
+    const 开场白 = buildOpeningPrompt(
+      data.value as any,
+      已选功法.value,
+      props.自由,
+      开局身份.value,
+      props.开挂 ? 自定义能力.value : '',
+    );
     await createChatMessages([{ role: 'user', message: 开场白 }]);
 
     // 4. 触发 AI 生成开场剧情
@@ -342,7 +359,7 @@ p {
   color: $blood-glow;
   font-style: italic;
   padding: 0.6rem 0.8rem;
-  background: rgba(80,15,15,0.18);
+  background: rgba(80, 15, 15, 0.18);
   border-left: 3px solid $blood-mid;
   border-radius: 0 $r-sm $r-sm 0;
 }
