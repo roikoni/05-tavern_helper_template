@@ -194,6 +194,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
     },
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     watchOptions: {
+<<<<<<< HEAD
       ignored: [
         '**/dist',
         '**/node_modules',
@@ -201,6 +202,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         '**/hiberfil.sys',
         '**/swapfile.sys',
       ],
+=======
+      ignored: ['**/dist', '**/node_modules'],
+>>>>>>> 563a54227d547b8c7ade58fb3242b38f89cefd18
     },
     entry: path.join(import.meta.dirname, entry.script),
     target: 'browserslist',
