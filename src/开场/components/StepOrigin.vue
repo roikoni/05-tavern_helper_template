@@ -49,18 +49,14 @@
       <div class="能量球区" :class="{ active: 当前配置 }">
         <div class="能量球" :class="特效风格">
           <span class="光环"></span>
-          <span class="轨道 轨道-1"></span>
-          <span class="轨道 轨道-2"></span>
-          <span class="轨道 轨道-3"></span>
+          <span class="轨道"></span>
           <span
             v-for="(a, i) in 已选属性候选"
             :key="a.名称"
             class="能量粒子"
             :style="粒子样式(i, a.色)"
           >
-            <span class="粒子-轨">
-              <span class="粒子-点"></span>
-            </span>
+            <span class="粒子-点"></span>
           </span>
           <span class="核"></span>
           <span class="核-辉"></span>
@@ -205,16 +201,15 @@ function 切属性(名: string) {
   同步灵根();
 }
 
-// 能量球粒子样式：在 3D 球面三轨道上分布，各带火焰拖尾
-// 每个粒子分配到三条轨道之一（不同 rotateY 倾角），同轨道多粒子用相位错开
-const 粒子轨道Y = [0, 60, 120, 30, 90]; // 5 个倾角，循环使用，覆盖球面
+// 能量球粒子样式：在轨道上均衡布置 + 沿切线方向的火焰拖尾
+// 用 --相位 控制每个粒子在公转动画中的起始位置（按索引平均分布）
 function 粒子样式(i: number, 色: string) {
-  const 轨Y = 粒子轨道Y[i % 粒子轨道Y.length];
-  const 相位秒 = -(i * 1.7) % 9; // 负 delay 让初始位置错开
+  const n = Math.max(已选属性候选.value.length, 1);
+  const 相位 = (i / n) * 360;
   return {
     '--粒子色': 色,
-    '--轨道Y': `${轨Y}deg`,
-    animationDelay: `${相位秒}s`,
+    '--相位': `${相位}deg`,
+    animationDelay: `${-(i / n) * 9}s`, // 让初始角度直接落在相位位置
   } as Record<string, string>;
 }
 
@@ -381,7 +376,7 @@ h3 {
 }
 
 // ═══════════════════════════════════════════════
-// 能量球（3D 立体环绕 + 火焰拖尾）
+// 能量球（平面环绕 + 沿切线方向火焰拖尾）
 // ═══════════════════════════════════════════════
 .能量球区 {
   display: flex;
@@ -393,28 +388,19 @@ h3 {
   top: 1rem;
   opacity: 0.35;
   transition: opacity 0.4s ease;
-  perspective: 900px;
   &.active { opacity: 1; }
 }
 
 .能量球 {
   position: relative;
   width: 200px; height: 200px;
-  transform-style: preserve-3d;
-  transform: rotateX(-18deg) rotateY(22deg);
   display: flex; align-items: center; justify-content: center;
-  animation: 球偏转 16s ease-in-out infinite;
   @include mobile { width: 160px; height: 160px; }
   @include tablet { width: 180px; height: 180px; }
 }
 
-@keyframes 球偏转 {
-  0%, 100% { transform: rotateX(-18deg) rotateY(22deg); }
-  50% { transform: rotateX(18deg) rotateY(-22deg); }
-}
-
 .光环 {
-  position: absolute; inset: -18%;
+  position: absolute; inset: -14%;
   border-radius: 50%;
   background: radial-gradient(circle at center,
     rgba(207,200,184,0.10) 0%,
@@ -424,86 +410,15 @@ h3 {
   animation: 光环呼吸 6s ease-in-out infinite;
 }
 
-// 三条立体轨道（不同倾角，组成 3D 球面网格）
+// 单一圆形轨道
 .轨道 {
-  position: absolute; inset: 14%;
+  position: absolute; inset: 16%;
   border-radius: 50%;
-  border: 1px dashed rgba(207,200,184,0.18);
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  animation: 轨道自转 16s linear infinite;
-}
-.轨道-1 { transform: rotateY(0deg);   border-color: rgba(230,198,88,0.22); animation-duration: 18s; }
-.轨道-2 { transform: rotateY(60deg);  border-color: rgba(106,168,90,0.22); animation-duration: 22s; animation-direction: reverse; }
-.轨道-3 { transform: rotateY(120deg);  border-color: rgba(138,90,212,0.22); animation-duration: 26s; }
-
-// 粒子容器：先 rotateY 平移到所属立体轨道平面，再在该平面内公转（rotateZ）
-.能量粒子 {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 0; height: 0;
-  transform-style: preserve-3d;
-  transform: rotateY(var(--轨道Y, 0deg));
-  will-change: transform;
-  // 公转：绕核旋转 + 向外平移到轨道半径
-  animation: 粒子公转 9s linear infinite;
+  border: 1px dashed rgba(207,200,184,0.22);
+  animation: 轨道闪 8s ease-in-out infinite;
 }
 
-.粒子-轨 {
-  position: absolute;
-  top: 0; left: 0;
-  width: 0; height: 0;
-  transform-style: preserve-3d;
-}
-
-.粒子-点 {
-  position: absolute;
-  top: -0.5rem; left: -0.5rem;
-  width: 1rem; height: 1rem;
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    #fff 0%,
-    var(--粒子色, #e8e2d4) 28%,
-    color-mix(in srgb, var(--粒子色, #e8e2d4) 50%, transparent) 60%,
-    transparent 100%);
-  box-shadow:
-    0 0 12px var(--粒子色, #e8e2d4),
-    0 0 24px color-mix(in srgb, var(--粒子色, #e8e2d4) 55%, transparent);
-  z-index: 3;
-  // 火焰拖尾：沿公转反方向（向核方向）延伸的渐变长尾
-  &::before {
-    content: "";
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 3.2rem; height: 0.45rem;
-    transform: translate(-100%, -50%);
-    transform-origin: 100% 50%;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--粒子色, #e8e2d4) 14%, transparent) 35%,
-      color-mix(in srgb, var(--粒子色, #e8e2d4) 48%, transparent) 75%,
-      var(--粒子色, #e8e2d4) 100%);
-    filter: blur(2px);
-    border-radius: 50%;
-    opacity: 0.85;
-    animation: 尾摇 0.55s ease-in-out infinite alternate;
-  }
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 1.8rem; height: 1.4rem;
-    transform: translate(-94%, -50%);
-    transform-origin: 100% 50%;
-    background: radial-gradient(ellipse at 100% 50%,
-      color-mix(in srgb, var(--粒子色, #e8e2d4) 42%, transparent) 0%,
-      transparent 70%);
-    filter: blur(4px);
-    opacity: 0.7;
-    animation: 尾摇 0.42s ease-in-out infinite alternate-reverse;
-  }
-}
-
+// 核心球
 .核 {
   position: relative;
   width: 28%; height: 28%;
@@ -528,23 +443,79 @@ h3 {
   animation: 核脉动 3.6s ease-in-out infinite;
 }
 
-// 各类别配色差异
+// 粒子：rotateZ 公转 + translateX 推到轨道半径。
+// --相位 控制起始角度（粒子按索引均衡分布）；
+// 元素整体被 rotateZ 转动后，内部 -x 方向恰为运动切线后方，
+// 所以拖尾伪元素固定在本地 -x 即自然落在运动反方向。
+.能量粒子 {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  z-index: 3;
+  animation: 粒子公转 9s linear infinite;
+  will-change: transform;
+}
+
+.粒子-点 {
+  position: absolute;
+  top: -0.5rem; left: -0.5rem;
+  width: 1rem; height: 1rem;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    #fff 0%,
+    var(--粒子色, #e8e2d4) 28%,
+    color-mix(in srgb, var(--粒子色, #e8e2d4) 50%, transparent) 60%,
+    transparent 100%);
+  box-shadow:
+    0 0 12px var(--粒子色, #e8e2d4),
+    0 0 24px color-mix(in srgb, var(--粒子色, #e8e2d4) 55%, transparent);
+  // 拖尾长条：本地 -x 方向 = 切线后方 = 运动反方向
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 3.2rem; height: 0.45rem;
+    transform: translate(-100%, -50%);
+    transform-origin: 100% 50%;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--粒子色, #e8e2d4) 14%, transparent) 35%,
+      color-mix(in srgb, var(--粒子色, #e8e2d4) 48%, transparent) 75%,
+      var(--粒子色, #e8e2d4) 100%);
+    filter: blur(2px);
+    border-radius: 50%;
+    opacity: 0.88;
+    animation: 尾摇 0.55s ease-in-out infinite alternate;
+  }
+  // 拖尾辉光：更宽更柔的径向辉光层
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 1.8rem; height: 1.4rem;
+    transform: translate(-94%, -50%);
+    transform-origin: 100% 50%;
+    background: radial-gradient(ellipse at 100% 50%,
+      color-mix(in srgb, var(--粒子色, #e8e2d4) 42%, transparent) 0%,
+      transparent 70%);
+    filter: blur(4px);
+    opacity: 0.7;
+    animation: 尾摇 0.42s ease-in-out infinite alternate-reverse;
+  }
+}
+
+// 各类别配色差异（平面）
 .能量球.pure {
-  .轨道-1 { border-color: rgba(230,198,88,0.32); }
+  .轨道 { border-color: rgba(230,198,88,0.32); }
   .核 { background: radial-gradient(circle at 35% 35%, #fff7e0 0%, #e6c658 35%, #8a6a1a 100%); }
 }
-.能量球.dual {
-  .轨道-2 { border-color: rgba(106,168,90,0.30); }
-}
+.能量球.dual { .轨道 { border-color: rgba(106,168,90,0.30); } }
 .能量球.chaos {
-  .轨道 { border-style: dotted; }
-  .轨道-1 { animation-duration: 10s; }
-  .轨道-2 { animation-duration: 12s; }
-  .轨道-3 { animation-duration: 14s; }
+  .轨道 { border-style: dotted; border-color: rgba(184,146,90,0.34); }
+  .能量粒子 { animation-duration: 12s; }
 }
 .能量球.mutant {
-  .轨道 { border-color: rgba(138,90,212,0.32); }
-  .轨道-3 { border-color: rgba(200,90,212,0.4); }
+  .轨道 { border-color: rgba(200,90,212,0.4); }
   .核 {
     background: radial-gradient(circle at 35% 35%, #f0d8ff 0%, #a86ad8 40%, #4a1a6a 100%);
     box-shadow: 0 0 30px rgba(168,90,212,0.4), 0 0 58px rgba(138,90,212,0.32), inset 0 0 16px rgba(255,230,255,0.4);
@@ -555,20 +526,21 @@ h3 {
   0%, 100% { opacity: 0.55; transform: scale(1); }
   50% { opacity: 0.95; transform: scale(1.08); }
 }
-@keyframes 轨道自转 {
-  to { transform: rotateZ(360deg); }
+@keyframes 轨道闪 {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
 }
 @keyframes 粒子公转 {
-  from { transform: rotateY(var(--轨道Y, 0deg)) rotateZ(0deg) translateX(4.4rem); }
-  to   { transform: rotateY(var(--轨道Y, 0deg)) rotateZ(360deg) translateX(4.4rem); }
+  from { transform: rotate(var(--相位, 0deg)) translateX(4.4rem); }
+  to   { transform: rotate(calc(var(--相位, 0deg) + 360deg)) translateX(4.4rem); }
 }
 @keyframes 核脉动 {
   0%, 100% { transform: scale(1); filter: brightness(1); }
   50% { transform: scale(1.12); filter: brightness(1.25); }
 }
 @keyframes 尾摇 {
-  from { transform: translate(-100%, -50%) scaleX(0.9) scaleY(0.85); opacity: 0.6; }
-  to   { transform: translate(-100%, -50%) scaleX(1.05) scaleY(1.1);  opacity: 0.9; }
+  from { transform: translate(-100%, -50%) scaleX(0.9); opacity: 0.65; }
+  to   { transform: translate(-100%, -50%) scaleX(1.08); opacity: 0.92; }
 }
 
 .能量提示 {
