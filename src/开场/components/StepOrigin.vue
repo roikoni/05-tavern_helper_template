@@ -2,6 +2,66 @@
   <section class="step">
     <h2>道途</h2>
 
+    <!-- 灵根：分类选择 + 能量球 -->
+    <h3>灵根</h3>
+    <div class="灵根区">
+      <div class="灵根左">
+        <!-- 类别选择 -->
+        <div class="类别组">
+          <button
+            v-for="g in 灵根类别列表"
+            :key="g.名称"
+            class="类别-btn"
+            :class="{ active: 当前类别 === g.名称 }"
+            @click="选类别(g.名称)"
+          >
+            <div class="title">{{ g.名称 }}</div>
+            <div class="desc">{{ g.描述 }}</div>
+            <div class="cost" :class="{ free: g.消耗 === 0 }">
+              {{ g.消耗 === 0 ? '免费' : `+${g.消耗} 点` }}
+            </div>
+          </button>
+        </div>
+
+        <!-- 属性选择 -->
+        <div v-if="当前配置" class="属性组">
+          <p class="属性行">
+            可选 {{ 当前配置.最少 }}~{{ 当前配置.最多 }} 个属性，已选 {{ 已选属性.length }}
+          </p>
+          <div class="属性网格">
+            <button
+              v-for="a in 当前配置.池"
+              :key="a.名称"
+              class="属性-btn"
+              :class="{ active: 已选属性.includes(a.名称) }"
+              :style="{ '--属性色': a.色 }"
+              @click="切属性(a.名称)"
+            >
+              <span class="属性点"></span>
+              <span class="属性名">{{ a.名称 }}</span>
+            </button>
+          </div>
+        </div>
+        <p v-else class="prop-hint">请先选择灵根类别</p>
+      </div>
+
+      <!-- 能量球 -->
+      <div class="能量球区" :class="{ active: 当前配置 }">
+        <div class="能量球" :class="特效风格">
+          <span class="光环"></span>
+          <span class="轨道"></span>
+          <span
+            v-for="(a, i) in 已选属性候选"
+            :key="a.名称"
+            class="能量粒子"
+            :style="粒子样式(i, a.色)"
+          ></span>
+          <span class="核"></span>
+        </div>
+        <p class="能量提示">{{ 能量提示 }}</p>
+      </div>
+    </div>
+
     <h3>本源（道之根本，自悟）</h3>
     <label class="field">
       <input v-model="本源" placeholder="一字到数字均可，如：剑、心、红尘、杀戮即道…" maxlength="10" />
@@ -43,19 +103,6 @@
       </button>
     </div>
 
-    <h3>灵根</h3>
-    <div class="grid grid-灵根">
-      <button v-for="g in 灵根列表" :key="g.名称"
-              :class="{ active: 灵根 === g.名称 }"
-              @click="灵根 = g.名称">
-        <div class="title">{{ g.名称 }}</div>
-        <div class="desc">{{ g.类型 }}</div>
-        <div class="cost" :class="{ free: g.消耗 === 0 }">
-          {{ g.消耗 === 0 ? '免费' : `+${g.消耗} 点` }}
-        </div>
-      </button>
-    </div>
-
     <h3>称号</h3>
     <label class="field">
       <input v-model="称号" placeholder="（默认从修炼流派生成，可改）" />
@@ -64,12 +111,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
 import { 流派列表 } from '../catalog/流派';
-import { 灵根列表 } from '../catalog/灵根';
+import { 灵根类别列表, 解析灵根, type 灵根类别 } from '../catalog/灵根';
 import { 境界列表, 查境界 } from '../lib/点数';
 
 const props = defineProps<{ 自由: boolean }>();
@@ -85,15 +132,82 @@ const 流派 = computed({
   get: () => data.value.主角.修炼流派,
   set: v => data.value.主角.修炼流派 = v,
 });
-const 灵根 = computed({
-  get: () => data.value.主角.灵根,
-  set: v => { data.value.主角.灵根 = v; draft.标记花费(); },
-});
 const 称号 = computed({
   get: () => data.value.主角.称号 === '待捏角' ? '' : data.value.主角.称号,
   set: v => data.value.主角.称号 = v || '待捏角',
 });
 const 境界 = computed(() => data.value.主角.境界);
+
+// ─── 灵根 ───
+const 解析结果 = 解析灵根(data.value.主角.灵根);
+const 当前类别 = ref<灵根类别 | ''>(解析结果?.类别 ?? '');
+const 已选属性 = ref<string[]>(解析结果?.属性 ?? []);
+
+const 当前配置 = computed(() =>
+  灵根类别列表.find(g => g.名称 === 当前类别.value)
+);
+
+const 已选属性候选 = computed(() => {
+  const cfg = 当前配置.value;
+  if (!cfg) return [];
+  return 已选属性.value
+    .map(名 => cfg.池.find(a => a.名称 === 名))
+    .filter(Boolean) as { 名称: string; 色: string }[];
+});
+
+const 特效风格 = computed(() => 当前配置.value?.特效 ?? 'pure');
+
+const 能量提示 = computed(() => {
+  const cfg = 当前配置.value;
+  if (!cfg) return '静待灵根觉醒';
+  const n = 已选属性.value.length;
+  if (n < cfg.最少) return `还需选 ${cfg.最少 - n} 个属性`;
+  if (n > cfg.最多) return `已超出 ${n - cfg.最多} 个，请减少`;
+  return `${cfg.名称} · ${n} 属性流转`;
+});
+
+function 同步灵根() {
+  const cfg = 当前配置.value;
+  if (!cfg || 已选属性.value.length < cfg.最少) {
+    data.value.主角.灵根 = '待捏角';
+    return;
+  }
+  data.value.主角.灵根 = `${cfg.名称}·${已选属性.value.join('·')}`;
+  draft.标记花费();
+}
+
+function 选类别(名: 灵根类别) {
+  当前类别.value = 名;
+  已选属性.value = [];
+  同步灵根();
+}
+
+function 切属性(名: string) {
+  const cfg = 当前配置.value;
+  if (!cfg) return;
+  const idx = 已选属性.value.indexOf(名);
+  if (idx >= 0) {
+    已选属性.value.splice(idx, 1);
+  } else {
+    if (已选属性.value.length >= cfg.最多) {
+      // 达到上限，替换最早的（保持不超额）
+      已选属性.value.shift();
+    }
+    已选属性.value.push(名);
+  }
+  同步灵根();
+}
+
+// 能量球粒子样式：沿轨道圆周分布
+function 粒子样式(i: number, 色: string) {
+  const n = Math.max(已选属性候选.value.length, 1);
+  const 角度 = (i / n) * 360;
+  return {
+    '--粒子色': 色,
+    '--角度': `${角度}deg`,
+    animationDelay: `${i * 0.4}s`,
+  } as Record<string, string>;
+}
 
 function 选境界(名: string) {
   data.value.主角.境界 = 名;
@@ -101,8 +215,6 @@ function 选境界(名: string) {
   if (候选) {
     data.value.主角.修为上限 = 候选.修为上限;
     data.value.主角.修为 = 候选.修为上限;
-    // 自由/开挂模式：境界选定后，六维下限抬升到该境界的最低标准
-    // 已高于下限的属性不动（保留玩家加点），低于下限的自动补齐
     if (props.自由) {
       const 六维 = data.value.主角.六维 as Record<string, number>;
       for (const k of Object.keys(六维)) {
@@ -153,17 +265,228 @@ h3 {
   &::before { content: "▸ "; color: $blood-glow; opacity: 0.7; }
 }
 
+// ═══════════════════════════════════════════════
+// 灵根区
+// ═══════════════════════════════════════════════
+.灵根区 {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 1.6rem;
+  align-items: start;
+  @include mobile { grid-template-columns: 1fr; gap: 1rem; }
+  @include tablet { grid-template-columns: 1fr 180px; gap: 1.2rem; }
+}
+
+.灵根左 { min-width: 0; }
+
+.类别组 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.7rem;
+  @include mobile { grid-template-columns: 1fr 1fr; }
+}
+
+.类别-btn {
+  @include xianxia-card;
+  text-align: left;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  cursor: pointer;
+  color: $paper-cold;
+  font-size: 0.95rem;
+  @include mobile { padding: 0.6rem; font-size: 0.85rem; }
+
+  .title { font-weight: bold; letter-spacing: 0.08em; }
+  .desc {
+    font-size: 0.78rem;
+    color: $paper-dim;
+    line-height: 1.45;
+    @include mobile { font-size: 0.72rem; }
+  }
+  .cost {
+    font-size: 0.8rem;
+    align-self: flex-end;
+    color: $blood-glow;
+    padding: 0.15rem 0.5rem;
+    background: rgba(80,15,15,0.25);
+    border-radius: $r-xs;
+    &.free { color: $jade; background: rgba(40,80,40,0.2); &::before { content: "✓ "; } }
+  }
+  &.active .title { color: #fff; text-shadow: 0 0 8px rgba(168,51,51,0.4); }
+}
+
+.属性组 {
+  margin-top: 1rem;
+  .属性行 {
+    font-size: 0.85rem;
+    color: $paper-dim;
+    margin: 0 0 0.5rem;
+    letter-spacing: 0.05em;
+  }
+}
+
+.属性网格 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.属性-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(8,7,10,0.7);
+  border: 1px solid rgba(207,200,184,0.18);
+  border-radius: $r-pill;
+  cursor: pointer;
+  color: $paper-cold;
+  font-family: $font-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  @include mobile { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+
+  .属性点 {
+    width: 0.6rem; height: 0.6rem;
+    border-radius: 50%;
+    background: var(--属性色, #999);
+    box-shadow: 0 0 6px var(--属性色, #999);
+    transition: box-shadow 0.3s ease;
+  }
+  &.active {
+    border-color: var(--属性色, rgba(207,200,184,0.5));
+    background: rgba(20,18,24,0.9);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--属性色, #999) 40%, transparent);
+    .属性点 { box-shadow: 0 0 12px var(--属性色, #999); }
+  }
+}
+
+.prop-hint {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: $paper-faint;
+  font-style: italic;
+}
+
+// ═══════════════════════════════════════════════
+// 能量球
+// ═══════════════════════════════════════════════
+.能量球区 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  position: sticky;
+  top: 1rem;
+  opacity: 0.35;
+  transition: opacity 0.4s ease;
+  &.active { opacity: 1; }
+}
+
+.能量球 {
+  position: relative;
+  width: 180px; height: 180px;
+  display: flex; align-items: center; justify-content: center;
+  @include mobile { width: 150px; height: 150px; }
+  @include tablet { width: 160px; height: 160px; }
+}
+
+.光环 {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+    rgba(207,200,184,0.06) 0%,
+    rgba(168,51,51,0.04) 40%,
+    transparent 70%);
+  filter: blur(4px);
+  animation: 光环呼吸 6s ease-in-out infinite;
+}
+
+.轨道 {
+  position: absolute; inset: 22%;
+  border-radius: 50%;
+  border: 1px dashed rgba(207,200,184,0.18);
+  animation: 轨道转 14s linear infinite;
+}
+
+.核 {
+  position: relative;
+  width: 30%; height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240,232,216,0.85) 0%, rgba(207,200,184,0.4) 50%, rgba(168,51,51,0.2) 100%);
+  box-shadow:
+    0 0 20px rgba(207,200,184,0.25),
+    inset 0 0 12px rgba(255,255,255,0.3);
+  z-index: 2;
+  animation: 核脉动 4s ease-in-out infinite;
+}
+
+.能量粒子 {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0.85rem; height: 0.85rem;
+  margin: -0.425rem 0 0 -0.425rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--粒子色, #e8e2d4) 0%, color-mix(in srgb, var(--粒子色, #e8e2d4) 40%, transparent) 60%, transparent 100%);
+  box-shadow: 0 0 10px var(--粒子色, #e8e2d4), 0 0 18px color-mix(in srgb, var(--粒子色, #e8e2d4) 50%, transparent);
+  transform: rotate(var(--角度, 0deg)) translateX(58px);
+  z-index: 3;
+  animation: 粒子转 12s linear infinite;
+  will-change: transform;
+  @include mobile { transform: rotate(var(--角度, 0deg)) translateX(48px); }
+}
+
+// 不同灵根类别的特效风格
+.能量球.pure .轨道 { border-color: rgba(230,198,88,0.25); animation-duration: 20s; }
+.能量球.dual .轨道 { border-color: rgba(106,168,90,0.25); }
+.能量球.chaos .轨道 {
+  border-color: rgba(184,146,90,0.3);
+  border-style: dotted;
+  animation-duration: 9s;
+}
+.能量球.mutant {
+  .轨道 { border-color: rgba(138,90,212,0.35); animation-duration: 11s; }
+  .核 { box-shadow: 0 0 24px rgba(138,90,212,0.35), inset 0 0 14px rgba(200,150,255,0.4); }
+}
+
+@keyframes 光环呼吸 {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+@keyframes 轨道转 {
+  to { transform: rotate(360deg); }
+}
+@keyframes 核脉动 {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.1); filter: brightness(1.2); }
+}
+@keyframes 粒子转 {
+  from { transform: rotate(var(--角度, 0deg)) translateX(58px) rotate(0deg); }
+  to   { transform: rotate(calc(var(--角度, 0deg) + 360deg)) translateX(58px) rotate(-360deg); }
+}
+
+.能量提示 {
+  font-family: $font-serif;
+  font-size: 0.85rem;
+  color: $paper-dim;
+  letter-spacing: 0.1em;
+  text-align: center;
+  min-height: 1.2em;
+  @include mobile { font-size: 0.78rem; }
+}
+
+// ═══════════════════════════════════════════════
+// 其余 grid（流派 / 境界）
+// ═══════════════════════════════════════════════
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
   gap: 0.7rem;
-  // 手机端：单列
   @include mobile { grid-template-columns: 1fr; }
-  &.grid-灵根 {
-    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
-    // 手机端灵根用 2 列
-    @include mobile { grid-template-columns: repeat(2, 1fr); }
-  }
   &.grid-境界 {
     grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
     @include mobile { grid-template-columns: repeat(2, 1fr); }
@@ -182,32 +505,17 @@ h3 {
   font-size: 1rem;
   @include mobile { padding: 0.65rem; font-size: 0.9rem; }
 
-  .title {
-    font-weight: bold;
-    color: $paper-cold;
-    letter-spacing: 0.08em;
-  }
+  .title { font-weight: bold; color: $paper-cold; letter-spacing: 0.08em; }
   .desc {
-    font-size: 0.85rem;
-    color: $paper-dim;
-    flex: 1;
-    line-height: 1.5;
+    font-size: 0.85rem; color: $paper-dim; flex: 1; line-height: 1.5;
     @include mobile { font-size: 0.78rem; }
   }
   .cost {
-    font-size: 0.85rem;
-    align-self: flex-end;
-    color: $blood-glow;
-    letter-spacing: 0.05em;
-    padding: 0.15rem 0.5rem;
-    background: rgba(80,15,15,0.25);
-    border-radius: $r-xs;
+    font-size: 0.85rem; align-self: flex-end; color: $blood-glow;
+    letter-spacing: 0.05em; padding: 0.15rem 0.5rem;
+    background: rgba(80,15,15,0.25); border-radius: $r-xs;
     @include mobile { font-size: 0.78rem; }
-    &.free {
-      color: $jade;
-      background: rgba(40,80,40,0.2);
-      &::before { content: "✓ "; }
-    }
+    &.free { color: $jade; background: rgba(40,80,40,0.2); &::before { content: "✓ "; } }
   }
   &.active .title { color: #fff; text-shadow: 0 0 8px rgba(168,51,51,0.4); }
 }
@@ -218,16 +526,19 @@ h3 {
     @include mobile { font-size: 0.92rem; }
   }
   .hint-本源 {
-    font-size: 0.92rem;
-    color: $paper-dim;
-    margin: 0.4rem 0 0 0;
-    font-style: italic;
-    padding: 0.5rem 0.75rem;
-    border-left: 2px solid $blood-mid;
-    background: rgba(80,15,15,0.12);
-    border-radius: 0 $r-sm $r-sm 0;
-    line-height: 1.7;
+    font-size: 0.92rem; color: $paper-dim; margin: 0.4rem 0 0 0;
+    font-style: italic; padding: 0.5rem 0.75rem;
+    border-left: 2px solid $blood-mid; background: rgba(80,15,15,0.12);
+    border-radius: 0 $r-sm $r-sm 0; line-height: 1.7;
     @include mobile { font-size: 0.8rem; padding: 0.4rem 0.55rem; }
   }
+}
+
+.hint {
+  font-size: 0.92rem; color: $paper-dim; font-style: italic;
+  margin-top: 0.6rem; padding: 0.5rem 0.75rem;
+  border-left: 2px solid $blood-mid; background: rgba(80,15,15,0.12);
+  border-radius: 0 $r-sm $r-sm 0; line-height: 1.7;
+  @include mobile { font-size: 0.8rem; padding: 0.4rem 0.55rem; }
 }
 </style>

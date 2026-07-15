@@ -1,5 +1,5 @@
 import { 流派列表, 查流派 } from '../catalog/流派';
-import { 灵根列表 } from '../catalog/灵根';
+import { 灵根类别列表, 查灵根类别 } from '../catalog/灵根';
 import { 武器列表, type 武器候选 } from '../catalog/武器';
 import { 法器列表, type 法器候选 } from '../catalog/法器';
 import { 功法列表, type 功法候选 } from '../catalog/功法';
@@ -16,7 +16,7 @@ export const 灵石换算 = 1000; // 每 1000 灵石消耗 1 开局点
 export interface 玩家选择 {
   本源: string;        // 玩家自由输入的"道之根本"，如"剑"、"红尘"、"杀戮"
   流派: string;        // 修炼流派名（如"剑修"），未选时为空字符串
-  灵根: string;        // 灵根名（如"金灵根"），未选时为空字符串
+  灵根: string;        // 灵根字符串，格式 "类别·属性·属性"，如"天灵根·金"
   宗门: string;        // 宗门名（如"太虚剑宗"），未选时为空字符串
   境界: string;        // 修为境界名（如"炼气期"），自由模式可自定义
   已购武器: readonly string[]; // 武器名数组
@@ -68,11 +68,11 @@ export function 计算属性点数(六维: 玩家选择['六维'], 免费基线:
 
 export function 计算总消耗(选择: 玩家选择): number {
   const 流派 = 流派列表.find(s => s.名称 === 选择.流派);
-  const 灵根 = 灵根列表.find(g => g.名称 === 选择.灵根);
+  const 灵根类别 = 查灵根类别(选择.灵根);
   let 总 = 0;
   // 本源是自由文本，不消耗点数；流派消耗按 catalog
   if (流派) 总 += 流派.消耗;
-  if (灵根) 总 += 灵根.消耗;
+  if (灵根类别) 总 += 灵根类别.消耗;
   总 += 计算境界消耗(选择.境界);
 
   for (const 名 of 选择.已购武器) {
