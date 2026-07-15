@@ -292,10 +292,12 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
     -webkit-text-stroke: clamp(0.35px, 0.08vw, 0.75px) rgba(4, 3, 5, 0.72);
     paint-order: stroke fill;
     text-shadow:
-      0 0 2px rgba(255,255,255,0.35),
-      0 0 8px rgba(236,231,218,0.25),
-      0 0 24px rgba(207,200,184,0.20),
-      0 0 48px rgba(207,200,184,0.12),
+      // 紧贴字形的墨晕
+      0 0 2px rgba(0,0,0,0.60),
+      0 0 8px rgba(0,0,0,0.50),
+      0 0 24px rgba(0,0,0,0.35),
+      0 0 48px rgba(0,0,0,0.20),
+      // 底部墨影压暗
       0 2px 0 rgba(0,0,0,0.9),
       0 4px 12px rgba(0,0,0,0.85),
       0 8px 28px rgba(0,0,0,0.70);
@@ -356,10 +358,12 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
 @keyframes char-ink-breathe {
   0%, 100% {
     text-shadow:
-      0 0 2px rgba(255,255,255,0.35),
-      0 0 8px rgba(236,231,218,0.25),
-      0 0 24px rgba(207,200,184,0.20),
-      0 0 48px rgba(207,200,184,0.12),
+      // 紧贴字形的墨晕
+      0 0 2px rgba(0,0,0,0.60),
+      0 0 8px rgba(0,0,0,0.50),
+      0 0 24px rgba(0,0,0,0.35),
+      0 0 48px rgba(0,0,0,0.20),
+      // 底部墨影压暗
       0 2px 0 rgba(0,0,0,0.9),
       0 4px 12px rgba(0,0,0,0.85),
       0 8px 28px rgba(0,0,0,0.70);
