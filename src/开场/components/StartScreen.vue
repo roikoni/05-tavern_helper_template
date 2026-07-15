@@ -74,13 +74,18 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
   isolation: isolate;
   transition: filter 0.6s ease;
 
-  // 强暗角 + 微噪点
+  // 暗角压暗 + 中心提亮文字可读性 + 微噪点
   &::before {
     content: "";
     position: absolute; inset: 0;
     background:
-      linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.08) 80%, rgba(0,0,0,0.62) 100%),
-      radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.72) 100%),
+      // 左右压暗
+      linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.02) 22%, rgba(0,0,0,0.02) 78%, rgba(0,0,0,0.55) 100%),
+      // 中心提亮：让文字在黑色底图上更突出
+      radial-gradient(ellipse at 50% 35%, rgba(30,28,34,0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 75%, rgba(30,28,34,0.25) 0%, transparent 50%),
+      // 边缘暗化
+      radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.65) 100%),
       repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0 1px, transparent 1px 3px);
     pointer-events: none;
     z-index: 3;
@@ -102,48 +107,51 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
   .mist {
     position: absolute;
     border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.08;
-    background: radial-gradient(ellipse at center, rgba(15,14,18,0.9) 0%, rgba(5,4,7,0.6) 40%, transparent 70%);
+    filter: blur(55px);
+    // 灰墨色（非纯黑），在黑色底图上可见
+    background: radial-gradient(ellipse at center, rgba(55,52,62,0.9) 0%, rgba(30,28,36,0.7) 45%, transparent 75%);
     will-change: transform;
+    --target-opacity: 0.25;
   }
 
   .m1 {
-    width: 45%; height: 18%;
-    top: 12%; left: -20%;
-    animation: mist-drift 28s linear -4s infinite;
-    opacity: 0.06;
+    width: 50%; height: 22%;
+    top: 8%; left: -25%;
+    animation: mist-drift 24s linear -4s infinite;
+    --target-opacity: 0.28;
   }
   .m2 {
-    width: 38%; height: 14%;
-    top: 32%; left: -15%;
-    animation: mist-drift 22s linear -8s infinite;
-    opacity: 0.1;
+    width: 42%; height: 16%;
+    top: 30%; left: -18%;
+    animation: mist-drift 20s linear -8s infinite;
+    --target-opacity: 0.35;
   }
   .m3 {
-    width: 52%; height: 22%;
-    top: 48%; left: -25%;
-    animation: mist-drift 32s linear -2s infinite;
-    opacity: 0.07;
+    width: 58%; height: 26%;
+    top: 45%; left: -30%;
+    animation: mist-drift 28s linear -2s infinite;
+    --target-opacity: 0.22;
   }
   .m4 {
-    width: 30%; height: 12%;
-    top: 68%; left: -10%;
-    animation: mist-drift 26s linear -12s infinite;
-    opacity: 0.09;
+    width: 35%; height: 14%;
+    top: 65%; left: -12%;
+    animation: mist-drift 22s linear -12s infinite;
+    --target-opacity: 0.30;
   }
   .m5 {
-    width: 40%; height: 16%;
-    top: 22%; left: -18%;
-    animation: mist-drift 30s linear -16s infinite;
-    opacity: 0.05;
+    width: 45%; height: 18%;
+    top: 18%; left: -22%;
+    animation: mist-drift 26s linear -16s infinite;
+    --target-opacity: 0.25;
   }
 }
 
 @keyframes mist-drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(120vw, -2vh, 0) scale(1.15); }
-  100% { transform: translate3d(240vw, 1vh, 0) scale(1); }
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.15; }
+  15%  { opacity: var(--target-opacity); }
+  50%  { transform: translate3d(120vw, -3vh, 0) scale(1.2); }
+  85%  { opacity: var(--target-opacity); }
+  100% { transform: translate3d(240vw, 2vh, 0) scale(1); opacity: 0.15; }
 }
 
 // ═══════════════════════════════════════════════
@@ -176,10 +184,15 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
   -webkit-text-stroke: clamp(0.35px, 0.08vw, 0.75px) rgba(4, 3, 5, 0.72);
   paint-order: stroke fill;
   text-shadow:
-    0 0 1px rgba(255,255,255,0.12),
-    0 0 18px rgba(236,231,218,0.15),
-    0 0 34px rgba(0,0,0,0.85),
-    0 4px 20px rgba(0,0,0,0.95);
+    // 内层冷白高光：让字在黑色底图上"亮"起来
+    0 0 2px rgba(255,255,255,0.35),
+    0 0 8px rgba(236,231,218,0.25),
+    0 0 24px rgba(207,200,184,0.20),
+    0 0 48px rgba(207,200,184,0.12),
+    // 外层墨影：压暗背景突出字形
+    0 2px 0 rgba(0,0,0,0.9),
+    0 4px 12px rgba(0,0,0,0.85),
+    0 8px 28px rgba(0,0,0,0.70);
   pointer-events: none;
   isolation: isolate;
 
@@ -253,14 +266,16 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
       padding: 0.65rem 1.4rem;
       gap: 0.5rem;
     }
-    background: rgba(5,4,7,0.35);
-    border: 1px solid rgba(207,200,184,0.22);
+    background: rgba(12,10,16,0.72);
+    border: 1px solid rgba(207,200,184,0.40);
     border-radius: 1px;
     color: $paper-cold;
     font-size: clamp(0.95rem, 3vw, 1.15rem);
     letter-spacing: 0.6em;
     text-indent: 0.6em;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    box-shadow:
+      inset 0 0 18px rgba(0,0,0,0.55),
+      0 4px 24px rgba(0,0,0,0.6);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     @include mobile { font-size: clamp(0.85rem, 4vw, 1rem); }
 
@@ -272,7 +287,7 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
       font-style: normal;
       font-size: 1em;
       color: $paper-cold;
-      opacity: 0.55;
+      opacity: 0.75;
       letter-spacing: 0;
       transition: all 0.4s ease;
     }
@@ -296,15 +311,17 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
   &:hover {
     .text {
       color: #fff;
-      border-color: rgba(207,200,184,0.5);
-      background: rgba(10,8,13,0.55);
+      border-color: rgba(207,200,184,0.65);
+      background: rgba(20,16,24,0.88);
       box-shadow:
-        0 0 0 1px rgba(207,200,184,0.35),
-        0 4px 32px rgba(120,20,20,0.35);
+        inset 0 0 22px rgba(168,51,51,0.18),
+        0 0 0 1px rgba(207,200,184,0.45),
+        0 4px 32px rgba(120,20,20,0.40),
+        0 0 24px rgba(168,51,51,0.15);
       .icon {
         color: $blood-glow;
-        opacity: 0.9;
-        text-shadow: 0 0 10px rgba(168,51,51,0.5);
+        opacity: 1;
+        text-shadow: 0 0 12px rgba(168,51,51,0.6);
       }
     }
     .btn-ink {
