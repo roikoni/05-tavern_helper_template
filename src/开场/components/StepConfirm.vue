@@ -28,7 +28,7 @@
         <span>宗门</span><b>{{ 主角.宗门 }}</b>
       </div>
       <div class="cell">
-        <span>本源</span><b>{{ 主角.本源 }}</b>
+        <span>本源</span><b>{{ 主角.本源 }}（{{ 本源基调 }}）</b>
       </div>
       <div class="cell">
         <span>修炼流派</span><b>{{ 主角.修炼流派 }}</b>
@@ -100,7 +100,7 @@ import { 人物已被设置 } from '../lib/person';
 const props = defineProps<{ 自由: boolean; 开挂?: boolean }>();
 const { data } = storeToRefs(useDataStore());
 const draft = useDraftStore();
-const { 已选功法, 点数池, 开局身份, 自定义能力 } = storeToRefs(draft);
+const { 已选功法, 点数池, 开局身份, 自定义能力, 本源基调 } = storeToRefs(draft);
 const 生成中 = ref(false);
 const 六维键 = ['力道', '体魄', '身法', '灵力', '神识', '根骨'] as const;
 
@@ -170,6 +170,7 @@ async function onConfirm() {
       props.自由,
       开局身份.value,
       props.开挂 ? 自定义能力.value : '',
+      本源基调.value,
     );
     await createChatMessages([{ role: 'user', message: 开场白 }]);
 

@@ -22,6 +22,8 @@ export const useDraftStore = defineStore('开场.draft', () => {
   const 开局身份 = ref<string>('');
   // 开挂模式：自定义能力填表
   const 自定义能力 = ref<string>('');
+  // 本源基调：影响 AI 生成自悟功法与开场剧情的笔调。正经/搞笑/涩涩
+  const 本源基调 = ref<'正经' | '搞笑' | '涩涩'>('正经');
 
   function 切换功法(名: string) {
     const i = 已选功法.value.indexOf(名);
@@ -54,13 +56,14 @@ export const useDraftStore = defineStore('开场.draft', () => {
     点数池.value = 普通模式点数;
   }
 
-  /** 重置全部草稿：已选功法、锁定、点数池、开局身份、自定义能力 */
+  /** 重置全部草稿：已选功法、锁定、点数池、开局身份、自定义能力、本源基调 */
   function 重置() {
     已选功法.value = [];
     锁定.value = false;
     点数池.value = 普通模式点数;
     开局身份.value = '';
     自定义能力.value = '';
+    本源基调.value = '正经';
   }
 
   /** 自由模式掷骰：0~100，结果直接成为点数池总量。已花费点数时不可 reroll */
@@ -71,7 +74,7 @@ export const useDraftStore = defineStore('开场.draft', () => {
   }
 
   return {
-    已选功法, 模式, 点数池, 锁定, 开局身份, 自定义能力,
+    已选功法, 模式, 点数池, 锁定, 开局身份, 自定义能力, 本源基调,
     切换功法, 清空, 设模式, 标记花费, 重置点数, 重置, roll,
   };
 });

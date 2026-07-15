@@ -197,6 +197,7 @@ function doSave() {
       点数池: 模式.value === '开挂' ? -1 : 点数池.value, // -1 表示无限，规避 JSON Infinity 丢失
       开局身份: draftStore.开局身份,
       自定义能力: draftStore.自定义能力,
+      本源基调: draftStore.本源基调,
       主角: klona(data.value.主角) as Record<string, any>,
       已选功法: klona(draftStore.已选功法),
     },
@@ -223,6 +224,7 @@ function doLoad(s: CreatorSave) {
   }
   if (typeof s.开局身份 === 'string') draftStore.开局身份 = s.开局身份;
   if (typeof s.自定义能力 === 'string') draftStore.自定义能力 = s.自定义能力;
+  if (s.本源基调 === '正经' || s.本源基调 === '搞笑' || s.本源基调 === '涩涩') draftStore.本源基调 = s.本源基调;
   // 恢复步骤
   当前步.value = s.step;
   // 恢复已选功法

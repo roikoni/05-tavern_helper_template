@@ -68,8 +68,20 @@
     <h3>本源</h3>
     <label class="field">
       <input v-model="本源" placeholder="自由发挥，随意填写" maxlength="10" />
+      <div class="基调组">
+        <button
+          v-for="k in 基调选项"
+          :key="k.值"
+          class="基调-btn"
+          :class="{ active: 本源基调 === k.值, [k.值]: true }"
+          @click="本源基调 = k.值"
+        >
+          <span class="基调-标记">{{ k.标记 }}</span>
+          <span class="基调-名">{{ k.名 }}</span>
+        </button>
+      </div>
       <p class="hint-本源">
-        本源是你修行的根本理念，由你自悟。AI 会根据你的本源 + 流派，为你独家定制一门自悟功法。
+        本源是你修行的根本理念，由你自悟。AI 会根据你的本源 + 流派，为你独家定制一门自悟功法。基调会影响自悟功法与开场剧情的笔调。
       </p>
     </label>
 
@@ -131,6 +143,14 @@ const 本源 = computed({
   get: () => data.value.主角.本源 === '待捏角' ? '' : data.value.主角.本源,
   set: v => data.value.主角.本源 = v || '待捏角',
 });
+
+// 本源基调：正经 / 搞笑 / 涩涩，存于 draft，仅影响提示词笔调
+const 基调选项 = [
+  { 值: '正经', 名: '正经', 标记: '正', 描述: '冷峻克制、正剧笔调' },
+  { 值: '搞笑', 名: '搞笑', 标记: '戏', 描述: '插科打诨、荒诞戏谑' },
+  { 值: '涩涩', 名: '涩涩', 标记: '媚', 描述: '香艳暧昧、情欲暗涌' },
+] as const;
+const { 本源基调 } = storeToRefs(draft);
 const 流派 = computed({
   get: () => data.value.主角.修炼流派,
   set: v => data.value.主角.修炼流派 = v,
@@ -605,6 +625,80 @@ h3 {
     border-left: 2px solid $blood-mid; background: rgba(80,15,15,0.12);
     border-radius: 0 $r-sm $r-sm 0; line-height: 1.7;
     @include mobile { font-size: 0.8rem; padding: 0.4rem 0.55rem; }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// 本源基调（正经 / 搞笑 / 涩涩）
+// ═══════════════════════════════════════════════
+.基调组 {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  @include mobile { gap: 0.35rem; }
+}
+
+.基调-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.5rem;
+  background: rgba(8,7,10,0.7);
+  border: 1px solid rgba(207,200,184,0.18);
+  border-radius: $r-sm;
+  cursor: pointer;
+  color: $paper-dim;
+  font-family: $font-serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  transition: all 0.3s ease;
+  @include mobile { font-size: 0.82rem; padding: 0.45rem 0.3rem; }
+
+  .基调-标记 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.4rem; height: 1.4rem;
+    border-radius: 50%;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: 1px solid currentColor;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    @include mobile { width: 1.2rem; height: 1.2rem; font-size: 0.85rem; }
+  }
+
+  &:hover {
+    border-color: rgba(207,200,184,0.38);
+    color: $paper-cold;
+  }
+
+  // 各基调激活态配色
+  &.正经 { --基调色: #b8b0a4; }
+  &.正经.active {
+    color: $paper-cold;
+    border-color: rgba(184,176,164,0.55);
+    background: rgba(20,18,24,0.9);
+    box-shadow: 0 0 10px rgba(184,176,164,0.18);
+    .基调-标记 { color: #e8e2d4; border-color: rgba(232,226,212,0.7); opacity: 1; }
+  }
+
+  &.搞笑 { --基调色: #d8b44a; }
+  &.搞笑.active {
+    color: #f4e2a0;
+    border-color: rgba(216,180,74,0.6);
+    background: rgba(34,28,14,0.92);
+    box-shadow: 0 0 12px rgba(216,180,74,0.28);
+    .基调-标记 { color: #f4e2a0; border-color: rgba(244,226,160,0.75); opacity: 1; }
+  }
+
+  &.涩涩 { --基调色: #d45a7a; }
+  &.涩涩.active {
+    color: #f4b8cc;
+    border-color: rgba(212,90,122,0.6);
+    background: rgba(36,16,24,0.92);
+    box-shadow: 0 0 12px rgba(212,90,122,0.3);
+    .基调-标记 { color: #f4b8cc; border-color: rgba(244,184,204,0.75); opacity: 1; }
   }
 }
 
