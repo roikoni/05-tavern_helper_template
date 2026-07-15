@@ -1,6 +1,6 @@
 <template>
   <section class="step">
-    <h2>江湖出身</h2>
+    <h2>出身</h2>
 
     <!-- 自由模式：开局身份（自由填表） -->
     <label v-if="自由" class="field">
@@ -56,21 +56,11 @@
 
     <label class="field">
       <span>人物设定</span>
-      <textarea v-model="外貌" rows="3" placeholder="（可选）描述你的容貌、身形、装束"></textarea>
-    </label>
-
-    <label class="field">
-      <span>出身地</span>
-      <select v-model="出身地">
-        <option value="待捏角" disabled>—— 请选择 ——</option>
-        <option v-for="d in 出身地列表" :key="d.名称" :value="d.名称">
-          {{ d.名称 }}（{{ d.区域 }}）
-        </option>
-      </select>
+      <textarea v-model="外貌" rows="3" placeholder="自定义人设"></textarea>
     </label>
 
     <div class="field">
-      <span>开局灵石</span>
+      <span>灵石</span>
       <div class="灵石控件">
         <button type="button" class="灵石-btn" @click="减灵石" :disabled="灵石 <= 0">−</button>
         <input
@@ -84,8 +74,6 @@
       </div>
       <p class="hint">每 1000 灵石消耗 1 开局点数，默认 0</p>
     </div>
-
-    <p v-if="当前出身地简介" class="hint">{{ 当前出身地简介 }}</p>
   </section>
 </template>
 
@@ -94,7 +82,6 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
-import { 出身地列表 } from '../catalog/出身地';
 import { 种族列表 } from '../catalog/种族';
 
 defineProps<{ 自由: boolean }>();
@@ -149,10 +136,6 @@ const 外貌 = computed({
   get: () => data.value.主角.外貌,
   set: v => data.value.主角.外貌 = v,
 });
-const 出身地 = computed({
-  get: () => data.value.主角.出身地,
-  set: v => data.value.主角.出身地 = v,
-});
 
 const 灵石 = computed({
   get: () => data.value.主角.灵石,
@@ -187,11 +170,6 @@ watch(自定义性别, v => {
   if (性别模式.value === '其他') {
     data.value.主角.性别 = v;
   }
-});
-
-const 当前出身地简介 = computed(() => {
-  const d = 出身地列表.find(x => x.名称 === 出身地.value);
-  return d?.简介;
 });
 </script>
 
