@@ -1,19 +1,7 @@
 <template>
   <section class="step">
     <h2>世界设定</h2>
-    <p class="hint">设定开局的世界时间与纪元，留给剧情一个时间锚点。</p>
-
-    <label class="field">
-      <span>当前年号</span>
-      <input v-model="年号" placeholder="如：太初、永宁、混沌历" maxlength="10" />
-    </label>
-
-    <label class="field">
-      <span>当前时间</span>
-      <input v-model="时间" placeholder="如：太初三年·春·卯时 / 混沌历元年" maxlength="30" />
-    </label>
-
-    <p class="hint">留空则沿用世界书默认（太初 / 混沌历元年）。</p>
+    <p class="hint">世界时间将在初始化时自动赋值，无需手动设定。</p>
   </section>
 </template>
 

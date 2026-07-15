@@ -1,6 +1,6 @@
 <template>
   <section class="step">
-    <h2>宗门归属</h2>
+    <h2>宗门</h2>
 
     <!-- 正道七宗 -->
     <h3>正道七宗</h3>

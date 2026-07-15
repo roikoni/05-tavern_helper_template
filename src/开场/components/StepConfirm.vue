@@ -1,6 +1,6 @@
 <template>
   <section class="step">
-    <h2>总览确认</h2>
+    <h2>总览</h2>
 
     <div class="grid">
       <div class="cell">

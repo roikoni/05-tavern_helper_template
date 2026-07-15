@@ -1,6 +1,6 @@
 <template>
   <section class="step">
-    <h2>道途取向</h2>
+    <h2>道途</h2>
 
     <h3>本源（道之根本，自悟）</h3>
     <label class="field">
