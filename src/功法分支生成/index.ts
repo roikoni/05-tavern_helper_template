@@ -49,8 +49,6 @@ const 层级消耗: Record<number, number> = {
   12: 2500,
 };
 
-/** 基础功法树首次生成时的层级范围：1~4，避免一次生成过多 */
-const 基础树层级范围 = 4;
 /** 功法树最大层级：到 12（仙阶）为止 */
 const 最大层级 = 12;
 
@@ -183,30 +181,7 @@ function buildBranchPrompt(
   return 行.join('\n');
 }
 
-// ── 整套基础树生成提示词构建 ──────────────────────────────
-
-/**
- * 根据 本源 + 修炼流派 + 灵根，请求 AI 生成一整套层级 1~4 的基础功法树。
- * 含根节点（层级1、前置=''）与逐层前置链；层级1 给 1 个已学习=true 作为参悟入口。
- */
-function buildTreePrompt(statData: StatData, existingNames: Set<string>): string {
-  const 主 = statData.主角;
-  const 流派 = 主.修炼流派 || '未知';
-  const 灵根 = 主.灵根 || '未知';
-  const 本源 = 主.本源 || '未知';
-
-  const 行: string[] = [];
-  行.push(`为修士生成一套完整的基础功法树。流派:${流派} 灵根:${灵根} 本源:${本源}`);
-  行.push(
-    `要求:层级覆盖1~${基础树层级范围}(${层级名[1]}~${层级名[基础树层级范围]})，共8-14个功法；` +
-      '层级1为根(前置功法="")，层级N的前置须为同体系层级N-1功法，形成树状前置链；' +
-      '四字古韵命名，遵循流派风格；效果15-30字；类型主动|被动；' +
-      '已学习全部为false，仅允许其中1个层级1根功法为true(作为参悟入口)；' +
-      '不可与"已有功法名"重名',
-  );
-  行.push(`已有功法名(禁重名):${[...existingNames].slice(0, 60).join('、') || '无'}`);
-  return 行.join('\n');
-}
+// ── 整套基础树现由开场白预加载注入变量，本脚本仅负责延续性的进阶分支生成 ──
 
 // ── 校验 ──────────────────────────────────────────────
 
@@ -257,57 +232,7 @@ function validateBranch(
   return 合法;
 }
 
-// ── 整套基础树校验 ──────────────────────────────────────
-
-/** 校验 AI 生成的整套基础树：层级 clamp 到 1~范围，确保至少 1 个层级1根功法，防重名。 */
-function validateTree(techniques: AI功法[], existingNames: Set<string>): AI功法[] {
-  const 合法: AI功法[] = [];
-
-  for (const raw of techniques) {
-    const t = 映射字段名(raw);
-
-    if (!t.名称 || typeof t.名称 !== 'string' || !t.名称.trim()) continue;
-    if (existingNames.has(t.名称)) {
-      console.info(`[功法树] 跳过重复名称: ${t.名称}`);
-      continue;
-    }
-
-    const parsed = AI功法条目Schema.safeParse(t);
-    if (!parsed.success) {
-      console.warn(`[功法树] 跳过无法修正的条目: ${JSON.stringify(t)}`, parsed.error.issues);
-      continue;
-    }
-    const 功 = parsed.data;
-
-    // 层级 clamp 到基础树范围
-    if (功.层级 < 1 || 功.层级 > 基础树层级范围) {
-      const clamped = _.clamp(功.层级, 1, 基础树层级范围);
-      console.info(`[功法树] 调整层级: ${功.名称} 从 ${功.层级} 调整为 ${clamped}`);
-      功.层级 = clamped;
-    }
-
-    existingNames.add(功.名称);
-    合法.push(功);
-  }
-
-  // 层级1 根功法：保留首个为已学习=true 作为参悟入口，其余根功法与所有非根功法强制未学习
-  const 根功法 = 合法.filter(t => t.层级 === 1 && !t.前置功法);
-  let 入口已设 = false;
-  for (const t of 合法) {
-    const 是根 = t.层级 === 1 && !t.前置功法;
-    if (是根 && !入口已设) {
-      t.已学习 = true;
-      入口已设 = true;
-    } else {
-      t.已学习 = false;
-    }
-  }
-  if (!入口已设 && 根功法.length === 0 && 合法.length > 0) {
-    console.warn('[功法树] 未生成层级1根功法，树可能无参悟入口');
-  }
-
-  return 合法;
-}
+// ── 整套基础树校验现由开场白预加载承担，本脚本不再需要 ──
 
 // ── 增量生成主函数 ─────────────────────────────────────
 
@@ -384,77 +309,7 @@ async function generateBranch(statData: StatData, triggerName: string, triggerLe
   }
 }
 
-// ── 整套基础树生成主函数 ─────────────────────────────────
-
-async function generateTree(statData: StatData): Promise<AI功法[] | null> {
-  const existingNames = new Set<string>([
-    ...功法列表.map(g => g.名称),
-    ...Object.keys(statData.功法),
-    ...Object.keys(statData.初始功法 ?? {}),
-  ]);
-
-  const prompt = buildTreePrompt(statData, existingNames);
-
-  console.info(`[功法树] 开始生成层级1~${基础树层级范围}基础功法树`);
-
-  try {
-    const result = await generateRaw({
-      user_input: prompt,
-      should_silence: true,
-      ordered_prompts: [
-        {
-          role: 'system',
-          content:
-            '你是一个修仙世界功法设计引擎。你的唯一任务是按照用户要求生成结构化的功法树 JSON 数据。不要输出任何 JSON 以外的内容，不要使用 <UpdateVariable> 或任何 XML 标签。输出格式必须严格为：{"techniques":[{"名称":"...","类型":"主动|被动","层级":数字,"前置功法":"...","效果":"...","已学习":false,"消耗灵悟":数字,"描述":"..."}]}',
-        },
-        'user_input',
-      ],
-    });
-
-    let techniques: AI功法[];
-    try {
-      const text = typeof result === 'string' ? result : JSON.stringify(result);
-      console.info('[功法树] AI 返回原始文本（前300字）:', text.slice(0, 300));
-      const parsed = extractJSON(text);
-      const obj = parsed as any;
-
-      if (Array.isArray(obj)) {
-        techniques = obj;
-      } else if (obj && typeof obj === 'object') {
-        techniques = obj.techniques ?? obj.功法 ?? obj.data ?? obj;
-        if (!Array.isArray(techniques)) {
-          for (const val of Object.values(obj)) {
-            if (Array.isArray(val)) {
-              techniques = val;
-              break;
-            }
-          }
-        }
-      } else {
-        techniques = obj;
-      }
-
-      if (!Array.isArray(techniques)) {
-        throw new Error('AI 返回的功法数据不是数组');
-      }
-    } catch (err) {
-      console.error('[功法树] 解析 AI 返回失败:', err);
-      return null;
-    }
-
-    const 合法功法 = validateTree(techniques, existingNames);
-    if (合法功法.length === 0) {
-      console.warn('[功法树] AI 生成的功法全部无效');
-      return null;
-    }
-
-    console.info(`[功法树] 成功生成 ${合法功法.length} 个基础功法`);
-    return 合法功法;
-  } catch (err) {
-    console.error('[功法树] 生成失败:', err);
-    return null;
-  }
-}
+// ── 整套基础树生成现由开场白预加载注入变量，本脚本不再提供 generateTree ──
 
 // ── 将新功法写入变量 ────────────────────────────────────
 
@@ -528,38 +383,27 @@ async function triggerBranchGeneration(triggerName: string, triggerLevel: number
 
 // ── 手动生成入口（供功法树界面按钮调用）──────────────────
 
-type 手动生成模式 = '基础树' | '进阶' | '无需';
+type 手动生成模式 = '进阶' | '无需';
 
 /**
- * 功法树界面按钮统一入口：
- * - /功法/ 为空 → 生成层级1~上限整套基础树
- * - /功法/ 非空 → 为末端「已学+无后续+层级<上限」的功法补一层进阶分支
- * - 无可补的功法 → 返回「无需」
+ * 功法树界面按钮入口：
+ * 基础功法树现由开场白预加载注入变量，本脚本只负责延续更新——
+ * 为末端「已学 + 无后续 + 层级 < 上限」的功法补一层进阶分支。
+ * 若功法树为空（预加载尚未注入），提示等待开场白完成。
  */
 async function 手动生成(): Promise<{ 模式: 手动生成模式; 已触发: string[] }> {
   const mvuData = Mvu.getMvuData({ type: 'message', message_id: -1 });
   const statData = _.get(mvuData, 'stat_data') as StatData | undefined;
   if (!statData?.功法) return { 模式: '无需', 已触发: [] };
 
-  // 模式一：功法树为空 → 生成整套基础树
+  // 功法树为空：基础树应由开场白预加载注入，此处不代为生成
   if (Object.keys(statData.功法).length === 0) {
-    toastr.info('功法树正在生根……');
-    const techniques = await generateTree(statData);
-    if (techniques && techniques.length > 0) {
-      writeBranchToData(statData, techniques);
-      if (mvuData) {
-        await Mvu.replaceMvuData(mvuData, { type: 'message', message_id: -1 });
-        console.info(`[功法树] 已生成 ${techniques.length} 个基础功法并写入变量`);
-      }
-      const 名称列表 = techniques.map(t => t.名称);
-      toastr.success(`功法树已生成！共觉醒 ${名称列表.length} 道功法`);
-      return { 模式: '基础树', 已触发: 名称列表 };
-    }
-    toastr.warning('功法树生成失败，请重试');
+    toastr.info('初始功法由开场白预加载注入，请先完成捏角与开场白');
+    console.info('[功法树] /功法/ 为空，等待开场白预加载注入，本脚本不代为生成基础树');
     return { 模式: '无需', 已触发: [] };
   }
 
-  // 模式二：扫描末端「已学+无后续+层级<上限」的功法，逐个补进阶分支
+  // 扫描末端「已学+无后续+层级<上限」的功法，逐个补进阶分支
   const 已触发: string[] = [];
   for (const [名, 功] of Object.entries(statData.功法)) {
     if (!功?.已学习) continue;

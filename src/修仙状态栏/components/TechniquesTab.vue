@@ -416,17 +416,17 @@ function ln(n: string, t: any) {
   dd.value = { ...(techs.value as any)[n] };
 }
 
-// 手动生成功法：/功法/ 为空则生成整套基础树，否则为末端已学功法补进阶分支
+// 手动生成功法：基础树现由开场白预加载注入；此处为末端已学功法补进阶分支
 const checking = ref(false);
 async function checkUpdate() {
   if (checking.value) return;
   try {
     checking.value = true;
-    // waitGlobalInitialized 仅负责“等到该全局被 initializeGlobal 注册”，其返回值不是接口对象
+    // waitGlobalInitialized 仅负责"等到该全局被 initializeGlobal 注册"，其返回值不是接口对象
     // （官方契约：await 后直接以全局变量名访问，参考 Mvu 用法）。
     // 脚本侧用 initializeGlobal('GongfaBranch', { 手动生成 }) 注册，故 await 后直接读 window.GongfaBranch。
     await waitGlobalInitialized('GongfaBranch');
-    const G = window.GongfaBranch as { 手动生成: () => Promise<{ 模式: '基础树' | '进阶' | '无需'; 已触发: string[] }> } | undefined;
+    const G = window.GongfaBranch as { 手动生成: () => Promise<{ 模式: '进阶' | '无需'; 已触发: string[] }> } | undefined;
     if (!G?.手动生成) {
       toastr.warning('功法生成脚本未就绪');
       return;
