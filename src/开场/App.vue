@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="app">
     <DoneView v-if="data.$flag?.已完成捏角" />
     <template v-else>
@@ -12,49 +12,55 @@
 
         <!-- 捏角主体 -->
         <div v-else key="creator" class="creator">
-          <!-- 存档工具栏 -->
-          <div class="save-toolbar">
-            <span class="mode-tag">{{ 模式 === '普通' ? '普通模式' : 模式 === '自由' ? '自由模式' : '开挂模式' }}</span>
-            <button class="save-btn danger" @click="resetOpen = true" title="重置所有捏角选择">
-              <i class="fa-solid fa-rotate-left"></i> 重置
-            </button>
-            <button class="save-btn" @click="onSave" title="保存当前进度">
-              <i class="fa-solid fa-floppy-disk"></i> 保存
-            </button>
-            <button class="save-btn" @click="onLoad" title="载入已保存的进度">
-              <i class="fa-solid fa-folder-open"></i> 载入
-            </button>
-          </div>
+          <aside class="step-sidebar">
+            <StepIndicator v-model="当前步" :模式="模式" />
+          </aside>
+          <main class="step-main">
+            <!-- 存档工具栏 -->
+            <div class="save-toolbar">
+              <span class="mode-tag">{{ 模式 === '普通' ? '普通模式' : 模式 === '自由' ? '自由模式' : '开挂模式' }}</span>
+              <button class="save-btn danger" @click="resetOpen = true" title="重置所有捏角选择">
+                <i class="fa-solid fa-rotate-left"></i> 重置
+              </button>
+              <button class="save-btn" @click="onSave" title="保存当前进度">
+                <i class="fa-solid fa-floppy-disk"></i> 保存
+              </button>
+              <button class="save-btn" @click="onLoad" title="载入已保存的进度">
+                <i class="fa-solid fa-folder-open"></i> 载入
+              </button>
+            </div>
 
-          <PointBar />
-          <StepIndicator v-model="当前步" :模式="模式" />
-          <Transition name="fade" mode="out-in">
-            <StepBasic     v-if="当前步 === 1" key="1" :自由="模式 !== '普通'" />
-            <StepOrigin    v-else-if="当前步 === 2" key="2" :自由="模式 !== '普通'" />
-            <StepSect      v-else-if="当前步 === 3" key="3" />
-            <StepShop      v-else-if="当前步 === 4" key="4" :开挂="模式 === '开挂'" />
-            <StepAttribute v-else-if="当前步 === 5" key="5" :自由="模式 !== '普通'" />
-            <template v-else-if="模式 === '自由'">
-              <StepRelation v-if="当前步 === 6" key="6" />
-              <StepWorld    v-else-if="当前步 === 7" key="7" />
-              <StepConfirm  v-else-if="当前步 === 8" key="8" :自由="true" />
-            </template>
-            <template v-else-if="模式 === '开挂'">
-              <StepRelation v-if="当前步 === 6" key="6" />
-              <StepWorld    v-else-if="当前步 === 7" key="7" />
-              <StepCheat    v-else-if="当前步 === 8" key="8" />
-              <StepConfirm  v-else-if="当前步 === 9" key="9" :自由="true" :开挂="true" />
-            </template>
-            <StepConfirm   v-else-if="当前步 === 6" key="6" :自由="false" />
-          </Transition>
-          <nav class="nav">
-            <button v-if="当前步 > 1" class="nav-btn" @click="当前步 -= 1">
-              <span class="arrow">‹</span> 上一步
-            </button>
-            <button v-if="当前步 < 总步数" class="nav-btn primary" @click="当前步 += 1">
-              下一步 <span class="arrow">›</span>
-            </button>
-          </nav>
+            <PointBar />
+            <div class="step-body">
+              <Transition name="fade" mode="out-in">
+                <StepBasic     v-if="当前步 === 1" key="1" :自由="模式 !== '普通'" />
+                <StepOrigin    v-else-if="当前步 === 2" key="2" :自由="模式 !== '普通'" />
+                <StepSect      v-else-if="当前步 === 3" key="3" />
+                <StepShop      v-else-if="当前步 === 4" key="4" :开挂="模式 === '开挂'" />
+                <StepAttribute v-else-if="当前步 === 5" key="5" :自由="模式 !== '普通'" />
+                <template v-else-if="模式 === '自由'">
+                  <StepRelation v-if="当前步 === 6" key="6" />
+                  <StepWorld    v-else-if="当前步 === 7" key="7" />
+                  <StepConfirm  v-else-if="当前步 === 8" key="8" :自由="true" />
+                </template>
+                <template v-else-if="模式 === '开挂'">
+                  <StepRelation v-if="当前步 === 6" key="6" />
+                  <StepWorld    v-else-if="当前步 === 7" key="7" />
+                  <StepCheat    v-else-if="当前步 === 8" key="8" />
+                  <StepConfirm  v-else-if="当前步 === 9" key="9" :自由="true" :开挂="true" />
+                </template>
+                <StepConfirm   v-else-if="当前步 === 6" key="6" :自由="false" />
+              </Transition>
+            </div>
+            <nav class="nav">
+              <button v-if="当前步 > 1" class="nav-btn" @click="当前步 -= 1">
+                <span class="arrow">‹</span> 上一步
+              </button>
+              <button v-if="当前步 < 总步数" class="nav-btn primary" @click="当前步 += 1">
+                下一步 <span class="arrow">›</span>
+              </button>
+            </nav>
+          </main>
         </div>
       </Transition>
     </template>
@@ -303,75 +309,71 @@ function fmtTime(ts: number): string {
 <style scoped lang="scss">
 @use './components/theme' as *;
 
-// 最外层容器：银色金属拉丝边框 + 圆角（开场页 / 捏角页都包在里面）
+// 最外层容器：不做额外边框，让开场 / 捏角内容自然铺开
 .app {
   width: 100%;
-  background-color: $bg-ink;
+  background-color: transparent;
   color: $paper-cold;
   font-family: $font-serif;
   // 手机小屏适当缩小基础字号
   font-size: 14px;
   @include desktop { font-size: 18px; }
-  border-radius: 18px;
+  border-radius: 0;
   position: relative;
-  // padding 留出金属边框宽度（4px），让内层背景不溢出
-  padding: 4px;
-  @include mobile { padding: 2px; }
-  // 金属基础：纵向黑色拉丝渐变
-  background-image:
-    linear-gradient(
-      135deg,
-      #050505 0%,
-      #1a1a1a 18%,
-      #3a3a3a 32%,
-      #2a2a2a 50%,
-      #3a3a3a 68%,
-      #1a1a1a 82%,
-      #000000 100%
-    );
-  // 多层阴影：外发光 + 抛光高光 + 深邃内阴影
-  box-shadow:
-    0 0 0 1px rgba(120,120,120,0.18),                 // 最外细高光
-    0 0 0 2px rgba(0,0,0,0.8),                        // 外深线
-    inset 0 1px 0 rgba(180,180,180,0.22),             // 顶部抛光
-    inset 0 -1px 0 rgba(0,0,0,0.7),                   // 底部凹槽
-    0 8px 28px rgba(0,0,0,0.8),                       // 落影
-    0 2px 4px rgba(0,0,0,0.7);
+  padding: 0;
+  background-image: none;
+  box-shadow: none;
 
-  // 内层：真正的内容容器（暗色），加内阴影制造深嵌效果
   &::before {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border-radius: 14px;
-    background: $bg-ink;
-    box-shadow:
-      inset 0 0 0 1px rgba(0,0,0,0.85),               // 黑色围线
-      inset 0 0 0 2px rgba(90,90,90,0.2),             // 内反光
-      inset 0 0 32px rgba(0,0,0,0.75),                // 内部暗角
-      inset 0 0 80px rgba(0,0,0,0.5);
-    z-index: 0;
-    pointer-events: none;
-  }
-  @include mobile {
-    &::before {
-      inset: 2px;
-      border-radius: 12px;
-    }
+    display: none;
   }
 
-  // 让所有子内容浮在 ::before 之上
+  &::after {
+    display: none;
+  }
+
   > * {
     position: relative;
     z-index: 1;
-    border-radius: 14px;
+    border-radius: 0;
     overflow: hidden;
-    @include mobile { border-radius: 12px; }
+    @include mobile { border-radius: 0; }
   }
 }
 
 .creator {
   @include paper-bg;
+  position: relative;
+  display: flex;
+  min-height: 0;
+}
+
+.step-sidebar {
+  width: 180px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg,
+    rgba(8,7,10,0.98) 0%,
+    rgba(12,10,15,0.95) 100%);
+  border-right: 1px solid rgba(207,200,184,0.12);
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+
+  @include mobile { width: 56px; }
+  @include tablet { width: 140px; }
+}
+
+.step-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.step-body {
+  flex: 1;
+  min-height: 0;
   position: relative;
 }
 
