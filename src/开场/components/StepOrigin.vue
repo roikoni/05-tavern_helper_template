@@ -65,9 +65,9 @@
       </div>
     </div>
 
-    <h3>本源（道之根本，自悟）</h3>
+    <h3>本源</h3>
     <label class="field">
-      <input v-model="本源" placeholder="一字到数字均可，如：剑、心、红尘、杀戮即道…" maxlength="10" />
+      <input v-model="本源" placeholder="自由发挥，随意填写" maxlength="10" />
       <p class="hint-本源">
         本源是你修行的根本理念，由你自悟。AI 会根据你的本源 + 流派，为你独家定制一门自悟功法。
       </p>
