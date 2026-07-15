@@ -38,12 +38,13 @@ const 总步数 = computed(() => 步骤标题.value.length);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 1.5rem 0.6rem;
+  justify-content: space-evenly;
+  padding: 1.8rem 0.8rem;
   height: 100%;
   position: relative;
 
-  @include mobile { padding: 1rem 0.25rem; align-items: center; }
-  @include tablet { padding: 1.2rem 0.5rem; }
+  @include mobile { padding: 1.2rem 0.2rem; align-items: center; }
+  @include tablet { padding: 1.5rem 0.6rem; }
 
   // 右侧装饰竖线
   &::after {
@@ -65,21 +66,21 @@ const 总步数 = computed(() => 步骤标题.value.length);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.7rem;
   cursor: pointer;
   color: $paper-faint;
   transition: all 0.3s ease;
-  padding: 0.25rem 0;
+  padding: 0.35rem 0;
   position: relative;
 
   @include mobile {
     gap: 0;
-    padding: 0.15rem 0;
+    padding: 0.2rem 0;
     justify-content: center;
   }
 
   .num {
-    width: 2.2rem; height: 2.2rem;
+    width: 2.8rem; height: 2.8rem;
     display: flex; align-items: center; justify-content: center;
     position: relative;
     background: $bg-soft;
@@ -92,26 +93,26 @@ const 总步数 = computed(() => 步骤标题.value.length);
     flex-shrink: 0;
 
     @include mobile {
-      width: 1.6rem; height: 1.6rem;
+      width: 2rem; height: 2rem;
     }
     @include tablet {
-      width: 1.9rem; height: 1.9rem;
+      width: 2.4rem; height: 2.4rem;
     }
 
     .inner {
       font-family: $font-serif;
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       font-weight: bold;
       color: $paper-dim;
-      @include mobile { font-size: 0.7rem; }
-      @include tablet { font-size: 0.85rem; }
+      @include mobile { font-size: 0.85rem; }
+      @include tablet { font-size: 1rem; }
     }
 
     // 外围装饰圈（激活时旋转）
     &::before {
       content: "";
       position: absolute;
-      inset: -4px;
+      inset: -5px;
       border-radius: 50%;
       border: 1px dashed rgba(168,51,51,0.4);
       opacity: 0;
@@ -122,15 +123,15 @@ const 总步数 = computed(() => 步骤标题.value.length);
 
   .title {
     font-family: $font-serif;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     white-space: nowrap;
     color: $paper-soft;
     transition: all 0.3s ease;
 
     @include mobile { display: none; }
-    @include tablet { font-size: 0.72rem; letter-spacing: 0.05em; }
+    @include tablet { font-size: 0.82rem; letter-spacing: 0.06em; }
   }
 
   &.active {
@@ -177,8 +178,9 @@ const 总步数 = computed(() => 步骤标题.value.length);
 
 .line {
   width: 1px;
-  height: 1.4rem;
-  margin-left: 1.1rem;
+  min-height: 0.5rem;
+  flex: 1;
+  margin-left: 1.4rem;
   background: linear-gradient(180deg,
     rgba(207,200,184,0.12),
     rgba(207,200,184,0.22),
@@ -189,7 +191,7 @@ const 总步数 = computed(() => 步骤标题.value.length);
 
   @include mobile {
     margin-left: 0;
-    height: 1rem;
+    min-height: 0.35rem;
   }
 
   &.done {

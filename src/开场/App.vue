@@ -349,7 +349,7 @@ function fmtTime(ts: number): string {
 }
 
 .step-sidebar {
-  width: 180px;
+  width: 200px;
   flex-shrink: 0;
   background: linear-gradient(180deg,
     rgba(8,7,10,0.98) 0%,
@@ -359,8 +359,8 @@ function fmtTime(ts: number): string {
   z-index: 5;
   overflow: hidden;
 
-  @include mobile { width: 56px; }
-  @include tablet { width: 140px; }
+  @include mobile { width: 64px; }
+  @include tablet { width: 160px; }
 }
 
 .step-main {
