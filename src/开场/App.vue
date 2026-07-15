@@ -33,23 +33,24 @@
             <PointBar />
             <div class="step-body">
               <Transition name="fade" mode="out-in">
-                <StepBasic     v-if="当前步 === 1" key="1" :自由="模式 !== '普通'" />
-                <StepOrigin    v-else-if="当前步 === 2" key="2" :自由="模式 !== '普通'" />
-                <StepSect      v-else-if="当前步 === 3" key="3" />
-                <StepShop      v-else-if="当前步 === 4" key="4" :开挂="模式 === '开挂'" />
-                <StepAttribute v-else-if="当前步 === 5" key="5" :自由="模式 !== '普通'" />
+                <StepBasic       v-if="当前步 === 1" key="1" :自由="模式 !== '普通'" />
+                <StepOrigin      v-else-if="当前步 === 2" key="2" :自由="模式 !== '普通'" />
+                <StepSect        v-else-if="当前步 === 3" key="3" />
+                <StepShop        v-else-if="当前步 === 4" key="4" :开挂="模式 === '开挂'" />
+                <StepAttribute   v-else-if="当前步 === 5" key="5" :自由="模式 !== '普通'" />
+                <StepBirthplace  v-else-if="当前步 === 6" key="6" />
                 <template v-else-if="模式 === '自由'">
-                  <StepRelation v-if="当前步 === 6" key="6" />
-                  <StepWorld    v-else-if="当前步 === 7" key="7" />
-                  <StepConfirm  v-else-if="当前步 === 8" key="8" :自由="true" />
+                  <StepRelation v-if="当前步 === 7" key="7" />
+                  <StepWorld    v-else-if="当前步 === 8" key="8" />
+                  <StepConfirm  v-else-if="当前步 === 9" key="9" :自由="true" />
                 </template>
                 <template v-else-if="模式 === '开挂'">
-                  <StepRelation v-if="当前步 === 6" key="6" />
-                  <StepWorld    v-else-if="当前步 === 7" key="7" />
-                  <StepCheat    v-else-if="当前步 === 8" key="8" />
-                  <StepConfirm  v-else-if="当前步 === 9" key="9" :自由="true" :开挂="true" />
+                  <StepRelation v-if="当前步 === 7" key="7" />
+                  <StepWorld    v-else-if="当前步 === 8" key="8" />
+                  <StepCheat    v-else-if="当前步 === 9" key="9" />
+                  <StepConfirm  v-else-if="当前步 === 10" key="10" :自由="true" :开挂="true" />
                 </template>
-                <StepConfirm   v-else-if="当前步 === 6" key="6" :自由="false" />
+                <StepConfirm   v-else-if="当前步 === 7" key="7" :自由="false" />
               </Transition>
             </div>
             <nav class="nav">
@@ -139,6 +140,7 @@ import StepOrigin from './components/StepOrigin.vue';
 import StepSect from './components/StepSect.vue';
 import StepShop from './components/StepShop.vue';
 import StepAttribute from './components/StepAttribute.vue';
+import StepBirthplace from './components/StepBirthplace.vue';
 import StepRelation from './components/StepRelation.vue';
 import StepWorld from './components/StepWorld.vue';
 import StepCheat from './components/StepCheat.vue';
@@ -151,7 +153,7 @@ const { 模式, 点数池 } = storeToRefs(draftStore);
 const 当前步 = ref(1);
 const 已开始 = ref(false);
 
-const 总步数 = computed(() => 模式.value === '开挂' ? 9 : 模式.value === '自由' ? 8 : 6);
+const 总步数 = computed(() => 模式.value === '开挂' ? 10 : 模式.value === '自由' ? 9 : 7);
 
 const loadOpen = ref(false);
 const saveOpen = ref(false);
