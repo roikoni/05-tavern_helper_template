@@ -194,6 +194,9 @@ function doLoad(s: CreatorSave) {
   if (typeof s.已选神契 === 'string') {
     draftStore.已选神契 = s.已选神契;
     _.set(data.value, '主角.神契装备', s.已选神契);
+  } else {
+    draftStore.已选神契 = '';
+    _.set(data.value, '主角.神契装备', '');
   }
   // 确保进入捏角界面
   已开始.value = true;
