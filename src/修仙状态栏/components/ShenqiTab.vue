@@ -21,11 +21,11 @@
         </div>
         <div class="skill-body" :class="{ blurred: !god.data.收服 }">
           <div class="skill-name">{{ god.data.神契技能 || '???' }}</div>
-          <p class="skill-desc">{{ god.data.神契描述 || '收服此古神后解锁' }}</p>
+          <p class="skill-desc">{{ god.data.神契描述 || '与此古神结契后解锁' }}</p>
         </div>
         <div v-if="!god.data.收服" class="skill-overlay">
           <i class="fa-solid fa-lock skill-overlay-icon"></i>
-          <span>收服后解锁</span>
+          <span>结契后解锁</span>
         </div>
       </div>
     </div>

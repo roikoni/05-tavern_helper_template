@@ -68,6 +68,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
 .subtitle {
   font-family: $font-serif;
   font-size: 0.95rem;
+  font-weight: 500;
   color: $paper-dim;
   letter-spacing: 0.15em;
   margin: 0 0 1.6rem;
@@ -85,14 +86,14 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
   width: 100%;
   aspect-ratio: 16 / 9;
   min-height: 240px;
-  border: 1px solid rgba(207, 200, 184, 0.22);
+  border: 1px solid rgba(200, 200, 210, 0.12);
   border-radius: $r-sm;
   background: linear-gradient(180deg,
-    rgba(8, 7, 10, 0.95) 0%,
-    rgba(12, 10, 15, 0.92) 100%);
+    rgba(8, 8, 10, 0.95) 0%,
+    rgba(12, 12, 16, 0.92) 100%);
   box-shadow:
-    inset 0 0 24px rgba(0, 0, 0, 0.7),
-    0 4px 20px rgba(0, 0, 0, 0.5);
+    inset 0 0 24px rgba(0, 0, 0, 0.6),
+    0 4px 20px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 
   @include mobile { aspect-ratio: 4 / 3; min-height: 180px; }
@@ -102,7 +103,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
     content: "";
     position: absolute;
     width: 24px; height: 24px;
-    border-color: rgba(207, 200, 184, 0.28);
+    border-color: rgba(200, 200, 210, 0.20);
     pointer-events: none;
     z-index: 2;
   }
@@ -137,11 +138,13 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
   .map-text {
     font-family: $font-serif;
     font-size: 1.1rem;
+    font-weight: 500;
     letter-spacing: 0.2em;
     @include mobile { font-size: 0.95rem; }
   }
   .map-hint {
     font-size: 0.82rem;
+    font-weight: 500;
     opacity: 0.5;
     @include mobile { font-size: 0.72rem; }
   }
@@ -152,8 +155,8 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.8rem 1rem;
-  background: rgba(8, 7, 10, 0.6);
-  border: 1px solid rgba(207, 200, 184, 0.12);
+  background: rgba(8, 8, 10, 0.55);
+  border: 1px solid rgba(200, 200, 210, 0.08);
   border-radius: $r-sm;
 
   .info-row {
@@ -164,6 +167,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
     .info-label {
       font-family: $font-serif;
       font-size: 0.9rem;
+      font-weight: 500;
       color: $paper-dim;
       letter-spacing: 0.1em;
       &::before { content: "❖ "; color: $blood-glow; opacity: 0.7; }
@@ -171,6 +175,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
     .info-value {
       font-family: $font-serif;
       font-size: 1.05rem;
+      font-weight: 600;
       color: $paper-cold;
       letter-spacing: 0.08em;
     }
@@ -178,10 +183,11 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 0.4rem;
 
   .info-desc {
     font-size: 0.88rem;
-    color: $paper-dim;
+    font-weight: 500;
+    color: $paper-soft;
     line-height: 1.7;
     padding: 0.4rem 0;
-    border-top: 1px solid rgba(207, 200, 184, 0.08);
+    border-top: 1px solid rgba(200, 200, 210, 0.06);
     margin-top: 0.3rem;
     @include mobile { font-size: 0.78rem; }
   }

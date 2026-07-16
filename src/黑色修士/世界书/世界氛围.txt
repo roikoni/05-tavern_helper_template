@@ -1,1 +1,0 @@
-<world_atmosphere>{{世界氛围}}</world_atmosphere>

@@ -12,7 +12,7 @@
     - >-
       for complex nested objects like `在场`, `羁绊` and `地图标记`, use insert with the full value object.
       Example (在场):
-      `{ "op": "insert", "path": "/在场/胧", "value": { "气血": 200, "法力值": 300, "善恶值": 0, "san值": 100, "好感度": 30, "洗脑值": 0, "内心想法": "饲主大人今天换了一身新道袍，腰间多挂了一个我没见过的小布袋。", "境界": "下位神", "六维": { "力道": 15, "体魄": 18, "身法": 25, "灵力": 30, "神识": 28, "根骨": 20 } } }`
+      `{ "op": "insert", "path": "/在场/胧", "value": { "气血": 200, "法力值": 300, "善恶值": 0, "san值": 100, "好感度": 30, "洗脑值": 0, "内心想法": "他今天换了一身新道袍，腰间多挂了一个我没见过的小布袋。哼，本姑娘只是顺便看见，才不是担心他藏了什么危险东西。", "境界": "下位神", "六维": { "力道": 15, "体魄": 18, "身法": 25, "灵力": 30, "神识": 28, "根骨": 20 } } }`
       Example (地图标记):
       `{ "op": "insert", "path": "/世界/地图标记/苍云峰", "value": { "x": 45, "y": 32, "类型": "宗门", "颜色": "#8b6b4a", "描述": "太虚剑宗山门所在" } }`
   format: |-
@@ -20,6 +20,7 @@
     <Analysis>$(IN ENGLISH, no more than 80 words)
     - ${calculate time passed: ...}
     - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
+    - ${list all characters present in the current scene by name: ...}
     - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
     </Analysis>
     <JSONPatch>

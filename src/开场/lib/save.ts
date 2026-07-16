@@ -1,7 +1,7 @@
 const SAVE_KEY_PREFIX = 'tavern_creator_save_';
 const SAVE_LIST_KEY = 'tavern_creator_save_list';
 
-export type 存档模式 = '普通' | '自由' | '开挂';
+export type 存档模式 = '沙盒';
 
 export interface CreatorSave {
   /** 存档名（用户自定义或自动生成） */
@@ -10,20 +10,18 @@ export interface CreatorSave {
   timestamp: number;
   /** 当前捏角步骤 */
   step: number;
-  /** 捏角模式 */
+  /** 存档模式 */
   模式: 存档模式;
-  /** 自由模式的点数池（普通模式为 15） */
-  点数池?: number;
-  /** 自由模式的开局身份（自由填表） */
+  /** 开局身份（自由填表） */
   开局身份?: string;
-  /** 开挂模式的自定义能力（自由填表） */
-  自定义能力?: string;
   /** 本源基调：正经/搞笑/涩涩，影响 AI 生成笔调 */
   本源基调?: '正经' | '搞笑' | '涩涩';
   /** 主角完整数据 */
   主角: Record<string, any>;
   /** 已选功法列表 */
   已选功法: string[];
+  /** 已选神契古神名（空字符串或 undefined 表示未选择） */
+  已选神契?: string;
 }
 
 /** 获取所有存档列表（按时间倒序） */

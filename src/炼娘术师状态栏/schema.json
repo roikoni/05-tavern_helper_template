@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "世界": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "当前时间": {
+          "default": "",
+          "type": "string"
+        },
+        "当前地点": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "user": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "善恶值": {
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
+    "莉莉安娜": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "外貌身材": {
+          "default": "",
+          "type": "string"
+        },
+        "内心想法": {
+          "default": "",
+          "type": "string"
+        },
+        "改造状态": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "艾琳娜": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "外貌身材": {
+          "default": "",
+          "type": "string"
+        },
+        "内心想法": {
+          "default": "",
+          "type": "string"
+        },
+        "改造状态": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "米璐": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "外貌身材": {
+          "default": "",
+          "type": "string"
+        },
+        "内心想法": {
+          "default": "",
+          "type": "string"
+        },
+        "改造状态": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "菲奥": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "外貌身材": {
+          "default": "",
+          "type": "string"
+        },
+        "内心想法": {
+          "default": "",
+          "type": "string"
+        },
+        "改造状态": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

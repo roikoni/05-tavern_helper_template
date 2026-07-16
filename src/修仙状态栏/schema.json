@@ -353,10 +353,6 @@
             "default": false,
             "type": "boolean"
           },
-          "沉沦值": {
-            "default": 0,
-            "type": "number"
-          },
           "神契技能": {
             "default": "",
             "type": "string"

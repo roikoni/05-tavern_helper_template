@@ -8,66 +8,66 @@ export const Schema = z.object({
     修为: z.coerce.number().prefault(0),
     修为上限: z.coerce.number().prefault(100),
     气血: z.preprocess(
-      val => (val === null || val === undefined) ? 100 : Number(val),
+      val => (val === <user> || val === undefined) ? 100 : Number(val),
       z.number(),
     ).prefault(100),
     // 气血上限 / 法力上限 不再作为变量存储，由六维派生：
     // 气血上限 = 50 + 体魄×10 + 根骨×5；法力上限 = 50 + 灵力×15 + 根骨×5
     法力值: z.preprocess(
-      val => (val === null || val === undefined) ? 80 : Number(val),
+      val => (val === <user> || val === undefined) ? 80 : Number(val),
       z.number(),
     ).prefault(80),
     善恶值: z.preprocess(
-      val => (val === null || val === undefined) ? 0 : Number(val),
+      val => (val === <user> || val === undefined) ? 0 : Number(val),
       z.number(),
     ).transform(v => _.clamp(v, -100, 100))
     .prefault(0),
     san值: z.preprocess(
-      val => (val === null || val === undefined) ? 80 : Number(val),
+      val => (val === <user> || val === undefined) ? 80 : Number(val),
       z.number(),
     ).transform(v => _.clamp(v, 0, 100))
     .prefault(80),
     状态: z.string().prefault('正常'),
     六维: z.object({
       力道: z.preprocess(
-        val => (val === null || val === undefined) ? 10 : Number(val),
+        val => (val === <user> || val === undefined) ? 10 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100))
       .prefault(10),
       体魄: z.preprocess(
-        val => (val === null || val === undefined) ? 10 : Number(val),
+        val => (val === <user> || val === undefined) ? 10 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100))
       .prefault(10),
       身法: z.preprocess(
-        val => (val === null || val === undefined) ? 10 : Number(val),
+        val => (val === <user> || val === undefined) ? 10 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100))
       .prefault(10),
       灵力: z.preprocess(
-        val => (val === null || val === undefined) ? 10 : Number(val),
+        val => (val === <user> || val === undefined) ? 10 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100))
       .prefault(10),
       神识: z.preprocess(
-        val => (val === null || val === undefined) ? 10 : Number(val),
+        val => (val === <user> || val === undefined) ? 10 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100))
       .prefault(10),
       根骨: z.preprocess(
-        val => (val === null || val === undefined) ? 10 : Number(val),
+        val => (val === <user> || val === undefined) ? 10 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100))
       .prefault(10),
     }).prefault({}),
     灵悟值: z.preprocess(
-      val => (val === null || val === undefined) ? 0 : Number(val),
+      val => (val === <user> || val === undefined) ? 0 : Number(val),
       z.number(),
     ).prefault(0),
     本源: z.string().prefault('剑'),
     灵根: z.string().prefault('金灵根'),
     灵石: z.preprocess(
-      val => (val === null || val === undefined) ? 0 : Number(val),
+      val => (val === <user> || val === undefined) ? 0 : Number(val),
       z.number(),
     ).prefault(0),
     神契装备: z.string().prefault(''),
@@ -86,7 +86,7 @@ export const Schema = z.object({
       z.object({
         描述: z.string().prefault(''),
         数量: z.preprocess(
-          val => (val === null || val === undefined) ? 1 : Number(val),
+          val => (val === <user> || val === undefined) ? 1 : Number(val),
           z.number(),
         ).prefault(1),
         类型: z.enum(['丹药', '材料', '功法', '杂物', '灵石', '武器', '法器', '头盔', '衣袍', '腰带', '靴子', '项链', '戒指', '护腕']).prefault('杂物'),
@@ -107,11 +107,11 @@ export const Schema = z.object({
       z.string().describe('标记点名'),
       z.object({
         x: z.preprocess(
-          val => (val === null || val === undefined) ? 50 : Number(val),
+          val => (val === <user> || val === undefined) ? 50 : Number(val),
           z.number(),
         ).prefault(50),
         y: z.preprocess(
-          val => (val === null || val === undefined) ? 50 : Number(val),
+          val => (val === <user> || val === undefined) ? 50 : Number(val),
           z.number(),
         ).prefault(50),
         类型: z.string().prefault('地点'),
@@ -143,11 +143,6 @@ export const Schema = z.object({
       描述: z.string().prefault(''),
       神迹: z.string().prefault(''),
       收服: z.boolean().prefault(false),
-      沉沦值: z.preprocess(
-        val => (val === null || val === undefined) ? 0 : Number(val),
-        z.number(),
-      ).transform(v => _.clamp(v, 0, 100))
-      .prefault(0),
       神契技能: z.string().prefault(''),
       神契描述: z.string().prefault(''),
     }).prefault({}),
@@ -156,12 +151,12 @@ export const Schema = z.object({
   在场: z.record(
     z.string().describe('角色名'),
     z.object({
-      气血: z.preprocess(v => (v === null || v === undefined) ? 100 : Number(v), z.number()).prefault(100),
-      法力值: z.preprocess(v => (v === null || v === undefined) ? 80 : Number(v), z.number()).prefault(80),
-      善恶值: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
-      san值: z.preprocess(v => (v === null || v === undefined) ? 80 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(80),
-      好感度: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
-      洗脑值: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(0),
+      气血: z.preprocess(v => (v === <user> || v === undefined) ? 100 : Number(v), z.number()).prefault(100),
+      法力值: z.preprocess(v => (v === <user> || v === undefined) ? 80 : Number(v), z.number()).prefault(80),
+      善恶值: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
+      san值: z.preprocess(v => (v === <user> || v === undefined) ? 80 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(80),
+      好感度: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
+      洗脑值: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(0),
       内心想法: z.string().prefault(''),
       境界: z.string().prefault('凡人'),
       种族: z.string().prefault('人族'),
@@ -171,12 +166,12 @@ export const Schema = z.object({
       外貌: z.string().prefault(''),
       关系: z.string().prefault('陌路人'),
       六维: z.object({
-        力道: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        体魄: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        身法: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        灵力: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        神识: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        根骨: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        力道: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        体魄: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        身法: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        灵力: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        神识: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        根骨: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
       }).prefault({}),
     }).prefault({}),
   ).prefault({}),
@@ -184,12 +179,12 @@ export const Schema = z.object({
   羁绊: z.record(
     z.string().describe('角色名'),
     z.object({
-      气血: z.preprocess(v => (v === null || v === undefined) ? 100 : Number(v), z.number()).prefault(100),
-      法力值: z.preprocess(v => (v === null || v === undefined) ? 80 : Number(v), z.number()).prefault(80),
-      善恶值: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
-      san值: z.preprocess(v => (v === null || v === undefined) ? 80 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(80),
-      好感度: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
-      洗脑值: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(0),
+      气血: z.preprocess(v => (v === <user> || v === undefined) ? 100 : Number(v), z.number()).prefault(100),
+      法力值: z.preprocess(v => (v === <user> || v === undefined) ? 80 : Number(v), z.number()).prefault(80),
+      善恶值: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
+      san值: z.preprocess(v => (v === <user> || v === undefined) ? 80 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(80),
+      好感度: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, -100, 100)).prefault(0),
+      洗脑值: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(0),
       内心想法: z.string().prefault(''),
       境界: z.string().prefault('凡人'),
       种族: z.string().prefault('人族'),
@@ -199,12 +194,12 @@ export const Schema = z.object({
       外貌: z.string().prefault(''),
       关系: z.string().prefault('陌路人'),
       六维: z.object({
-        力道: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        体魄: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        身法: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        灵力: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        神识: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
-        根骨: z.preprocess(v => (v === null || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        力道: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        体魄: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        身法: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        灵力: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        神识: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
+        根骨: z.preprocess(v => (v === <user> || v === undefined) ? 0 : Number(v), z.number()).prefault(0),
       }).prefault({}),
     }).prefault({}),
   ).prefault({}),
@@ -216,12 +211,12 @@ export const Schema = z.object({
       境界: z.string().prefault('未知'),
       势力: z.string().prefault('散修'),
       好感度: z.preprocess(
-          val => (val === null || val === undefined) ? 0 : Number(val),
+          val => (val === <user> || val === undefined) ? 0 : Number(val),
           z.number(),
         ).transform(v => _.clamp(v, -100, 100))
         .prefault(0),
       洗脑值: z.preprocess(
-          val => (val === null || val === undefined) ? 0 : Number(val),
+          val => (val === <user> || val === undefined) ? 0 : Number(val),
           z.number(),
         ).transform(v => _.clamp(v, 0, 100))
         .prefault(0),
@@ -233,12 +228,12 @@ export const Schema = z.object({
       攻略: z.boolean().prefault(false),
       // _属性 为只读字段（以 _ 开头），AI 不可通过变量更新命令修改
       _属性: z.object({
-        力道: z.preprocess(v => (v === null || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
-        体魄: z.preprocess(v => (v === null || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
-        身法: z.preprocess(v => (v === null || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
-        灵力: z.preprocess(v => (v === null || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
-        神识: z.preprocess(v => (v === null || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
-        根骨: z.preprocess(v => (v === null || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
+        力道: z.preprocess(v => (v === <user> || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
+        体魄: z.preprocess(v => (v === <user> || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
+        身法: z.preprocess(v => (v === <user> || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
+        灵力: z.preprocess(v => (v === <user> || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
+        神识: z.preprocess(v => (v === <user> || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
+        根骨: z.preprocess(v => (v === <user> || v === undefined) ? 10 : Number(v), z.number()).transform(v => _.clamp(v, 0, 100)).prefault(10),
       }).prefault({}),
     }).prefault({}),
   ),
@@ -252,7 +247,7 @@ export const Schema = z.object({
       效果: z.string().prefault(''),
       属性加成: z.string().prefault(''),
       已学习: z.preprocess(
-        val => (val === null || val === undefined) ? false : Boolean(val),
+        val => (val === <user> || val === undefined) ? false : Boolean(val),
         z.boolean(),
       ).prefault(false),
       消耗灵悟: z.coerce.number().prefault(10),
@@ -270,7 +265,7 @@ export const Schema = z.object({
       效果: z.string().prefault(''),
       属性加成: z.string().prefault(''),
       已学习: z.preprocess(
-        val => (val === null || val === undefined) ? true : Boolean(val),
+        val => (val === <user> || val === undefined) ? true : Boolean(val),
         z.boolean(),
       ).prefault(true),
       消耗灵悟: z.coerce.number().prefault(0),
@@ -284,7 +279,7 @@ export const Schema = z.object({
       描述: z.string().prefault(''),
       被击败时间: z.string().prefault(''),
       调教值: z.preprocess(
-        val => (val === null || val === undefined) ? 0 : Number(val),
+        val => (val === <user> || val === undefined) ? 0 : Number(val),
         z.number(),
       ).transform(v => _.clamp(v, 0, 100)).prefault(0),
       心理状态: z.string().prefault('未知'),

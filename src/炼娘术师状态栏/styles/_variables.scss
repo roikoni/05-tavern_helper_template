@@ -1,0 +1,61 @@
+:root {
+  /* ========== 通用过渡 ========== */
+  --transition-theme: all 0.5s ease;
+
+  /* ========== 字体 ========== */
+  --font-title: 'KeinannPOP', 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-body: 'KeinannPOP', 'LXGW Marker Gothic', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* ========== 玻璃材质通用参数 ========== */
+  --glass-blur: 18px;
+  --glass-saturate: 120%;
+  --glass-radius: 12px;
+  --glass-border: 1px;
+}
+
+/* ========== 炼娘术师 · 银黑玻璃 · 单层主题 ========== */
+.dark-mode {
+  /* 银黑底色 */
+  --bg-primary: transparent;
+  --bg-card: rgba(200, 205, 215, 0.05);
+  --bg-overlay: rgba(160, 165, 175, 0.03);
+
+  /* 玻璃质感 —— 银黑透明 */
+  --glass-bg: rgba(210, 215, 225, 0.06);
+  --glass-blur-strength: blur(18px) saturate(120%);
+  --glass-highlight: rgba(220, 225, 235, 0.12);
+  --glass-highlight-strong: rgba(230, 235, 245, 0.18);
+  --inner-shadow: inset 0 1px 0 rgba(240, 245, 255, 0.06);
+
+  /* 文字 —— 银白 */
+  --text-primary: #d8dce4;
+  --text-secondary: #9095a0;
+  --text-muted: #5a5f6a;
+
+  /* 强调色 —— 银灰冷光系 */
+  --accent-pink: #a0a8b8;
+  --accent-purple: #7a8290;
+  --accent-gold: #8a92a0;
+  --accent-rose: #b0b8c8;
+  --accent-copper: #6a7280;
+
+  /* 阴影与发光 —— 银白 */
+  --shadow-glow: rgba(160, 170, 190, 0.3);
+  --shadow-purple: rgba(120, 130, 150, 0.25);
+
+  /* 边框与装饰 */
+  --border-gradient: linear-gradient(135deg, #6a7280, #8a92a0);
+  --border-copper: rgba(140, 150, 165, 0.3);
+
+  /* 善恶值 */
+  --morality-evil: #c44a4a;
+  --morality-good: #4a9a6a;
+  --morality-neutral: #6a7580;
+
+  /* 其他 */
+  --mask-overlay: rgba(5, 5, 6, 0.65);
+  --placeholder-gradient: radial-gradient(ellipse at center, #0e0e10 0%, #050505 100%);
+  --thought-text: #b0b8c8;
+  --scrollbar-thumb: rgba(140, 150, 165, 0.35);
+  --ornament-color: rgba(160, 170, 190, 0.4);
+}

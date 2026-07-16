@@ -9,16 +9,16 @@
       <div class="cell">
         <span>性别</span><b>{{ 主角.性别 }}</b>
       </div>
-      <div v-if="自由" class="cell">
+      <div class="cell">
         <span>种族</span><b>{{ 主角.种族 || '人族' }}</b>
       </div>
-      <div v-if="自由 && 开局身份" class="cell wide">
-        <span>开局身份</span><b>{{ 开局身份 }}</b>
+      <div class="cell">
+        <span>开局身份</span><b>{{ 开局身份 || '（未填）' }}</b>
       </div>
       <div class="cell">
         <span>称号</span><b>{{ 主角.称号 }}</b>
       </div>
-      <div v-if="自由" class="cell">
+      <div class="cell">
         <span>境界</span><b>{{ 主角.境界 }}（修为 {{ 主角.修为 }}/{{ 主角.修为上限 }}）</b>
       </div>
       <div class="cell">
@@ -39,7 +39,7 @@
       <div class="cell">
         <span>灵石</span><b>{{ 主角.灵石 }} 枚</b>
       </div>
-      <div v-if="自由" class="cell">
+      <div class="cell">
         <span>善恶 / san</span><b>{{ 主角.善恶值 }} / {{ 主角.san值 }}</b>
       </div>
       <div class="cell wide">
@@ -61,21 +61,11 @@
     </ul>
     <p v-else class="hint">（未选择功法）</p>
 
-    <template v-if="自由">
-      <h3>人脉羁绊</h3>
-      <ul v-if="人脉列表.length">
-        <li v-for="(r, i) in 人脉列表" :key="i">
-          {{ r.名 }}：{{ r.关系 }}<template v-if="r.好感 !== null">（好感 {{ r.好感 }}）</template>
-        </li>
-      </ul>
-      <p v-else class="hint">（未设置人物关系）</p>
-
-      <h3>世界</h3>
-      <p>{{ 主角_世界.当前年号 }} · {{ 主角_世界.当前时间 }}</p>
-
-      <h3 v-if="开挂">自定义外挂</h3>
-      <p v-if="开挂" class="cheat-text">{{ 自定义能力 || '（未填）' }}</p>
-    </template>
+    <h3>神契</h3>
+    <p v-if="已选神契条目">
+      {{ 已选神契条目.名称 }}（{{ 已选神契条目.身份 }}）— 神契技能：{{ 已选神契条目.神契技能 }}
+    </p>
+    <p v-else class="hint">（未选择神契）</p>
 
     <div v-if="校验.错误.length" class="errors">
       <p v-for="(e, i) in 校验.错误" :key="i">⚠ {{ e }}</p>
@@ -92,56 +82,34 @@ import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
-import { 校验玩家选择, 普通六维上限, 自由六维上限 } from '../lib/点数';
 import { buildOpeningPrompt } from '../lib/prompt';
+import { 神契列表 } from '../catalog/神契';
 import { deriveMaxHp, deriveMaxMp } from '../../修仙状态栏/vitals';
-import { 人物已被设置 } from '../lib/person';
-
-const props = defineProps<{ 自由: boolean; 开挂?: boolean }>();
 const { data } = storeToRefs(useDataStore());
 const draft = useDraftStore();
-const { 已选功法, 点数池, 开局身份, 自定义能力, 本源基调 } = storeToRefs(draft);
+const { 已选功法, 开局身份, 本源基调 } = storeToRefs(draft);
 const 生成中 = ref(false);
 const 六维键 = ['力道', '体魄', '身法', '灵力', '神识', '根骨'] as const;
 
 const 主角 = computed(() => data.value.主角);
 const 已学功法 = computed(() => 已选功法.value);
-const 主角_世界 = computed(() => data.value.世界);
-
-const 人脉列表 = computed(() => {
-  const out: { 名: string; 关系: string; 好感: number | null }[] = [];
-  const 人物 = data.value.重要人物 ?? {};
-  for (const [名, v] of Object.entries(人物)) {
-    if (!v) continue;
-    // 与 prompt 同口径：只展示玩家真正设置过的人物，排除 initvar 预置占位档案
-    if (!人物已被设置(名, v)) continue;
-    out.push({ 名, 关系: v.关系 ?? '陌路人', 好感: v.好感度 ?? null });
-  }
-  return out;
-});
+const 已选神契条目 = computed(() => 神契列表.find(s => s.名称 === draft.已选神契));
 
 const 校验 = computed(() => {
   const 主 = data.value.主角;
-  const 装备武器 = 主.装备?.武器?.名称 && 主.装备.武器.名称 !== '空置' ? [主.装备.武器.名称] : [];
-  const 装备法器 = 主.装备?.法器?.名称 && 主.装备.法器.名称 !== '空置' ? [主.装备.法器.名称] : [];
-  return 校验玩家选择(
-    {
-      本源: 主.本源,
-      流派: 主.修炼流派,
-      灵根: 主.灵根,
-      宗门: 主.宗门,
-      境界: 主.境界,
-      已购武器: 装备武器,
-      已购法器: 装备法器,
-      已选功法: 已学功法.value,
-      六维: 主.六维 as any,
-      灵石: 主.灵石,
-    },
-    主.名称,
-    主.出身地,
-    props.自由 ? 自由六维上限 : 普通六维上限,
-    props.开挂 ? Infinity : 点数池.value,
-  );
+  const 错误: string[] = [];
+  if (!主.名称 || 主.名称 === '待捏角') 错误.push('请填写姓名');
+  if (!主.本源 || 主.本源 === '待捏角') 错误.push('请填写本源');
+  if (!主.修炼流派 || 主.修炼流派 === '待捏角') 错误.push('请选择修炼流派');
+  if (!主.灵根 || 主.灵根 === '待捏角') 错误.push('请选择灵根');
+  if (!主.出身地 || 主.出身地 === '待捏角') 错误.push('请选择出身地');
+  if (!主.宗门 || 主.宗门 === '待捏角') 错误.push('请选择宗门');
+  const 上限 = 100;
+  for (const k of ['力道','体魄','身法','灵力','神识','根骨']) {
+    const v = (主.六维 as any)[k];
+    if (v === undefined || v < 0 || v > 上限) 错误.push(`${k} 超出范围 0-${上限}`);
+  }
+  return { 通过: 错误.length === 0, 错误 };
 });
 
 async function onConfirm() {
@@ -167,9 +135,8 @@ async function onConfirm() {
     const 开场白 = buildOpeningPrompt(
       data.value as any,
       已选功法.value,
-      props.自由,
+      true,
       开局身份.value,
-      props.开挂 ? 自定义能力.value : '',
       本源基调.value,
     );
     await createChatMessages([{ role: 'user', message: 开场白 }]);
@@ -269,8 +236,9 @@ h3 {
       box-shadow: 0 0 10px rgba(168, 51, 51, 0.15);
     }
     > span {
-      color: $paper-faint;
+      color: $paper-dim;
       font-size: 0.95rem;
+      font-weight: 500;
       letter-spacing: 0.1em;
       @include mobile {
         font-size: 0.82rem;
@@ -279,7 +247,7 @@ h3 {
     > b {
       color: $paper-cold;
       font-family: $font-serif;
-      font-weight: bold;
+      font-weight: 600;
       letter-spacing: 0.05em;
       font-size: 1.05rem;
       @include mobile {
@@ -312,14 +280,15 @@ h3 {
   }
   > span {
     padding: 0.45rem 0.85rem;
-    background: linear-gradient(180deg, rgba(40, 18, 18, 0.55), rgba(20, 10, 12, 0.7));
-    border: 1px solid rgba(168, 51, 51, 0.4);
+    background: linear-gradient(180deg, rgba(40, 18, 18, 0.50), rgba(20, 10, 12, 0.65));
+    border: 1px solid rgba(168, 51, 51, 0.35);
     border-radius: $r-pill;
     font-family: $font-serif;
     color: $paper-cold;
     letter-spacing: 0.1em;
     font-size: 1.05rem;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.45);
     @include mobile {
       font-size: 0.88rem;
       padding: 0.35rem 0.55rem;
@@ -339,6 +308,7 @@ ul {
     margin: 0.4rem 0;
     letter-spacing: 0.05em;
     font-size: 1.05rem;
+    font-weight: 500;
     @include mobile {
       font-size: 0.92rem;
     }
@@ -351,6 +321,7 @@ p {
   color: $paper-cold;
   line-height: 1.7;
   font-size: 1.05rem;
+  font-weight: 500;
   @include mobile {
     font-size: 0.92rem;
   }
@@ -360,22 +331,23 @@ p {
   color: $blood-glow;
   font-style: italic;
   padding: 0.6rem 0.8rem;
-  background: rgba(80, 15, 15, 0.18);
+  background: rgba(80, 15, 15, 0.15);
   border-left: 3px solid $blood-mid;
   border-radius: 0 $r-sm $r-sm 0;
 }
 .hint {
-  color: $paper-faint;
+  color: $paper-dim;
   font-style: italic;
+  font-weight: 500;
 }
 
 .errors {
-  background: linear-gradient(180deg, rgba(80, 15, 15, 0.45), rgba(35, 5, 5, 0.6));
+  background: linear-gradient(180deg, rgba(80, 15, 15, 0.40), rgba(35, 5, 5, 0.55));
   padding: 0.8rem 1.1rem;
   border-left: 3px solid $blood-bright;
   border-radius: 0 $r-sm $r-sm 0;
   margin: 1rem 0;
-  box-shadow: inset 0 0 12px rgba(168, 51, 51, 0.15);
+  box-shadow: inset 0 0 12px rgba(168, 51, 51, 0.12);
   @include mobile {
     padding: 0.6rem 0.8rem;
   }
@@ -383,6 +355,7 @@ p {
     color: #f0c0c0;
     margin: 0.3rem 0;
     font-size: 1rem;
+    font-weight: 500;
     @include mobile {
       font-size: 0.88rem;
     }

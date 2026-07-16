@@ -1,0 +1,75 @@
+/* ========== 魔法阵旋转 ========== */
+@keyframes rotate-magic-circle {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ========== 选中发光脉动 ========== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 6px 2px var(--shadow-glow); }
+  50%      { box-shadow: 0 0 14px 4px var(--shadow-glow); }
+}
+
+/* ========== 改造灯呼吸 ========== */
+@keyframes breathe-light {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+/* ========== 锁图标旋转消失 ========== */
+@keyframes lock-spin-out {
+  0%   { transform: rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: rotate(360deg) scale(0); opacity: 0; }
+}
+
+/* ========== 详情展开/收起 ========== */
+@keyframes expand-panel {
+  from { max-height: 0; opacity: 0; }
+  to   { max-height: 500px; opacity: 1; }
+}
+
+@keyframes collapse-panel {
+  from { max-height: 500px; opacity: 1; }
+  to   { max-height: 0; opacity: 0; }
+}
+
+/* ========== 星光闪烁（两层错落） ========== */
+@keyframes twinkle-1 {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+
+@keyframes twinkle-2 {
+  0%, 100% { opacity: 0.8; }
+  50%      { opacity: 0.2; }
+}
+
+/* ========== 角色滑动过渡 ========== */
+.slide-enter-active {
+  transition: all 0.35s ease-out;
+}
+.slide-leave-active {
+  transition: all 0.35s ease-in;
+  position: absolute;
+  width: 100%;
+}
+.slide-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* ========== 手机端上下滑动 ========== */
+@media (max-width: 480px) {
+  .slide-enter-from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  .slide-leave-to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}

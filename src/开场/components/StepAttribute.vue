@@ -2,9 +2,8 @@
   <section class="step">
     <h2>属性</h2>
     <p class="hint">
-      每 3 点属性消耗 1 开局点；减点回收点数。
       单项范围 {{ 下限 }}-{{ 上限 }}，基线 10。
-      <span v-if="自由">自由模式下境界抬升的属性免费，仅超出境界下限的加点消耗点数。</span>
+      境界附带六维保底，减点不能低于境界下限。
     </p>
 
     <div v-for="key in 六维键" :key="key" class="row">
@@ -18,31 +17,26 @@
       </div>
     </div>
 
-    <p class="summary">净变化合计：{{ 净变化 }} 属性点 ≈ 消耗 {{ 等价点数 }} 开局点</p>
-
-    <!-- 自由模式：善恶 / san -->
-    <template v-if="自由">
-      <h3 class="sub">心性</h3>
-      <div class="slider-row">
-        <span class="name">善恶值</span>
-        <div class="slider-ctrl">
-          <span class="range-label">邪</span>
-          <input type="range" min="-100" max="100" step="1" v-model.number="善恶值" class="slider" />
-          <span class="range-label">善</span>
-          <span class="value small">{{ 善恶值 }}</span>
-        </div>
+    <!-- 善恶 / san -->
+    <h3 class="sub">心性</h3>
+    <div class="slider-row">
+      <span class="name">善恶值</span>
+      <div class="slider-ctrl">
+        <span class="range-label">邪</span>
+        <input type="range" min="-100" max="100" step="1" v-model.number="善恶值" class="slider" />
+        <span class="range-label">善</span>
+        <span class="value small">{{ 善恶值 }}</span>
       </div>
-      <div class="slider-row">
-        <span class="name">san 值</span>
-        <div class="slider-ctrl">
-          <span class="range-label">狂</span>
-          <input type="range" min="0" max="100" step="1" v-model.number="san值" class="slider" />
-          <span class="range-label">稳</span>
-          <span class="value small">{{ san值 }}</span>
-        </div>
+    </div>
+    <div class="slider-row">
+      <span class="name">san 值</span>
+      <div class="slider-ctrl">
+        <span class="range-label">狂</span>
+        <input type="range" min="0" max="100" step="1" v-model.number="san值" class="slider" />
+        <span class="range-label">稳</span>
+        <span class="value small">{{ san值 }}</span>
       </div>
-      <p class="hint">克苏鲁修玩家可调低 san 开局，拥抱疯狂</p>
-    </template>
+    </div>
   </section>
 </template>
 
@@ -50,32 +44,22 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
-import { useDraftStore } from '../draft';
-import { 默认六维基线, 计算属性点数, 境界六维下限, 普通六维上限, 自由六维上限 } from '../lib/点数';
+import { 境界六维下限 } from '../catalog/境界';
+import { 境界列表 } from '../catalog/境界';
 
-const props = defineProps<{ 自由: boolean }>();
+const 自由六维上限 = 100;
+
 const { data } = storeToRefs(useDataStore());
-const draft = useDraftStore();
 const 六维键 = ['力道','体魄','身法','灵力','神识','根骨'] as const;
 
-const 上限 = computed(() => props.自由 ? 自由六维上限 : 普通六维上限);
-// 自由模式：境界抬升的六维免费，减点不得低于境界下限（否则会把免费保底回收成点数）
-// 普通模式：地板仍是 0
-const 下限 = computed(() => props.自由 ? 境界六维下限(data.value.主角.境界) : 0);
+const 上限 = 自由六维上限;
+const 下限 = computed(() => 境界六维下限(data.value.主角.境界));
 
 function 调整(key: typeof 六维键[number], 增量: number) {
   const 新值 = data.value.主角.六维[key] + 增量;
-  if (新值 < 下限.value || 新值 > 上限.value) return;
+  if (新值 < 下限.value || 新值 > 上限) return;
   data.value.主角.六维[key] = 新值;
-  // 净加点超出基线才算消耗；减点不消耗（只回收）
-  if (新值 > 默认六维基线) draft.标记花费();
 }
-
-const 净变化 = computed(() =>
-  Object.values(data.value.主角.六维).reduce((acc, v) => acc + (v - 默认六维基线), 0)
-);
-// 等价点数：用境界下限作为免费基线，与实际计费一致
-const 等价点数 = computed(() => 计算属性点数(data.value.主角.六维 as any, 下限.value));
 
 const 善恶值 = computed({
   get: () => data.value.主角.善恶值,
@@ -117,12 +101,13 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.2rem;
 }
 .hint {
   font-size: 0.95rem;
-  color: $paper-dim;
+  font-weight: 500;
+  color: $paper-soft;
   font-style: italic;
   padding: 0.5rem 0.75rem;
   margin: 0.5rem 0 1.1rem;
   border-left: 2px solid $blood-mid;
-  background: rgba(80,15,15,0.1);
+  background: rgba(80,15,15,0.10);
   border-radius: 0 $r-sm $r-sm 0;
   line-height: 1.7;
   @include mobile { font-size: 0.82rem; padding: 0.4rem 0.55rem; }
@@ -168,7 +153,6 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.2rem;
   }
 }
 
-// 滑块行
 .slider-row {
   @include xianxia-card;
   display: flex; align-items: center;
@@ -193,6 +177,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.2rem;
 
     .range-label {
       font-size: 0.85rem;
+      font-weight: 500;
       color: $paper-dim;
       letter-spacing: 0.1em;
       @include mobile { font-size: 0.75rem; }
@@ -231,18 +216,5 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.2rem;
       font-family: $font-serif;
     }
   }
-}
-
-.summary {
-  margin-top: 1.3rem;
-  padding: 0.7rem 0.9rem;
-  background: rgba(30,18,18,0.45);
-  border-left: 3px solid $blood-mid;
-  border-radius: 0 $r-sm $r-sm 0;
-  color: $paper-soft;
-  font-family: $font-serif;
-  font-size: 1.05rem;
-  letter-spacing: 0.05em;
-  @include mobile { font-size: 0.9rem; padding: 0.5rem 0.6rem; margin-top: 0.9rem; }
 }
 </style>

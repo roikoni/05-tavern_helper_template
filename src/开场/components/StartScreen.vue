@@ -420,7 +420,7 @@ $cover-desktop: "https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%
   background: transparent;
   border: none;
   cursor: pointer;
-  font-family: $font-serif;
+  font-family: "STKaiti", "KaiTi", "FangSong", "Songti SC", "SimSun", serif;
   isolation: isolate;
   @include mobile { margin: 0.5rem auto; }
 

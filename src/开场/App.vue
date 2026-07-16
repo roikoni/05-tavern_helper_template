@@ -13,12 +13,12 @@
         <!-- 捏角主体 -->
         <div v-else key="creator" class="creator">
           <aside class="step-sidebar">
-            <StepIndicator v-model="当前步" :模式="模式" />
+            <StepIndicator v-model="当前步" />
           </aside>
           <main class="step-main">
             <!-- 存档工具栏 -->
             <div class="save-toolbar">
-              <span class="mode-tag">{{ 模式 === '普通' ? '普通模式' : 模式 === '自由' ? '自由模式' : '开挂模式' }}</span>
+              <span class="mode-tag">沙盒模式</span>
               <button class="save-btn danger" @click="resetOpen = true" title="重置所有捏角选择">
                 <i class="fa-solid fa-rotate-left"></i> 重置
               </button>
@@ -30,27 +30,16 @@
               </button>
             </div>
 
-            <PointBar />
             <div class="step-body">
               <Transition name="fade" mode="out-in">
-                <StepBasic       v-if="当前步 === 1" key="1" :自由="模式 !== '普通'" />
-                <StepOrigin      v-else-if="当前步 === 2" key="2" :自由="模式 !== '普通'" />
+                <StepBasic       v-if="当前步 === 1" key="1" />
+                <StepOrigin      v-else-if="当前步 === 2" key="2" />
                 <StepSect        v-else-if="当前步 === 3" key="3" />
-                <StepShop        v-else-if="当前步 === 4" key="4" :开挂="模式 === '开挂'" />
-                <StepAttribute   v-else-if="当前步 === 5" key="5" :自由="模式 !== '普通'" />
-                <StepBirthplace  v-else-if="当前步 === 6" key="6" />
-                <template v-else-if="模式 === '自由'">
-                  <StepRelation v-if="当前步 === 7" key="7" />
-                  <StepWorld    v-else-if="当前步 === 8" key="8" />
-                  <StepConfirm  v-else-if="当前步 === 9" key="9" :自由="true" />
-                </template>
-                <template v-else-if="模式 === '开挂'">
-                  <StepRelation v-if="当前步 === 7" key="7" />
-                  <StepWorld    v-else-if="当前步 === 8" key="8" />
-                  <StepCheat    v-else-if="当前步 === 9" key="9" />
-                  <StepConfirm  v-else-if="当前步 === 10" key="10" :自由="true" :开挂="true" />
-                </template>
-                <StepConfirm   v-else-if="当前步 === 7" key="7" :自由="false" />
+                <StepShop          v-else-if="当前步 === 4" key="4" />
+                <StepDivineContract v-else-if="当前步 === 5" key="5" />
+                <StepAttribute     v-else-if="当前步 === 6" key="6" />
+                <StepBirthplace    v-else-if="当前步 === 7" key="7" />
+                <StepConfirm      v-else-if="当前步 === 8" key="8" />
               </Transition>
             </div>
             <nav class="nav">
@@ -110,7 +99,7 @@
         <button class="load-close" @click="resetOpen = false">&times;</button>
         <h2 class="load-title">重置捏角</h2>
         <div class="save-form">
-          <p class="reset-warn">将清空所有已选选项（姓名、种族、境界、宗门、流派、灵根、装备、功法、六维、灵石、人脉、世界时间）并重置点数池与掷骰锁定。此操作不可撤销。</p>
+          <p class="reset-warn">将清空所有已选选项（姓名、种族、境界、宗门、流派、灵根、装备、功法、神契、六维、灵石）。此操作不可撤销。</p>
           <div class="save-actions">
             <button class="save-act-btn cancel" @click="resetOpen = false">取消</button>
             <button class="save-act-btn confirm danger" @click="doReset">确认重置</button>
@@ -127,33 +116,27 @@ import _ from 'lodash';
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from './store';
-import { useDraftStore, type 捏角模式 } from './draft';
+import { useDraftStore } from './draft';
 import { listSaves, saveCreator, deleteSave } from './lib/save';
 import type { CreatorSave } from './lib/save';
-import { 神级武器列表, 神级法器列表 } from './catalog/神级装备';
-import { 神级功法列表 } from './catalog/神级功法';
 import StartScreen from './components/StartScreen.vue';
-import PointBar from './components/PointBar.vue';
 import StepIndicator from './components/StepIndicator.vue';
 import StepBasic from './components/StepBasic.vue';
 import StepOrigin from './components/StepOrigin.vue';
 import StepSect from './components/StepSect.vue';
 import StepShop from './components/StepShop.vue';
+import StepDivineContract from './components/StepDivineContract.vue';
 import StepAttribute from './components/StepAttribute.vue';
 import StepBirthplace from './components/StepBirthplace.vue';
-import StepRelation from './components/StepRelation.vue';
-import StepWorld from './components/StepWorld.vue';
-import StepCheat from './components/StepCheat.vue';
 import StepConfirm from './components/StepConfirm.vue';
 import DoneView from './components/DoneView.vue';
 
 const { data } = storeToRefs(useDataStore());
 const draftStore = useDraftStore();
-const { 模式, 点数池 } = storeToRefs(draftStore);
 const 当前步 = ref(1);
 const 已开始 = ref(false);
 
-const 总步数 = computed(() => 模式.value === '开挂' ? 10 : 模式.value === '自由' ? 9 : 7);
+const 总步数 = 8;
 
 const loadOpen = ref(false);
 const saveOpen = ref(false);
@@ -162,21 +145,8 @@ const saveName = ref('');
 const saveInput = ref<HTMLInputElement | null>(null);
 const saves = ref<CreatorSave[]>([]);
 
-function 进入捏角(m: 捏角模式) {
-  draftStore.设模式(m);
-  if (m === '开挂') {
-    // 无限点数
-    draftStore.点数池 = Infinity;
-    // 六维拉满
-    data.value.主角.六维 = { 力道: 100, 体魄: 100, 身法: 100, 灵力: 100, 神识: 100, 根骨: 100 };
-    // 预装神级装备（优先通用型）
-    const w = 神级武器列表.find(x => x.适配流派.length === 0) ?? 神级武器列表[0];
-    _.set(data.value, '主角.装备.武器', { 名称: w.名称, 品阶: w.品阶, 描述: w.描述, 属性: w.适配流派.join('/') });
-    const f = 神级法器列表[0];
-    _.set(data.value, '主角.装备.法器', { 名称: f.名称, 品阶: f.品阶, 描述: f.描述, 属性: f.适配流派.join('/') });
-    // 预学所有神级功法
-    draftStore.已选功法 = 神级功法列表.map(g => g.名称);
-  }
+function 进入捏角() {
+  // 沙盒模式：全功能开放，无模式区分
   已开始.value = true;
 }
 
@@ -193,13 +163,12 @@ function doSave() {
   saveCreator(
     {
       step: 当前步.value,
-      模式: 模式.value,
-      点数池: 模式.value === '开挂' ? -1 : 点数池.value, // -1 表示无限，规避 JSON Infinity 丢失
+      模式: '沙盒',
       开局身份: draftStore.开局身份,
-      自定义能力: draftStore.自定义能力,
       本源基调: draftStore.本源基调,
       主角: klona(data.value.主角) as Record<string, any>,
       已选功法: klona(draftStore.已选功法),
+      已选神契: draftStore.已选神契,
     },
     name,
   );
@@ -215,20 +184,17 @@ function onLoad() {
 function doLoad(s: CreatorSave) {
   // 恢复主角数据
   data.value.主角 = s.主角 as any;
-  // 恢复模式与点数池
-  draftStore.设模式(s.模式 ?? '普通');
-  if (s.模式 === '开挂') {
-    draftStore.点数池 = Infinity;
-  } else if (s.模式 === '自由' && typeof s.点数池 === 'number') {
-    draftStore.点数池 = s.点数池;
-  }
   if (typeof s.开局身份 === 'string') draftStore.开局身份 = s.开局身份;
-  if (typeof s.自定义能力 === 'string') draftStore.自定义能力 = s.自定义能力;
   if (s.本源基调 === '正经' || s.本源基调 === '搞笑' || s.本源基调 === '涩涩') draftStore.本源基调 = s.本源基调;
   // 恢复步骤
   当前步.value = s.step;
   // 恢复已选功法
   draftStore.已选功法 = klona(s.已选功法);
+  // 恢复已选神契
+  if (typeof s.已选神契 === 'string') {
+    draftStore.已选神契 = s.已选神契;
+    _.set(data.value, '主角.神契装备', s.已选神契);
+  }
   // 确保进入捏角界面
   已开始.value = true;
   loadOpen.value = false;
@@ -289,7 +255,7 @@ function doReset() {
       }
     }
 
-    // 草稿：已选功法、锁定、点数池全部重置
+    // 草稿：已选功法、已选神契全部重置
     draftStore.重置();
 
     // 回到第一步
@@ -356,9 +322,9 @@ function fmtTime(ts: number): string {
   width: 200px;
   flex-shrink: 0;
   background: linear-gradient(180deg,
-    rgba(8,7,10,0.98) 0%,
-    rgba(12,10,15,0.95) 100%);
-  border-right: 1px solid rgba(207,200,184,0.12);
+    rgba(8,8,10,0.98) 0%,
+    rgba(12,12,16,0.95) 100%);
+  border-right: 1px solid rgba(200,200,210,0.08);
   position: relative;
   z-index: 5;
   overflow: hidden;
@@ -388,6 +354,7 @@ function fmtTime(ts: number): string {
   gap: 1rem;
   position: relative;
   z-index: 2;
+  border-top: 1px solid rgba(200,200,210,0.08);
 
   // 手机端减少内边距
   @include mobile {
@@ -398,31 +365,10 @@ function fmtTime(ts: number): string {
     padding: 1rem 1rem 1.2rem;
   }
 
-  // 顶部水墨分割线
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent, rgba(207,200,184,0.35) 50%, transparent);
-  }
-  // 中央小墨点
-  &::after {
-    content: "◆";
-    position: absolute;
-    top: -8px; left: 50%;
-    transform: translateX(-50%);
-    color: $paper-soft;
-    opacity: 0.4;
-    font-size: 0.7rem;
-    background: $bg-ink;
-    padding: 0 0.4em;
-  }
-
   .nav-btn {
     @include xianxia-btn;
     font-size: 1.05rem;
+    font-weight: 500;
     padding: 0.65rem 1.6rem;
     @include mobile {
       font-size: 0.9rem;
@@ -469,24 +415,26 @@ function fmtTime(ts: number): string {
 .mode-tag {
   margin-right: auto;
   font-family: $font-serif;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   color: $blood-glow;
-  padding: 0.2rem 0.6rem;
-  border: 1px solid rgba(168,51,51,0.4);
+  padding: 0.25rem 0.7rem;
+  border: 1px solid rgba(216,56,56,0.35);
   border-radius: $r-xs;
-  background: rgba(80,15,15,0.18);
-  @include mobile { font-size: 0.65rem; padding: 0.15rem 0.45rem; }
+  background: rgba(80,15,15,0.15);
+  @include mobile { font-size: 0.68rem; padding: 0.2rem 0.5rem; }
 }
 
 .save-btn {
   @include xianxia-btn;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: 500;
   padding: 0.35rem 0.85rem;
-  opacity: 0.7;
+  opacity: 0.75;
   transition: opacity 0.2s, background 0.2s;
   @include mobile {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     padding: 0.3rem 0.65rem;
   }
   &:hover {
@@ -494,11 +442,11 @@ function fmtTime(ts: number): string {
   }
   &.danger {
     color: $blood-bright;
-    border-color: rgba(198,69,69,0.4);
+    border-color: rgba(232,80,80,0.35);
     &:hover {
       background: linear-gradient(180deg, rgba(50,12,12,0.95) 0%, rgba(20,5,5,0.98) 100%);
       border-color: $blood-bright;
-      box-shadow: 0 0 10px rgba(168,51,51,0.3);
+      box-shadow: 0 0 10px rgba(216,56,56,0.25);
     }
   }
   i {
@@ -513,21 +461,23 @@ function fmtTime(ts: number): string {
   position: absolute;
   inset: 0;
   z-index: 80;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.80);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   border-radius: 14px;
 }
 
 .load-modal {
   width: 340px;
   max-height: 380px;
-  background: $bg-ink;
-  border: 1px solid rgba(207, 200, 184, 0.25);
-  border-radius: $r-md;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  background: $bg-soft;
+  border: 1px solid rgba(200, 200, 210, 0.15);
+  border-radius: $r-lg;
+  box-shadow:
+    0 0 50px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -555,26 +505,27 @@ function fmtTime(ts: number): string {
 }
 
 .load-title {
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(207, 200, 184, 0.15);
-  background: rgba(0, 0, 0, 0.4);
-  font-size: 1rem;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(200, 200, 210, 0.10);
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 1.05rem;
+  font-weight: 600;
   font-family: $font-serif;
   color: $paper-cold;
   letter-spacing: 0.1em;
   margin: 0;
   @include mobile {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     padding: 10px 12px;
   }
 }
 
 .load-empty {
   text-align: center;
-  padding: 24px;
-  color: $paper-faint;
-  font-size: 0.82rem;
-  font-style: italic;
+  padding: 28px;
+  color: $paper-dim;
+  font-size: 0.88rem;
+  font-weight: 500;
   font-family: $font-serif;
 }
 
@@ -583,11 +534,11 @@ function fmtTime(ts: number): string {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(207, 200, 184, 0.06);
+  border-bottom: 1px solid rgba(200, 200, 210, 0.05);
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
-    background: rgba(207, 200, 184, 0.08);
+    background: rgba(200, 200, 210, 0.06);
   }
   @include mobile {
     padding: 8px 10px;
@@ -597,7 +548,8 @@ function fmtTime(ts: number): string {
 
 .load-name {
   flex: 1;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
+  font-weight: 500;
   color: $paper-cold;
   font-family: $font-serif;
   letter-spacing: 0.05em;
@@ -605,17 +557,18 @@ function fmtTime(ts: number): string {
   text-overflow: ellipsis;
   white-space: nowrap;
   @include mobile {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
   }
 }
 
 .load-time {
-  font-size: 0.62rem;
-  color: $paper-faint;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: $paper-dim;
   font-family: $font-serif;
   white-space: nowrap;
   @include mobile {
-    font-size: 0.55rem;
+    font-size: 0.6rem;
   }
 }
 
@@ -680,23 +633,24 @@ function fmtTime(ts: number): string {
 
 .save-act-btn {
   @include xianxia-btn;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: 500;
   padding: 0.4rem 1rem;
   @include mobile {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     padding: 0.35rem 0.85rem;
   }
   &.confirm {
-    opacity: 0.7;
+    opacity: 0.75;
     &:not(:disabled):hover { opacity: 1; }
     &:disabled { opacity: 0.3; cursor: not-allowed; }
     &.danger {
       color: $blood-bright;
-      border-color: rgba(198,69,69,0.5);
+      border-color: rgba(232,80,80,0.45);
       opacity: 0.85;
       &:hover {
         background: linear-gradient(180deg, $blood-bright 0%, $blood-glow 50%, $blood 100%);
-        color: #f4e8d8;
+        color: #f0e8e0;
         border-color: $blood-bright;
       }
     }
@@ -705,11 +659,12 @@ function fmtTime(ts: number): string {
 
 .reset-warn {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
+  font-weight: 500;
   line-height: 1.7;
-  color: $paper-dim;
+  color: $paper-soft;
   font-family: $font-serif;
   letter-spacing: 0.03em;
-  @include mobile { font-size: 0.74rem; }
+  @include mobile { font-size: 0.78rem; }
 }
 </style>

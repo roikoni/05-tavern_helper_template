@@ -35,7 +35,7 @@
                 <span v-for="i in 4" :key="i" class="rank-dot" :class="{ active: i <= getRankDots(god.位阶) }">&#9670;</span>
               </span>
             </div>
-            <span class="god-status" :class="{ done: god.收服 }">{{ god.收服 ? '✓ 已收服' : '未收服' }}</span>
+            <span class="god-status" :class="{ done: god.收服 }">{{ god.收服 ? '✓ 已结契' : '未结契' }}</span>
           </div>
         </div>
       </div>
@@ -104,7 +104,6 @@
           <div class="dt-row"><span class="dt-lbl">领域</span><span class="dt-val">{{ detailData.领域 }}</span></div>
           <div class="dt-row"><span class="dt-lbl">位阶</span><span class="dt-val dt-gold">{{ detailData.位阶 }}</span></div>
           <div class="dt-row"><span class="dt-lbl">状态</span><span class="dt-val">{{ detailData.状态 }}</span></div>
-          <div class="dt-row"><span class="dt-lbl">沉沦</span><span class="dt-val dt-sink">{{ detailData.沉沦值 }}</span></div>
         </div>
         <div v-else class="dt-grid">
           <div class="dt-row"><span class="dt-lbl">境界</span><span class="dt-val dt-gold">{{ detailData.境界 }}</span></div>
@@ -299,7 +298,6 @@ function getRankDots(rank: string): number {
 .dt-gold { color: var(--c-gold); }
 .dt-stamp { color: var(--c-stamp); }
 .dt-brainwash { color: #8b5a9a; }
-.dt-sink { color: #c97a7a; }
 .aff-good { color: var(--c-affinity-green); }
 .aff-evil { color: var(--c-stamp); }
 

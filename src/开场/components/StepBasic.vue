@@ -1,12 +1,61 @@
 <template>
   <section class="step">
+    <!-- 头像编辑页 -->
+    <div v-if="avatarEdit" class="av-edit-page">
+      <button class="av-edit-back" @click="cancelAvatarEdit">
+        <i class="fa-solid fa-chevron-left"></i> 返回
+      </button>
+      <div class="av-edit-preview">
+        <div class="portrait-frame large">
+          <div class="portrait-outer"></div>
+          <div class="portrait-dash"></div>
+          <div class="portrait-inner">
+            <div class="portrait-gradient"></div>
+            <img v-if="avUrl" :src="avUrl" class="portrait-img" @error="avUrl = ''" />
+            <i v-else class="fa-solid fa-user portrait-icon"></i>
+          </div>
+        </div>
+        <p class="av-edit-hint">{{ avUrl ? '预览效果（未保存）' : '尚未设置头像' }}</p>
+      </div>
+      <div class="av-edit-section">
+        <div class="av-edit-label">图片链接</div>
+        <input v-model="avUrl" class="av-edit-input" placeholder="粘贴图片链接…" />
+      </div>
+      <div class="av-edit-section">
+        <div class="av-edit-label">本地图片</div>
+        <label class="av-edit-file">
+          <i class="fa-solid fa-folder-open"></i> 选择本地图片
+          <input type="file" accept="image/*" hidden @change="onAvFile" />
+        </label>
+      </div>
+      <div class="av-edit-actions">
+        <button class="av-edit-btn cancel" @click="cancelAvatarEdit">取消</button>
+        <button class="av-edit-btn confirm" @click="confirmAvatar" :disabled="!avUrl">保存头像</button>
+      </div>
+    </div>
+
+    <template v-else>
+    <!-- 头像 -->
+    <div class="avatar-section">
+      <div class="portrait-frame" @click="startAvEdit" @mouseenter="avHover = true" @mouseleave="avHover = false">
+        <div class="portrait-outer"></div>
+        <div class="portrait-dash"></div>
+        <div class="portrait-inner">
+          <div class="portrait-gradient"></div>
+          <img v-if="avatarUrl" :src="avatarUrl" class="portrait-img" />
+          <i v-else class="fa-solid fa-user portrait-icon"></i>
+          <div v-if="avHover" class="portrait-badge">{{ avatarUrl ? '点击换装' : '点击添像' }}</div>
+        </div>
+        <div v-if="avHover" class="portrait-edit-btn"><i class="fa-solid fa-pen"></i></div>
+      </div>
+    </div>
+
     <h2>出身</h2>
 
-    <!-- 自由模式：开局身份（自由填表） -->
-    <label v-if="自由" class="field">
+    <!-- 开局身份（自由填表） -->
+    <label class="field">
       <span>开局身份</span>
       <input v-model="身份" placeholder="如：散修联盟执事 / 太虚剑宗外门弟子 / 隐世老怪…" maxlength="30" />
-      <p class="hint">仅作背景描述，不绑定境界/流派/宗门——那些请到对应步骤自行选择</p>
     </label>
 
     <label class="field">
@@ -31,8 +80,8 @@
       <span v-if="性别模式 === '待定'" class="hint">请选择或自定义性别</span>
     </div>
 
-    <!-- 自由模式：种族 -->
-    <div v-if="自由" class="field">
+    <!-- 种族 -->
+    <div class="field">
       <span>种族</span>
       <div class="grid-种族">
         <button
@@ -72,19 +121,57 @@
         <button type="button" class="灵石-btn" @click="加灵石">+</button>
         <span class="灵石单位">枚</span>
       </div>
-      <p class="hint">每 1000 灵石消耗 1 开局点数，默认 0</p>
     </div>
+    </template>
   </section>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
 import { 种族列表 } from '../catalog/种族';
 
-defineProps<{ 自由: boolean }>();
+// ─── 头像 ───
+const avStorage = useLocalStorage<Record<string, string>>('cultivation_bar:avatars', {});
+const 主角默认头像 = 'https://cdn.jsdelivr.net/gh/roikoni/my_blog_image/A%3A%5CSilly%20Tavern%E7%9B%B8%E5%85%B3%5C%E5%9B%BE%E5%BA%8A-%E6%88%91%E8%A2%AB%E7%8C%AB%E5%A8%98%E5%8C%85%E5%9B%B4%E4%BA%86!C85A7A1F61DB84E87C221D2C20DA7031.png';
+const avatarUrl = computed(() => avStorage.value['主角'] || 主角默认头像);
+const avatarEdit = ref(false);
+const avHover = ref(false);
+const avUrl = ref('');
+const avUrlError = ref('');
+
+function startAvEdit() {
+  avatarEdit.value = true;
+  avUrl.value = avatarUrl.value || '';
+}
+function isValidImageSource(url: string): boolean {
+  if (!url) return false;
+  if (/^data:image\/(png|jpe?g|gif|webp|svg\+xml|bmp);base64,/i.test(url)) return true;
+  try { const u = new URL(url); return u.protocol === 'http:' || u.protocol === 'https:'; }
+  catch { return false; }
+}
+function confirmAvatar() {
+  const url = avUrl.value.trim();
+  if (!isValidImageSource(url)) { avUrlError.value = '链接无效'; return; }
+  avStorage.value = { ...avStorage.value, '主角': url };
+  avatarEdit.value = false;
+  avUrlError.value = '';
+}
+function cancelAvatarEdit() {
+  avatarEdit.value = false;
+  avUrl.value = '';
+  avUrlError.value = '';
+}
+function onAvFile(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { avUrl.value = reader.result as string; };
+  reader.readAsDataURL(file);
+}
 
 const { data } = storeToRefs(useDataStore());
 const draft = useDraftStore();
@@ -141,7 +228,6 @@ const 灵石 = computed({
   get: () => data.value.主角.灵石,
   set: v => {
     data.value.主角.灵石 = Math.max(0, Number(v) || 0);
-    if (data.value.主角.灵石 > 0) draft.标记花费();
   },
 });
 
@@ -151,7 +237,6 @@ function 减灵石() {
 }
 function 加灵石() {
   data.value.主角.灵石 = 灵石.value + 1000;
-  draft.标记花费();
 }
 
 function 选性别(g: string) {
@@ -201,6 +286,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.6rem;
   > span {
     font-family: $font-serif;
     font-size: 1.05rem;
+    font-weight: 500;
     color: $paper-cold;
     letter-spacing: 0.15em;
     @include mobile { font-size: 0.92rem; }
@@ -257,6 +343,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.6rem;
     .title { font-weight: bold; letter-spacing: 0.08em; }
     .desc {
       font-size: 0.78rem;
+      font-weight: 500;
       color: $paper-dim;
       line-height: 1.45;
       @include mobile { font-size: 0.72rem; }
@@ -301,6 +388,7 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.6rem;
   .灵石单位 {
     color: $paper-dim;
     font-size: 0.95rem;
+    font-weight: 500;
     font-family: $font-serif;
     letter-spacing: 0.1em;
     @include mobile { font-size: 0.82rem; }
@@ -309,14 +397,181 @@ h2 { @include gold-heading; font-size: 1.7rem; margin: 0 0 1.6rem;
 
 .hint {
   font-size: 0.95rem;
-  color: $paper-dim;
+  font-weight: 500;
+  color: $paper-soft;
   font-style: italic;
   margin-top: 0.7rem;
   padding: 0.5rem 0.75rem;
   border-left: 2px solid $blood-mid;
-  background: rgba(80,15,15,0.12);
+  background: rgba(80,15,15,0.10);
   border-radius: 0 $r-sm $r-sm 0;
   line-height: 1.7;
   @include mobile { font-size: 0.82rem; padding: 0.4rem 0.55rem; }
+}
+
+// ═══════════════════════════════════════════════
+// 头像
+// ═══════════════════════════════════════════════
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.portrait-frame {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 0.5s;
+  &:hover { transform: translateY(-3px); }
+  &.large { width: 170px; height: 170px; }
+  @include mobile {
+    width: 90px; height: 90px;
+    &.large { width: 140px; height: 140px; }
+  }
+}
+
+.portrait-outer {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(200,200,210,0.18);
+}
+
+.portrait-dash {
+  position: absolute; inset: 3px;
+  border: 1px dashed rgba(200,200,210,0.12);
+}
+
+.portrait-inner {
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(200,200,210,0.08);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+
+.portrait-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+  z-index: 0;
+}
+
+.portrait-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  position: relative; z-index: 5;
+}
+
+.portrait-icon {
+  font-size: 2.2rem;
+  color: rgba(200,200,210,0.15);
+  position: relative; z-index: 10;
+  .portrait-frame.large & { font-size: 3rem; }
+  @include mobile { font-size: 1.6rem; }
+}
+
+.portrait-badge {
+  position: absolute; bottom: 5px;
+  border: 1px solid rgba(200,200,210,0.18);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 10px;
+  color: $paper-dim;
+  font-size: 0.6rem; font-weight: 500;
+  font-family: $font-serif;
+  letter-spacing: 0.15em;
+  z-index: 10;
+}
+
+.portrait-edit-btn {
+  position: absolute; top: 5px; right: 5px;
+  z-index: 15;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(200,200,210,0.18);
+  display: flex; align-items: center; justify-content: center;
+  color: $paper-dim;
+  font-size: 0.65rem;
+}
+
+// 头像编辑页
+.av-edit-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0 1rem;
+}
+
+.av-edit-back {
+  align-self: flex-start;
+  background: transparent; border: none;
+  color: $paper-dim;
+  font-family: $font-serif;
+  font-size: 0.88rem; font-weight: 500;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  &:hover { color: $paper-cold; }
+}
+
+.av-edit-preview {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+
+.av-edit-hint {
+  font-size: 0.78rem; font-weight: 500;
+  color: $paper-faint;
+  letter-spacing: 0.1em;
+}
+
+.av-edit-section {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+
+.av-edit-label {
+  font-size: 0.82rem; font-weight: 500;
+  color: $paper-soft;
+  letter-spacing: 0.1em;
+}
+
+.av-edit-input {
+  @include xianxia-input;
+  width: 100%;
+  font-size: 0.88rem;
+}
+
+.av-edit-file {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  border: 1px dashed rgba(200,200,210,0.18);
+  border-radius: $r-sm;
+  font-size: 0.88rem; font-weight: 500;
+  color: $paper-dim;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover {
+    border-color: $blood-glow;
+    color: $blood-glow;
+  }
+}
+
+.av-edit-actions {
+  display: flex; gap: 0.7rem;
+}
+
+.av-edit-btn {
+  @include xianxia-btn;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.88rem; font-weight: 500;
+  &.confirm {
+    opacity: 0.7;
+    &:not(:disabled):hover { opacity: 1; }
+    &:disabled { opacity: 0.3; cursor: not-allowed; }
+  }
 }
 </style>

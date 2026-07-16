@@ -1,10 +1,13 @@
 // ─────────────────────────────────────────────
-// 黑色修士主题 · 水墨 × 黑暗融合
+// 黑色修士主题 · 现代主义深黑 + 仙侠古风点缀
 // 在各组件中以 `@use './theme' as *;` 引入
 // ─────────────────────────────────────────────
 
-// 毛笔书法 Web Font（兜底：Windows 6 种系统书法字体）
+// 毛笔书法 Web Font（兜底：Windows 系统书法字体）
 @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+
+// 极影毁片辉宋（正文用，标题除外）
+@import url('https://fontsapi.zeoseven.com/183/main/result.css');
 
 // === 响应式断点 ===
 $bp-sm: 520px;   // 手机横屏 / 小平板
@@ -36,98 +39,88 @@ $bp-lg: 1024px;  // 桌面
 }
 
 
-// === 色板 ===
-$bg-ink:      #050407;   // 浓墨底
-$bg-soft:     #0a090d;   // 飞白墨
-$bg-card:     #0f0d12;   // 卡片底
-$bg-card-hi:  #161318;   // 卡片悬浮
-$ink-line:    #1a181c;   // 墨线
-$ink-line-2:  #2a2630;   // 浅墨线
+// === 色板：现代主义深黑 ===
+$bg-ink:      #08080a;   // 极深黑，微蓝底
+$bg-soft:     #0c0c10;   // 次级深黑
+$bg-card:     #111115;   // 卡片底
+$bg-card-hi:  #16161c;   // 卡片悬浮
+$ink-line:    #1a1a20;   // 分隔线
+$ink-line-2:  #282830;   // 浅分隔线
 
-$paper-cold:  #e8e2d4;   // 冷宣纸白（主文字，提亮以增对比）
-$paper:       #e8e2d4;   // 兼容别名
-$paper-soft:  #c4bca9;   // 弱宣纸（提亮）
-$paper-dim:   #b8af9a;   // 暗宣纸（提亮）
-$paper-faint: #9a9180;   // 极弱（提亮，保证最小可读对比）
+// 文字色：大幅提亮，保证高对比
+$paper-cold:  #e8e8ec;   // 主文字：冷白
+$paper:       #e8e8ec;   // 兼容别名
+$paper-soft:  #b8b8c0;   // 次文字：亮灰
+$paper-dim:   #9898a0;   // 辅助文字：中灰
+$paper-faint: #686870;   // 弱化文字：深灰（仍比旧版亮）
 
-// 血色系（替代原烫金做高亮）
-$blood:        #6b1a1a;
-$blood-mid:    #8a2424;
-$blood-glow:   #a83333;
-$blood-bright: #c64545;
+// 血色强调：更鲜明现代
+$blood:        #8a1c1c;
+$blood-mid:    #b52a2a;
+$blood-glow:   #d83838;
+$blood-bright: #e85050;
 
-// 兼容旧引用（弱化为冷灰白色调，不再"金"）
-$gold:        #b8b0a4;
-$gold-bright: #e0d8c8;
-$gold-deep:   #6a655c;
+// 兼容旧引用（弱化为冷灰色调）
+$gold:        #a0a0a8;
+$gold-bright: #c8c8d0;
+$gold-deep:   #585860;
 
 // 兼容旧 ink-* 变量名
 $ink-black:   $bg-ink;
 $ink-deep:    $bg-soft;
 $ink-soft:    $bg-card;
 
-// 朱砂保留（用于印章 / 警示）
+// 朱砂保留（印章 / 警示）
 $cinnabar:        #8a1a1a;
 $cinnabar-bright: #b22a2a;
 
-// 状态色（去饱和、暗化）
-$jade:        #6a9a72;
-$amber:       #b8754a;
-$amber-bright:#d49a5a;
+// 状态色
+$jade:        #5a9a62;
+$amber:       #c08048;
+$amber-bright:#d89858;
 
-// === 圆角 ===
-$r-xs: 3px;     // 细节
+// === 圆角：现代统一 ===
+$r-xs: 4px;     // 细节
 $r-sm: 6px;     // 输入框 / 小按钮
-$r-md: 8px;     // 卡片 / 行
-$r-lg: 12px;   // 大块容器
+$r-md: 10px;    // 卡片 / 行
+$r-lg: 14px;    // 大块容器
 $r-pill: 999px; // 胶囊
 
-// === 字体 ===
-$font-serif: "STKaiti", "KaiTi", "FangSong", "Songti SC", "SimSun", serif;
-// 毛笔/书法字体（Windows 自带 STXingkai/华文行楷 + 隶书 + 新魏 + Web font 兜底）
+// === 字体：书法用于标题，正文更现代 ===
+$font-serif: "极影毁片辉宋 Bold", "STKaiti", "KaiTi", "FangSong", "Songti SC", "SimSun", serif;
 $font-brush: "Ma Shan Zheng", "ZCOOL KuaiLe", "华文行楷", "STXingkai",
              "华文新魏", "STXinwei", "华文隶书", "STLiti",
              "KaiTi", "STKaiti", serif;
 
-// === 墨纸纹理 ===
+// === 现代深黑背景 ===
 @mixin paper-bg {
   background-color: $bg-ink;
   background-image:
-    radial-gradient(ellipse at 20% 0%,    rgba(40,30,40,0.45) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, rgba(80,20,20,0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 50%,   rgba(10,9,13,0.4)  0%, $bg-ink 80%),
-    repeating-linear-gradient(45deg,
-      rgba(255,255,255,0.012) 0 1px,
-      transparent 1px 3px);
+    radial-gradient(ellipse at 20% 0%,    rgba(60,30,40,0.20) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(40,20,30,0.12) 0%, transparent 60%);
 }
 
-// 冷白文字（替代原烫金）
+// 现代强调文字：纯色+微妙发光，替代复杂渐变
 @mixin gold-text {
   color: $paper-cold;
-  background: linear-gradient(180deg, #e8e0d0 0%, $paper-cold 50%, $paper-soft 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 12px rgba(207,200,184,0.18);
+  text-shadow: 0 0 16px rgba(200,200,210,0.12);
   font-family: $font-serif;
   letter-spacing: 0.05em;
 }
 
 // 血色文字（强高亮）
 @mixin blood-text {
-  background: linear-gradient(180deg, #d8a0a0 0%, $blood-glow 55%, $blood 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: $blood-glow;
+  text-shadow: 0 0 8px rgba(216,56,56,0.35);
   font-family: $font-serif;
-  filter: drop-shadow(0 0 4px rgba(168,51,51,0.4));
 }
 
-// 标题 + 装饰横线（墨线 + 中央笔触）
+// 现代简洁标题：去掉墨线装饰，保留书法字体
 @mixin gold-heading {
   @include gold-text;
   position: relative;
-  padding-bottom: 0.8rem;
+  padding-bottom: 0.6rem;
+  // 极简底边：细线+中央微光
   &::after {
     content: "";
     position: absolute;
@@ -135,124 +128,94 @@ $font-brush: "Ma Shan Zheng", "ZCOOL KuaiLe", "华文行楷", "STXingkai",
     height: 1px;
     background: linear-gradient(90deg,
       transparent 0%,
-      rgba(207,200,184,0.35) 25%,
-      rgba(207,200,184,0.6) 50%,
-      rgba(207,200,184,0.35) 75%,
+      rgba(200,200,210,0.25) 20%,
+      rgba(200,200,210,0.45) 50%,
+      rgba(200,200,210,0.25) 80%,
       transparent 100%);
-  }
-  // 中央小墨点
-  &::before {
-    content: "";
-    position: absolute;
-    left: 50%; bottom: -3px;
-    transform: translateX(-50%);
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: radial-gradient(circle, $paper-cold 0%, $paper-dim 60%, transparent 100%);
-    opacity: 0.55;
   }
 }
 
-// 水墨卡片（带圆角与四角墨点）
+// 现代卡片：细边框+微妙发光，去掉四角墨点
 @mixin xianxia-card {
   background:
     linear-gradient(180deg,
-      rgba(22,19,24,0.85) 0%,
-      rgba(10,9,13,0.95) 100%);
-  border: 1px solid rgba(207,200,184,0.18);
+      rgba(20,20,26,0.90) 0%,
+      rgba(12,12,16,0.95) 100%);
+  border: 1px solid rgba(200,200,210,0.10);
   border-radius: $r-md;
   position: relative;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
-    inset 0 0 16px rgba(0,0,0,0.55),
-    0 2px 6px rgba(0,0,0,0.5);
-
-  // 四角小墨点装饰（不再是金线直角）
-  &::before, &::after {
-    content: "";
-    position: absolute;
-    width: 4px; height: 4px;
-    background: $paper-soft;
-    border-radius: 50%;
-    opacity: 0.45;
-    pointer-events: none;
-    transition: opacity 0.3s ease, background 0.3s ease;
-  }
-  &::before { top: 6px; left: 6px;   box-shadow: calc(100% + 0px) 0 0 0 transparent; }
-  &::after  { bottom: 6px; right: 6px; }
+    inset 0 0 12px rgba(0,0,0,0.5),
+    0 1px 3px rgba(0,0,0,0.4);
 
   &:hover {
-    border-color: rgba(207,200,184,0.45);
+    border-color: rgba(200,200,210,0.22);
     background:
       linear-gradient(180deg,
-        rgba(28,24,30,0.9) 0%,
-        rgba(14,12,16,0.96) 100%);
+        rgba(26,26,34,0.92) 0%,
+        rgba(16,16,22,0.96) 100%);
     box-shadow:
-      inset 0 0 20px rgba(0,0,0,0.6),
-      0 0 14px rgba(207,200,184,0.08),
-      0 3px 10px rgba(0,0,0,0.6);
+      inset 0 0 16px rgba(0,0,0,0.55),
+      0 0 12px rgba(200,200,210,0.06),
+      0 2px 8px rgba(0,0,0,0.5);
     transform: translateY(-1px);
-    &::before, &::after { opacity: 0.7; }
   }
   &.active, &.selected {
-    border-color: $blood-glow;
+    border-color: rgba(216,56,56,0.45);
     background:
       linear-gradient(180deg,
-        rgba(60,18,18,0.6) 0%,
-        rgba(20,10,12,0.95) 100%);
+        rgba(50,18,18,0.55) 0%,
+        rgba(18,10,12,0.95) 100%);
     box-shadow:
-      inset 0 0 24px rgba(168,51,51,0.18),
-      0 0 16px rgba(168,51,51,0.3),
-      0 2px 8px rgba(0,0,0,0.6);
-    &::before, &::after {
-      background: $blood-glow;
-      opacity: 0.9;
-      box-shadow: 0 0 6px rgba(168,51,51,0.6);
-    }
+      inset 0 0 20px rgba(168,51,51,0.14),
+      0 0 16px rgba(168,51,51,0.25),
+      0 2px 6px rgba(0,0,0,0.5);
   }
 }
 
-// 水墨按钮
+// 现代按钮：简洁边框+hover光晕
 @mixin xianxia-btn {
   font-family: $font-serif;
-  background: linear-gradient(180deg, rgba(28,24,30,0.85) 0%, rgba(10,9,13,0.95) 100%);
+  background: linear-gradient(180deg, rgba(24,24,30,0.85) 0%, rgba(12,12,16,0.95) 100%);
   color: $paper-cold;
-  border: 1px solid rgba(207,200,184,0.25);
+  border: 1px solid rgba(200,200,210,0.18);
   padding: 0.5rem 1.2rem;
   cursor: pointer;
   border-radius: $r-sm;
   letter-spacing: 0.1em;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: all 0.25s ease;
   box-shadow:
-    inset 0 0 10px rgba(0,0,0,0.55),
-    0 1px 2px rgba(0,0,0,0.5);
+    inset 0 0 8px rgba(0,0,0,0.5),
+    0 1px 2px rgba(0,0,0,0.4);
 
   &:hover:not(:disabled):not(.active) {
-    border-color: $paper-cold;
+    border-color: rgba(200,200,210,0.35);
     color: #fff;
-    background: linear-gradient(180deg, rgba(40,28,28,0.95) 0%, rgba(15,8,8,0.98) 100%);
+    background: linear-gradient(180deg, rgba(32,28,28,0.92) 0%, rgba(16,12,14,0.96) 100%);
     box-shadow:
-      inset 0 0 14px rgba(168,51,51,0.18),
-      0 0 12px rgba(168,51,51,0.25),
-      0 2px 6px rgba(0,0,0,0.6);
+      inset 0 0 12px rgba(168,51,51,0.14),
+      0 0 10px rgba(168,51,51,0.20),
+      0 2px 6px rgba(0,0,0,0.5);
   }
   &.primary {
     background: linear-gradient(180deg, $blood-glow 0%, $blood-mid 50%, $blood 100%);
-    color: #f4e8d8;
+    color: #f0e8e0;
     border-color: $blood-bright;
-    font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     box-shadow:
-      inset 0 0 14px rgba(255,200,200,0.15),
-      0 0 14px rgba(168,51,51,0.4),
-      0 2px 6px rgba(0,0,0,0.6);
+      inset 0 0 12px rgba(255,200,200,0.12),
+      0 0 12px rgba(168,51,51,0.35),
+      0 2px 6px rgba(0,0,0,0.5);
   }
   &.primary:hover:not(:disabled) {
     background: linear-gradient(180deg, $blood-bright 0%, $blood-glow 50%, $blood-mid 100%);
     box-shadow:
-      inset 0 0 18px rgba(255,200,200,0.25),
-      0 0 22px rgba(198,69,69,0.6),
-      0 3px 10px rgba(0,0,0,0.7);
+      inset 0 0 16px rgba(255,200,200,0.20),
+      0 0 20px rgba(198,69,69,0.55),
+      0 3px 8px rgba(0,0,0,0.6);
   }
   &:disabled {
     opacity: 0.3;
@@ -261,34 +224,35 @@ $font-brush: "Ma Shan Zheng", "ZCOOL KuaiLe", "华文行楷", "STXingkai",
   }
 }
 
-// 水墨输入框 / 下拉 / textarea
+// 现代输入框：底部光晕聚焦
 @mixin xianxia-input {
-  background: rgba(5,4,7,0.85);
-  border: 1px solid rgba(207,200,184,0.2);
+  background: rgba(6,6,8,0.85);
+  border: 1px solid rgba(200,200,210,0.15);
   color: $paper-cold;
   padding: 0.6rem 0.9rem;
   font-family: $font-serif;
   border-radius: $r-sm;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   box-shadow:
-    inset 0 1px 4px rgba(0,0,0,0.7),
-    inset 0 0 12px rgba(0,0,0,0.4);
+    inset 0 1px 3px rgba(0,0,0,0.6),
+    inset 0 0 8px rgba(0,0,0,0.35);
+  font-weight: 500;
   &:focus {
     outline: none;
-    border-color: $blood-glow;
-    background: rgba(15,8,10,0.9);
+    border-color: rgba(216,56,56,0.5);
+    background: rgba(12,8,10,0.88);
     box-shadow:
-      inset 0 1px 4px rgba(0,0,0,0.7),
-      inset 0 0 16px rgba(168,51,51,0.15),
-      0 0 10px rgba(168,51,51,0.25);
+      inset 0 1px 3px rgba(0,0,0,0.6),
+      inset 0 0 12px rgba(168,51,51,0.12),
+      0 0 8px rgba(168,51,51,0.20);
   }
   &::placeholder {
-    color: rgba(207,200,184,0.3);
+    color: rgba(160,160,170,0.35);
     font-style: italic;
   }
 }
 
-// 朱砂印章（保留作小元素使用）
+// 朱砂印章：保留古风点缀
 @mixin cinnabar-seal {
   display: inline-block;
   background: linear-gradient(135deg, $cinnabar-bright 0%, $cinnabar 100%);
@@ -301,4 +265,30 @@ $font-brush: "Ma Shan Zheng", "ZCOOL KuaiLe", "华文行楷", "STXingkai",
     inset 0 0 6px rgba(60,5,5,0.7),
     0 0 8px rgba(178,42,42,0.4);
   text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+
+// 现代竖线分隔（古风点缀）
+@mixin vertical-divider {
+  content: "";
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(200,200,210,0.15) 20%,
+    rgba(200,200,210,0.25) 50%,
+    rgba(200,200,210,0.15) 80%,
+    transparent 100%);
+}
+
+// 现代横线分隔
+@mixin horizontal-divider {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200,200,210,0.15) 20%,
+    rgba(200,200,210,0.25) 50%,
+    rgba(200,200,210,0.15) 80%,
+    transparent 100%);
 }

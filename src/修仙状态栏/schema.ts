@@ -159,10 +159,6 @@ export const Schema = z.object({
         描述: z.string().prefault(''),
         神迹: z.string().prefault(''),
         收服: z.boolean().prefault(false),
-        沉沦值: z
-          .preprocess(val => (val === null || val === undefined ? 0 : Number(val)), z.number())
-          .transform(v => _.clamp(v, 0, 100))
-          .prefault(0),
         神契技能: z.string().prefault(''),
         神契描述: z.string().prefault(''),
       })

@@ -1,6 +1,6 @@
 <div class="cbt-card cbt-$2 cbt-$7">
+<div class="cbt-corner cbt-c-tl"></div><div class="cbt-corner cbt-c-tr"></div><div class="cbt-corner cbt-c-bl"></div><div class="cbt-corner cbt-c-br"></div>
 <div class="cbt-top"></div>
-<div class="cbt-glow"></div>
 <div class="cbt-head"><span class="cbt-sword">⚔️</span><span class="cbt-turn">$1</span><span class="cbt-badge">$2</span></div>
 <div class="cbt-school"><span class="cbt-school-icon">$2</span><span class="cbt-school-text">$2 · $3</span></div>
 <div class="cbt-row cbt-row-act"><span class="cbt-lbl">行动</span><span class="cbt-txt">$4</span></div>
@@ -10,36 +10,36 @@
 <div class="cbt-status"><span class="cbt-status-lbl">状态变化</span><pre class="cbt-status-pre">$9</pre></div>
 </div>
 <style>
-.cbt-card{position:relative;background:linear-gradient(180deg,#0a0a0a 0%,#050505 100%);border:1px solid var(--cb,#7f1d1d);border-radius:10px;padding:0 0 12px;margin:14px 0;color:#d4d4d4;font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;box-shadow:0 0 16px var(--cg,rgba(127,29,29,0.25)),inset 0 1px 0 rgba(255,255,255,0.03);box-sizing:border-box;overflow:hidden;max-width:100%;animation:cbt-in 0.4s ease-out 1;}
-@keyframes cbt-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.cbt-top{height:3px;background:linear-gradient(90deg,transparent,var(--cs,#991b1b) 30%,var(--cm,#dc2626) 50%,var(--cs,#991b1b) 70%,transparent);background-size:200% 100%;animation:cbt-flow 3s linear infinite;}
-@keyframes cbt-flow{from{background-position:200% 0;}to{background-position:-200% 0;}}
-.cbt-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,var(--cg,rgba(127,29,29,0.15)) 0%,transparent 60%);animation:cbt-breathe 4s ease-in-out infinite;}
-@keyframes cbt-breathe{0%,100%{opacity:0.5;}50%{opacity:1;}}
-.cbt-head{position:relative;display:flex;align-items:center;gap:10px;padding:13px 16px 9px;border-bottom:1px solid var(--cb,#7f1d1d);}
-.cbt-sword{font-size:18px;filter:drop-shadow(0 0 4px var(--cg,rgba(127,29,29,0.25)));}
-.cbt-turn{font-size:14px;font-weight:700;color:var(--cm,#dc2626);letter-spacing:2px;text-shadow:0 0 6px var(--cg,rgba(127,29,29,0.25));flex:1;}
-.cbt-badge{font-size:10px;padding:2px 9px;border-radius:2px;background:var(--cs,#991b1b);color:#fff;font-weight:700;letter-spacing:1px;border:1px solid var(--cm,#dc2626);white-space:nowrap;}
-.cbt-school{display:flex;align-items:center;gap:8px;padding:7px 16px 3px;}
-.cbt-school-icon{font-size:11px;color:var(--cm,#dc2626);font-weight:700;opacity:0.8;}
-.cbt-school-text{font-size:12px;color:#a3a3a3;}
-.cbt-row{display:flex;padding:5px 16px;gap:8px;align-items:flex-start;}
-.cbt-lbl{min-width:42px;font-size:11px;font-weight:700;color:var(--cs,#991b1b);letter-spacing:2px;font-family:'Courier New',monospace;margin-top:3px;flex-shrink:0;}
-.cbt-txt{font-size:13px;color:#d4d4d4;line-height:1.5;}
-.cbt-resp{display:flex;padding:0 16px 5px;gap:8px;align-items:flex-start;opacity:0.72;font-size:12px;color:#737373;line-height:1.5;}
+.cbt-card{position:relative;background:linear-gradient(180deg,#0c0a0a 0%,#050404 100%);border:1px solid var(--cb,#7f1d1d);border-radius:8px;padding:0 0 14px;margin:16px 0;color:#d4d4d4;font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;box-shadow:0 0 0 1px rgba(0,0,0,0.6),0 6px 24px rgba(0,0,0,0.7),0 0 18px var(--cg,rgba(127,29,29,0.22)),inset 0 1px 0 rgba(255,255,255,0.04),inset 0 0 0 1px rgba(255,255,255,0.02);box-sizing:border-box;overflow:hidden;max-width:100%;}
+.cbt-corner{position:absolute;width:14px;height:14px;pointer-events:none;z-index:3;}
+.cbt-corner::before,.cbt-corner::after{content:"";position:absolute;background:var(--cm,#dc2626);box-shadow:0 0 6px var(--cg,rgba(127,29,29,0.5));}
+.cbt-corner::before{width:14px;height:1px;}
+.cbt-corner::after{width:1px;height:14px;}
+.cbt-c-tl{top:5px;left:5px;}.cbt-c-tr{top:5px;right:5px;}.cbt-c-tr::after{right:0;}.cbt-c-bl{bottom:5px;left:5px;}.cbt-c-bl::before{bottom:0;}.cbt-c-br{bottom:5px;right:5px;}.cbt-c-br::before{bottom:0;}.cbt-c-br::after{right:0;}
+.cbt-top{height:3px;background:linear-gradient(90deg,transparent 0%,var(--cs,#991b1b) 25%,var(--cm,#dc2626) 50%,var(--cs,#991b1b) 75%,transparent 100%);box-shadow:0 0 8px var(--cg,rgba(127,29,29,0.4));}
+.cbt-head{position:relative;display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid var(--cb,#7f1d1d);background:linear-gradient(180deg,rgba(127,29,29,0.08) 0%,transparent 100%);}
+.cbt-sword{font-size:18px;filter:drop-shadow(0 0 4px var(--cg,rgba(127,29,29,0.4)));}
+.cbt-turn{font-size:14px;font-weight:700;color:var(--cm,#dc2626);letter-spacing:2px;text-shadow:0 0 6px var(--cg,rgba(127,29,29,0.35)),0 1px 0 rgba(0,0,0,0.8);flex:1;}
+.cbt-badge{font-size:10px;padding:2px 10px;border-radius:2px;background:linear-gradient(180deg,var(--cm,#dc2626),var(--cs,#991b1b));color:#fff;font-weight:700;letter-spacing:1px;border:1px solid var(--cm,#dc2626);box-shadow:0 1px 2px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.2);white-space:nowrap;}
+.cbt-school{display:flex;align-items:center;gap:8px;padding:8px 18px 4px;}
+.cbt-school-icon{font-size:11px;color:var(--cm,#dc2626);font-weight:700;opacity:0.85;letter-spacing:1px;}
+.cbt-school-text{font-size:12px;color:#a3a3a3;letter-spacing:0.5px;}
+.cbt-row{display:flex;padding:5px 18px;gap:8px;align-items:flex-start;}
+.cbt-lbl{min-width:42px;font-size:11px;font-weight:700;color:var(--cs,#991b1b);letter-spacing:2px;font-family:'Courier New',monospace;margin-top:3px;flex-shrink:0;text-shadow:0 0 4px var(--cg,rgba(127,29,29,0.2));}
+.cbt-txt{font-size:13px;color:#d4d4d4;line-height:1.6;}
+.cbt-resp{display:flex;padding:0 18px 6px;gap:8px;align-items:flex-start;opacity:0.72;font-size:12px;color:#737373;line-height:1.5;}
 .cbt-resp::before{content:"应对";min-width:42px;font-size:11px;font-weight:700;color:#525252;letter-spacing:2px;font-family:'Courier New',monospace;margin-top:1px;}
 .cbt-resp:empty{display:none;}
-.cbt-roll{background:rgba(0,0,0,0.45);border-left:2px solid var(--cs,#991b1b);margin:6px 16px 9px;padding:9px 14px;border-radius:0 6px 6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.cbt-roll{background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.35) 100%);border-left:2px solid var(--cm,#dc2626);margin:7px 18px 10px;padding:10px 14px;border-radius:0 6px 6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.03),inset 2px 0 8px rgba(0,0,0,0.4);}
 .cbt-roll-lbl{font-size:11px;color:var(--cs,#991b1b);font-weight:600;letter-spacing:1px;font-family:'Courier New',monospace;}
 .cbt-roll-txt{font-size:12px;color:#a3a3a3;font-family:'Courier New',monospace;line-height:1.6;flex:1;min-width:120px;}
-.cbt-res{font-size:11px;font-weight:700;padding:3px 12px;border-radius:3px;background:rgba(220,38,38,0.1);color:#f87171;border:1px solid rgba(220,38,38,0.25);font-family:'Courier New',monospace;letter-spacing:1px;white-space:nowrap;}
-.cbt-dmg{position:relative;background:var(--cg,rgba(127,29,29,0.08));border:1px solid var(--cb,#7f1d1d);border-radius:6px;padding:9px 14px;margin:0 16px 9px;font-size:14px;color:#ef4444;font-weight:800;text-shadow:0 0 8px var(--cg,rgba(239,68,68,0.4)),0 0 2px rgba(239,68,68,0.8);font-family:'Courier New',monospace;line-height:1.5;animation:cbt-dmg-pop 0.5s ease-out 1;}
+.cbt-res{font-size:11px;font-weight:700;padding:3px 12px;border-radius:3px;background:linear-gradient(180deg,rgba(220,38,38,0.18),rgba(220,38,38,0.08));color:#f87171;border:1px solid rgba(220,38,38,0.35);font-family:'Courier New',monospace;letter-spacing:1px;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);text-shadow:0 0 6px rgba(248,113,113,0.3);}
+.cbt-dmg{position:relative;background:linear-gradient(180deg,var(--cg,rgba(127,29,29,0.14)) 0%,rgba(127,29,29,0.04) 100%);border:1px solid var(--cb,#7f1d1d);border-radius:6px;padding:10px 14px;margin:0 18px 10px;font-size:14px;color:#ef4444;font-weight:800;text-shadow:0 0 8px rgba(239,68,68,0.5),0 0 2px rgba(239,68,68,0.9),0 1px 0 rgba(0,0,0,0.6);font-family:'Courier New',monospace;line-height:1.5;box-shadow:inset 0 0 0 1px rgba(239,68,68,0.08),inset 0 1px 0 rgba(255,255,255,0.04);}
 .cbt-dmg::before{content:"伤害  ";font-size:11px;color:var(--cs,#991b1b);font-weight:700;letter-spacing:1px;text-shadow:none;}
 .cbt-dmg:empty{display:none;}
-@keyframes cbt-dmg-pop{0%{transform:scale(0.85);opacity:0;}60%{transform:scale(1.04);}100%{transform:scale(1);opacity:1;}}
-.cbt-status{background:rgba(255,255,255,0.02);border:1px solid rgba(82,82,82,0.15);border-radius:6px;padding:9px 14px;margin:0 16px;}
+.cbt-status{background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,rgba(255,255,255,0.01) 100%);border:1px solid rgba(82,82,82,0.2);border-radius:6px;padding:10px 14px;margin:0 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);}
 .cbt-status-lbl{font-size:11px;color:#737373;font-weight:700;display:block;margin-bottom:5px;letter-spacing:1px;font-family:'Courier New',monospace;}
-.cbt-status-pre{font-size:12px;color:#a3a3a3;line-height:1.7;white-space:pre-wrap;font-family:'Courier New',monospace;margin:0;}
+.cbt-status-pre{font-size:12px;color:#a3a3a3;line-height:1.8;white-space:pre-wrap;font-family:'Courier New',monospace;margin:0;}
 .cbt-剑修{--cm:#e5e7eb;--cs:#9ca3af;--cb:#6b7280;--cg:rgba(156,163,175,0.3);}
 .cbt-法修{--cm:#f59e0b;--cs:#b45309;--cb:#92400e;--cg:rgba(245,158,11,0.3);}
 .cbt-体修{--cm:#d97706;--cs:#92400e;--cb:#78350f;--cg:rgba(217,119,6,0.3);}
@@ -50,29 +50,29 @@
 .cbt-魔修{--cm:#a855f7;--cs:#7e22ce;--cb:#6b21a8;--cg:rgba(168,85,247,0.35);}
 .cbt-克苏鲁修{--cm:#a855f7;--cs:#6b21a8;--cb:#4c1d95;--cg:rgba(168,85,247,0.4);}
 .cbt-散修{--cm:#a8a29e;--cs:#78716c;--cb:#57534e;--cg:rgba(168,162,158,0.25);}
-.cbt-card.cbt-暴击{animation:cbt-in 0.4s ease-out 1,cbt-flash-gold 1s ease-out 1;}
-.cbt-card.cbt-暴击 .cbt-sword{animation:cbt-pulse 1.3s ease-in-out infinite;}
-.cbt-card.cbt-暴击 .cbt-res{background:rgba(251,191,36,0.18);color:#fbbf24;border-color:rgba(251,191,36,0.5);box-shadow:0 0 12px rgba(251,191,36,0.4);}
-.cbt-card.cbt-暴击 .cbt-dmg{color:#fbbf24;text-shadow:0 0 12px rgba(251,191,36,0.8),0 0 4px rgba(251,191,36,1);font-size:16px;}
-.cbt-card.cbt-暴击::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 30% 20%,rgba(251,191,36,0.15) 0%,transparent 30%),radial-gradient(circle at 70% 80%,rgba(251,191,36,0.12) 0%,transparent 25%);animation:cbt-sparkle 1.2s ease-out 1;}
-@keyframes cbt-flash-gold{0%{box-shadow:0 0 0 rgba(251,191,36,0.9);}25%{box-shadow:0 0 48px rgba(251,191,36,0.8),0 0 12px var(--cg);}100%{box-shadow:0 0 16px var(--cg);}}
-@keyframes cbt-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);filter:drop-shadow(0 0 14px #fbbf24);}}
-@keyframes cbt-sparkle{0%{opacity:0;}30%{opacity:1;}100%{opacity:0;}}
-.cbt-card.cbt-大失败{animation:cbt-in 0.4s ease-out 1,cbt-shake 0.6s ease-in-out 1;}
-.cbt-card.cbt-大失败 .cbt-head{background:rgba(220,38,38,0.15);}
-.cbt-card.cbt-大失败 .cbt-res{background:rgba(220,38,38,0.25);color:#fca5a5;border-color:rgba(220,38,38,0.6);}
-.cbt-card.cbt-大失败::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(135deg,transparent 0,transparent 8px,rgba(220,38,38,0.08) 8px,rgba(220,38,38,0.08) 10px);}
-@keyframes cbt-shake{0%,100%{transform:translateX(0);}15%{transform:translateX(-8px) rotate(-0.5deg);}30%{transform:translateX(8px) rotate(0.5deg);}45%{transform:translateX(-6px);}60%{transform:translateX(6px);}75%{transform:translateX(-3px);}90%{transform:translateX(3px);}}
-.cbt-card.cbt-落空{opacity:0.6;filter:grayscale(0.6);}
-.cbt-card.cbt-落空 .cbt-res{background:rgba(115,115,115,0.1);color:#a3a3a3;border-color:rgba(115,115,115,0.25);}
-.cbt-card.cbt-落空 .cbt-sword{animation:cbt-fade-sword 1s ease-out 1;}
-@keyframes cbt-fade-sword{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(20px) rotate(45deg);opacity:0.3;}}
-.cbt-card.cbt-擦伤{opacity:0.88;}
-.cbt-card.cbt-擦伤 .cbt-res{color:#fcd34d;background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);}
-.cbt-剑修 .cbt-card-top,.cbt-card.cbt-剑修{background-image:linear-gradient(180deg,#0a0a0a 0%,#050505 100%),repeating-linear-gradient(115deg,transparent 0,transparent 14px,rgba(229,231,235,0.04) 14px,rgba(229,231,235,0.04) 15px);}
-.cbt-card.cbt-克苏鲁修::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 90% 10%,rgba(168,85,247,0.1) 0%,transparent 20%),radial-gradient(circle at 10% 90%,rgba(76,29,149,0.1) 0%,transparent 20%);opacity:0.8;}
-.cbt-card.cbt-魔修{box-shadow:0 0 20px var(--cg),inset 0 0 30px rgba(168,85,247,0.05);}
-.cbt-card.cbt-魂修 .cbt-sword{filter:drop-shadow(0 0 6px var(--cg)) drop-shadow(0 0 12px rgba(59,130,246,0.3));}
+.cbt-card.cbt-暴击{border-color:#fbbf24;box-shadow:0 0 0 1px rgba(0,0,0,0.6),0 6px 24px rgba(0,0,0,0.7),0 0 22px rgba(251,191,36,0.45),inset 0 0 0 1px rgba(251,191,36,0.25),inset 0 1px 0 rgba(255,255,255,0.05);}
+.cbt-card.cbt-暴击 .cbt-top{background:linear-gradient(90deg,transparent,#fbbf24 25%,#fde68a 50%,#fbbf24 75%,transparent);box-shadow:0 0 10px rgba(251,191,36,0.6);}
+.cbt-card.cbt-暴击 .cbt-sword{filter:drop-shadow(0 0 6px rgba(251,191,36,0.8));}
+.cbt-card.cbt-暴击 .cbt-turn{color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6),0 1px 0 rgba(0,0,0,0.8);}
+.cbt-card.cbt-暴击 .cbt-badge{background:linear-gradient(180deg,#fde68a,#fbbf24);color:#3a2a00;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.5),inset 0 1px 0 rgba(255,255,255,0.4);}
+.cbt-card.cbt-暴击 .cbt-res{background:linear-gradient(180deg,rgba(251,191,36,0.22),rgba(251,191,36,0.1));color:#fbbf24;border-color:rgba(251,191,36,0.6);box-shadow:0 0 12px rgba(251,191,36,0.4),inset 0 1px 0 rgba(255,255,255,0.15);text-shadow:0 0 8px rgba(251,191,36,0.6);}
+.cbt-card.cbt-暴击 .cbt-dmg{color:#fbbf24;border-color:#fbbf24;background:linear-gradient(180deg,rgba(251,191,36,0.16),rgba(251,191,36,0.04));text-shadow:0 0 12px rgba(251,191,36,0.9),0 0 4px rgba(251,191,36,1),0 1px 0 rgba(0,0,0,0.6);font-size:16px;box-shadow:inset 0 0 0 1px rgba(251,191,36,0.2),0 0 14px rgba(251,191,36,0.25);}
+.cbt-card.cbt-暴击 .cbt-dmg::before{color:#fbbf24;}
+.cbt-card.cbt-暴击::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 30% 20%,rgba(251,191,36,0.12) 0%,transparent 30%),radial-gradient(circle at 70% 80%,rgba(251,191,36,0.1) 0%,transparent 25%);}
+.cbt-card.cbt-大失败{border-color:#dc2626;box-shadow:0 0 0 1px rgba(0,0,0,0.6),0 6px 24px rgba(0,0,0,0.7),0 0 22px rgba(220,38,38,0.4),inset 0 0 0 1px rgba(220,38,38,0.2);}
+.cbt-card.cbt-大失败 .cbt-head{background:linear-gradient(180deg,rgba(220,38,38,0.2) 0%,transparent 100%);}
+.cbt-card.cbt-大失败 .cbt-res{background:linear-gradient(180deg,rgba(220,38,38,0.3),rgba(220,38,38,0.15));color:#fca5a5;border-color:rgba(220,38,38,0.7);text-shadow:0 0 8px rgba(252,165,165,0.5);}
+.cbt-card.cbt-大失败 .cbt-dmg{color:#fca5a5;border-color:#dc2626;text-shadow:0 0 8px rgba(252,165,165,0.4);}
+.cbt-card.cbt-大失败::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(135deg,transparent 0,transparent 8px,rgba(220,38,38,0.1) 8px,rgba(220,38,38,0.1) 10px);}
+.cbt-card.cbt-落空{opacity:0.55;filter:grayscale(0.7);}
+.cbt-card.cbt-落空 .cbt-res{background:linear-gradient(180deg,rgba(115,115,115,0.15),rgba(115,115,115,0.05));color:#a3a3a3;border-color:rgba(115,115,115,0.3);}
+.cbt-card.cbt-落空 .cbt-top{background:linear-gradient(90deg,transparent,#525252 25%,#737373 50%,#525252 75%,transparent);box-shadow:none;}
+.cbt-card.cbt-擦伤{opacity:0.9;}
+.cbt-card.cbt-擦伤 .cbt-res{color:#fcd34d;background:linear-gradient(180deg,rgba(251,191,36,0.12),rgba(251,191,36,0.04));border-color:rgba(251,191,36,0.3);}
+.cbt-剑修 .cbt-card-top,.cbt-card.cbt-剑修{background-image:linear-gradient(180deg,#0c0a0a 0%,#050404 100%),repeating-linear-gradient(115deg,transparent 0,transparent 14px,rgba(229,231,235,0.04) 14px,rgba(229,231,235,0.04) 15px);}
+.cbt-card.cbt-克苏鲁修::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 90% 10%,rgba(168,85,247,0.12) 0%,transparent 22%),radial-gradient(circle at 10% 90%,rgba(76,29,149,0.12) 0%,transparent 22%);z-index:1;}
+.cbt-card.cbt-魔修{box-shadow:0 0 0 1px rgba(0,0,0,0.6),0 6px 24px rgba(0,0,0,0.7),0 0 24px var(--cg),inset 0 0 30px rgba(168,85,247,0.06),inset 0 1px 0 rgba(255,255,255,0.04);}
+.cbt-card.cbt-魂修 .cbt-sword{filter:drop-shadow(0 0 6px var(--cg)) drop-shadow(0 0 12px rgba(59,130,246,0.35));}
 .cbt-card.cbt-丹修 .cbt-dmg{border-left:3px solid #10b981;}
 .cbt-card.cbt-阵修{border-style:dashed;}
 .cbt-card.cbt-符修 .cbt-badge{font-family:'STKaiti','KaiTi',serif;}

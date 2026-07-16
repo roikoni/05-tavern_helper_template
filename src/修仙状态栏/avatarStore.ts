@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@vueuse/core';
+﻿import { useLocalStorage } from '@vueuse/core';
 import { computed, type Ref } from 'vue';
 
 // 随卡分发的默认头像（按角色名索引）。用户在状态栏内的覆盖会优先于此表。

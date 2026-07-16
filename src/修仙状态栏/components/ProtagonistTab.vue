@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="page-root">
     <div class="bg-glow"></div>
 
@@ -316,7 +316,7 @@
             </div>
             <span v-if="store.data.主角.神契装备 === god.name" class="sq-equipped-badge">已装备</span>
           </div>
-          <div v-if="subduedGods.length === 0" class="sq-empty-msg">尚未收服任何古神，无神契可用</div>
+          <div v-if="subduedGods.length === 0" class="sq-empty-msg">尚未与任何古神结契，无神契可用</div>
         </div>
       </div>
     </div>

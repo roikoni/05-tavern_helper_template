@@ -17,9 +17,6 @@
           >
             <div class="title">{{ g.名称 }}</div>
             <div class="desc">{{ g.描述 }}</div>
-            <div class="cost" :class="{ free: g.消耗 === 0 }">
-              {{ g.消耗 === 0 ? '免费' : `+${g.消耗} 点` }}
-            </div>
           </button>
         </div>
 
@@ -85,8 +82,7 @@
       </p>
     </label>
 
-    <!-- 自由模式：修为境界 -->
-    <template v-if="自由">
+    <!-- 修为境界 -->
       <h3>修为境界</h3>
       <div class="grid grid-境界">
         <button
@@ -96,14 +92,10 @@
           @click="选境界(b.名称)"
         >
           <div class="title">{{ b.名称 }}</div>
-          <div class="desc">{{ b.档次 }} · 寿元 {{ b.寿元 }}</div>
-          <div class="cost" :class="{ free: b.消耗 === 0 }">
-            {{ b.消耗 === 0 ? '免费' : `+${b.消耗} 点` }}
-          </div>
-        </button>
+            <div class="desc">{{ b.档次 }} · 寿元 {{ b.寿元 }}</div>
+          </button>
       </div>
-      <p class="hint">境界越高开局越强，消耗点数越多；选定后修为自动填满上限</p>
-    </template>
+      <p class="hint">选定后修为自动填满上限，高境界附带更高的六维下限</p>
 
     <h3>修炼流派</h3>
     <div class="grid">
@@ -112,9 +104,6 @@
               @click="选流派(s.名称)">
         <div class="title">{{ s.名称 }}</div>
         <div class="desc">{{ s.简介 }}</div>
-        <div class="cost" :class="{ free: s.消耗 === 0 }">
-          {{ s.消耗 === 0 ? '免费' : `+${s.消耗} 点` }}
-        </div>
       </button>
     </div>
 
@@ -132,9 +121,9 @@ import { useDataStore } from '../store';
 import { useDraftStore } from '../draft';
 import { 流派列表 } from '../catalog/流派';
 import { 灵根类别列表, 解析灵根, type 灵根类别 } from '../catalog/灵根';
-import { 境界列表, 查境界 } from '../lib/点数';
+import { 境界列表, 查境界 } from '../catalog/境界';
 
-const props = defineProps<{ 自由: boolean }>();
+const props = defineProps<{}>();
 
 const { data } = storeToRefs(useDataStore());
 const draft = useDraftStore();
@@ -196,7 +185,6 @@ function 同步灵根() {
     return;
   }
   data.value.主角.灵根 = `${cfg.名称}·${已选属性.value.join('·')}`;
-  draft.标记花费();
 }
 
 function 选类别(名: 灵根类别) {
@@ -239,14 +227,11 @@ function 选境界(名: string) {
   if (候选) {
     data.value.主角.修为上限 = 候选.修为上限;
     data.value.主角.修为 = 候选.修为上限;
-    if (props.自由) {
-      const 六维 = data.value.主角.六维 as Record<string, number>;
-      for (const k of Object.keys(六维)) {
-        if (六维[k] < 候选.六维下限) 六维[k] = 候选.六维下限;
-      }
+    const 六维 = data.value.主角.六维 as Record<string, number>;
+    for (const k of Object.keys(六维)) {
+      if (六维[k] < 候选.六维下限) 六维[k] = 候选.六维下限;
     }
   }
-  draft.标记花费();
 }
 
 function 选流派(名: string) {
@@ -256,7 +241,6 @@ function 选流派(名: string) {
   if (data.value.主角.称号 === 旧默认称号 || data.value.主角.称号 === '待捏角') {
     data.value.主角.称号 = 名;
   }
-  draft.标记花费();
 }
 </script>
 
@@ -328,15 +312,6 @@ h3 {
     color: $paper-dim;
     line-height: 1.45;
     @include mobile { font-size: 0.72rem; }
-  }
-  .cost {
-    font-size: 0.8rem;
-    align-self: flex-end;
-    color: $blood-glow;
-    padding: 0.15rem 0.5rem;
-    background: rgba(80,15,15,0.25);
-    border-radius: $r-xs;
-    &.free { color: $jade; background: rgba(40,80,40,0.2); &::before { content: "✓ "; } }
   }
   &.active .title { color: #fff; text-shadow: 0 0 8px rgba(168,51,51,0.4); }
 }
@@ -603,13 +578,6 @@ h3 {
   .desc {
     font-size: 0.85rem; color: $paper-dim; flex: 1; line-height: 1.5;
     @include mobile { font-size: 0.78rem; }
-  }
-  .cost {
-    font-size: 0.85rem; align-self: flex-end; color: $blood-glow;
-    letter-spacing: 0.05em; padding: 0.15rem 0.5rem;
-    background: rgba(80,15,15,0.25); border-radius: $r-xs;
-    @include mobile { font-size: 0.78rem; }
-    &.free { color: $jade; background: rgba(40,80,40,0.2); &::before { content: "✓ "; } }
   }
   &.active .title { color: #fff; text-shadow: 0 0 8px rgba(168,51,51,0.4); }
 }
