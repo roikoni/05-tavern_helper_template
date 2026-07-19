@@ -194,6 +194,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
     },
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     watchOptions: {
+<<<<<<< HEAD
       ignored: [
         '**/dist',
         '**/node_modules',
@@ -201,6 +202,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         '**/hiberfil.sys',
         '**/swapfile.sys',
       ],
+=======
+      ignored: ['**/dist', '**/node_modules'],
+>>>>>>> a4d60f52b8b1b0f872a80088ba7e339b0933eeb2
     },
     entry: path.join(import.meta.dirname, entry.script),
     target: 'browserslist',
@@ -567,9 +571,23 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       const cdn = {
         sass: 'https://jspm.dev/sass',
       };
+<<<<<<< HEAD
       return callback(
         null,
         'module-import ' + (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${request}/+esm`),
+=======
+      const package_json = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf-8')) as {
+        dependencies?: Record<string, string>;
+        devDependencies?: Record<string, string>;
+      };
+      const package_versions = { ...package_json.devDependencies, ...package_json.dependencies };
+      const version = package_versions[request]?.replace(/^[~^]/, '');
+      const versioned_request = /^[.\d]+$/.test(version) ? `${request}@${version}` : request;
+      return callback(
+        null,
+        'module-import ' +
+          (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${versioned_request}/+esm`),
+>>>>>>> a4d60f52b8b1b0f872a80088ba7e339b0933eeb2
       );
     },
   });
