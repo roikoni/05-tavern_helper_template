@@ -551,6 +551,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       ) {
         return callback();
       }
+
+      if (request === 'pinia') {
+        return callback();
+      }
+
       const global = {
         jquery: '$',
         lodash: '_',
